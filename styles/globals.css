@@ -1,0 +1,138 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+/*
+ * HeroUI Theme Customization
+ * Add this to your global.css after importing @heroui/styles
+ * Only includes variables users need to customize
+ * @see https://heroui.com/docs/react/getting-started/theming
+ */
+
+:root,
+.light,
+.default,
+[data-theme="light"],
+[data-theme="default"] {
+  /* Theme Colors (Light Mode) */
+  --accent: oklch(67.31% 0.1625 144.21);
+  --accent-foreground: oklch(15% 0.0300 144.21);
+  --background: oklch(97.02% 0.0015 144.21);
+  --border: oklch(90.00% 0.0015 144.21);
+  --danger: oklch(65.32% 0.2335 12.59);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: oklch(94.00% 0.0015 144.21);
+  --default-foreground: oklch(21.03% 0.0059 144.21);
+  --field-background: oklch(100.00% 0.0008 144.21);
+  --field-border: transparent;
+  --field-foreground: oklch(21.03% 0.0015 144.21);
+  --field-placeholder: oklch(55.17% 0.0030 144.21);
+  --focus: oklch(67.31% 0.1625 144.21);
+  --foreground: oklch(21.03% 0.0015 144.21);
+  --muted: oklch(55.17% 0.0030 144.21);
+  --overlay: oklch(100.00% 0.0004 144.21);
+  --overlay-foreground: oklch(21.03% 0.0015 144.21);
+  --scrollbar: oklch(87.10% 0.0015 144.21);
+  --segment: oklch(100.00% 0.0015 144.21);
+  --segment-foreground: oklch(21.03% 0.0015 144.21);
+  --separator: oklch(92.00% 0.0015 144.21);
+  --success: oklch(73.29% 0.1941 137.66);
+  --success-foreground: oklch(21.03% 0.0059 137.66);
+  --surface: oklch(100.00% 0.0008 144.21);
+  --surface-foreground: oklch(21.03% 0.0015 144.21);
+  --surface-secondary: oklch(95.24% 0.0012 144.21);
+  --surface-secondary-foreground: oklch(21.03% 0.0015 144.21);
+  --surface-tertiary: oklch(93.73% 0.0012 144.21);
+  --surface-tertiary-foreground: oklch(21.03% 0.0015 144.21);
+  --warning: oklch(78.19% 0.1590 59.18);
+  --warning-foreground: oklch(21.03% 0.0059 59.18);
+
+  /* Border Radius */
+  --radius: 0.25rem;
+  --field-radius: 0.25rem;
+
+  /* Font Family */
+  /* Make sure to load Hanken Grotesk font in your app */
+  --font-sans: var(--font-hanken-grotesk);
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+  /* Theme Colors (Dark Mode) */
+  --accent: oklch(67.31% 0.1625 144.21);
+  --accent-foreground: oklch(15% 0.0300 144.21);
+  --background: oklch(12.00% 0.0015 144.21);
+  --border: oklch(28.00% 0.0015 144.21);
+  --danger: oklch(59.40% 0.1973 11.48);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: oklch(27.40% 0.0015 144.21);
+  --default-foreground: oklch(99.11% 0 0);
+  --field-background: oklch(21.03% 0.0030 144.21);
+  --field-border: transparent;
+  --field-foreground: oklch(99.11% 0.0015 144.21);
+  --field-placeholder: oklch(70.50% 0.0030 144.21);
+  --focus: oklch(67.31% 0.1625 144.21);
+  --foreground: oklch(99.11% 0.0015 144.21);
+  --muted: oklch(70.50% 0.0030 144.21);
+  --overlay: oklch(21.03% 0.0030 144.21);
+  --overlay-foreground: oklch(99.11% 0.0015 144.21);
+  --scrollbar: oklch(70.50% 0.0015 144.21);
+  --segment: oklch(39.64% 0.0015 144.21);
+  --segment-foreground: oklch(99.11% 0.0015 144.21);
+  --separator: oklch(25.00% 0.0015 144.21);
+  --success: oklch(73.29% 0.1941 137.66);
+  --success-foreground: oklch(21.03% 0.0059 137.66);
+  --surface: oklch(21.03% 0.0030 144.21);
+  --surface-foreground: oklch(99.11% 0.0015 144.21);
+  --surface-secondary: oklch(25.70% 0.0023 144.21);
+  --surface-secondary-foreground: oklch(99.11% 0.0015 144.21);
+  --surface-tertiary: oklch(27.21% 0.0023 144.21);
+  --surface-tertiary-foreground: oklch(99.11% 0.0015 144.21);
+  --warning: oklch(82.03% 0.1392 63.19);
+  --warning-foreground: oklch(21.03% 0.0059 63.19);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-row {
+  animation: fade-up 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-row {
+    animation: none;
+  }
+}
