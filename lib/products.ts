@@ -3,6 +3,7 @@ export type Product = {
   description: string;
   grade: string;
   packSizes: string[];
+  image?: string;
 };
 
 export type Category = {
@@ -24,6 +25,14 @@ export const categories: Category[] = [
       "Fertilizers, herbicides, fungicides, and crop-protection formulations for commercial agriculture.",
     products: [
       {
+        name: "Clover Pure Lawn",
+        description:
+          "Professional-grade lawn treatment formulation for lush, even growth. Controls weeds while feeding the turf for a deep, lasting green.",
+        grade: "Professional Grade",
+        packSizes: ["1 L", "5 L", "20 L"],
+        image: "/products/pure_lawn_clover.jpeg",
+      },
+      {
         name: "NPK 20-20-20 Water Soluble Fertilizer",
         description:
           "Balanced, fully water-soluble fertilizer for foliar and fertigation application across a wide range of crops.",
@@ -43,13 +52,6 @@ export const categories: Category[] = [
           "Contact fungicide for the prevention and control of a wide spectrum of fungal diseases in cereals and vegetables.",
         grade: "Technical Grade",
         packSizes: ["1 kg", "5 kg", "25 kg"],
-      },
-      {
-        name: "Chlorpyrifos 480 EC Insecticide",
-        description:
-          "Organophosphate insecticide for the control of soil and foliar insects across a variety of crops.",
-        grade: "Technical Grade",
-        packSizes: ["1 L", "5 L", "20 L"],
       },
     ],
   },
@@ -138,32 +140,35 @@ export const categories: Category[] = [
       "Process chemicals, cleaning agents, and treatment chemicals for manufacturing, mining, and heavy industry.",
     products: [
       {
+        name: "Clover Multi-Surface Cleaner",
+        description:
+          "Concentrated multi-surface cleaning solution for commercial and industrial environments. Cuts through grease, grime, and residue on contact.",
+        grade: "Commercial Grade",
+        packSizes: ["500 mL", "1 L", "5 L", "20 L"],
+        image: "/products/cleaning_products_clover.jpeg",
+      },
+      {
+        name: "Clover Air Freshener",
+        description:
+          "Long-lasting industrial air freshener formulated for high-traffic facilities, warehouses, and commercial spaces. Neutralises odours rather than masking them.",
+        grade: "Commercial Grade",
+        packSizes: ["300 mL", "500 mL", "1 L"],
+        image: "/products/air_freshner_clover.jpeg",
+      },
+      {
+        name: "Clover Glass & Surface Cleaner",
+        description:
+          "Streak-free glass and hard-surface cleaner for windows, mirrors, and reflective surfaces. Fast-drying, ammonia-based formula for a crystal-clear finish.",
+        grade: "Commercial Grade",
+        packSizes: ["500 mL", "1 L", "5 L"],
+        image: "/products/clover_windex.jpeg",
+      },
+      {
         name: "Heavy Duty Degreaser HD-50",
         description:
           "Concentrated alkaline degreaser for the removal of oils, greases, and carbon deposits from plant and equipment.",
         grade: "Technical Grade",
         packSizes: ["5 L", "20 L", "200 L", "1000 L"],
-      },
-      {
-        name: "Caustic Soda Flakes",
-        description:
-          "Technical-grade sodium hydroxide for soap manufacture, water treatment, textile processing, and chemical synthesis.",
-        grade: "Technical Grade",
-        packSizes: ["25 kg", "50 kg"],
-      },
-      {
-        name: "Sodium Hypochlorite 12%",
-        description:
-          "Industrial-strength hypochlorite for large-scale disinfection of water systems, cooling towers, and plant surfaces.",
-        grade: "Technical Grade",
-        packSizes: ["20 L", "200 L", "1000 L"],
-      },
-      {
-        name: "Phosphoric Acid 85%",
-        description:
-          "Industrial phosphoric acid for metal treatment, rust removal, detergent formulation, and water treatment.",
-        grade: "Technical Grade",
-        packSizes: ["5 L", "25 L", "200 L"],
       },
     ],
   },

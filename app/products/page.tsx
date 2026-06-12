@@ -84,7 +84,7 @@ export default function ProductsPage() {
                         alt={product.name}
                         className="object-cover object-center transition-transform duration-500 hover:scale-105"
                         fill
-                        src={cat.image}
+                        src={product.image ?? cat.image}
                       />
                     </div>
 

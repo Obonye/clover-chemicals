@@ -89,7 +89,7 @@ export default function CategoryPage() {
                     alt={product.name}
                     className="object-cover object-center transition-transform duration-500 hover:scale-105"
                     fill
-                    src={active.image}
+                    src={product.image ?? active.image}
                   />
                 </div>
 
