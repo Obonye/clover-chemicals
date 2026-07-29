@@ -31,7 +31,7 @@ export default function ContactPage() {
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Get in Touch
           </p>
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground lg:text-5xl">
+          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
             Contact Us
           </h1>
           <p className="text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
@@ -53,7 +53,7 @@ export default function ContactPage() {
                   <span className="font-mono text-xs uppercase tracking-widest text-accent">
                     Message Sent
                   </span>
-                  <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                  <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
                     Thank you — we&apos;ll be in touch.
                   </h2>
                   <p className="text-sm leading-relaxed text-muted" style={{ maxWidth: "44ch" }}>

@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+@theme inline {
+  --font-display: var(--font-archivo);
+  --color-specials: var(--specials);
+  --color-specials-foreground: var(--specials-foreground);
+}
+
 html,
 body {
   overflow-x: hidden;
@@ -19,9 +25,9 @@ body {
 [data-theme="light"],
 [data-theme="default"] {
   /* Theme Colors (Light Mode) */
-  --accent: oklch(67.31% 0.1625 144.21);
+  --accent: oklch(62% 0.165 133.83);
   --accent-foreground: oklch(15% 0.0300 144.21);
-  --background: oklch(97.02% 0.0015 144.21);
+  --background: oklch(0.9564 0.0025 48.72);
   --border: oklch(90.00% 0.0015 144.21);
   --danger: oklch(65.32% 0.2335 12.59);
   --danger-foreground: oklch(99.11% 0 0);
@@ -32,7 +38,7 @@ body {
   --field-foreground: oklch(21.03% 0.0015 144.21);
   --field-placeholder: oklch(55.17% 0.0030 144.21);
   --focus: oklch(67.31% 0.1625 144.21);
-  --foreground: oklch(21.03% 0.0015 144.21);
+  --foreground: oklch(0.1543 0 0);
   --muted: oklch(55.17% 0.0030 144.21);
   --overlay: oklch(100.00% 0.0004 144.21);
   --overlay-foreground: oklch(21.03% 0.0015 144.21);
@@ -40,6 +46,8 @@ body {
   --segment: oklch(100.00% 0.0015 144.21);
   --segment-foreground: oklch(21.03% 0.0015 144.21);
   --separator: oklch(92.00% 0.0015 144.21);
+  --specials: oklch(78% 0.17 92);
+  --specials-foreground: oklch(20% 0.02 90);
   --success: oklch(73.29% 0.1941 137.66);
   --success-foreground: oklch(21.03% 0.0059 137.66);
   --surface: oklch(100.00% 0.0008 144.21);
@@ -64,9 +72,9 @@ body {
 [data-theme="dark"] {
   color-scheme: dark;
   /* Theme Colors (Dark Mode) */
-  --accent: oklch(67.31% 0.1625 144.21);
+  --accent: oklch(75.62% 0.1583 133.83);
   --accent-foreground: oklch(15% 0.0300 144.21);
-  --background: oklch(12.00% 0.0015 144.21);
+  --background: oklch(0.1448 0 0);
   --border: oklch(28.00% 0.0015 144.21);
   --danger: oklch(59.40% 0.1973 11.48);
   --danger-foreground: oklch(99.11% 0 0);
@@ -85,6 +93,8 @@ body {
   --segment: oklch(39.64% 0.0015 144.21);
   --segment-foreground: oklch(99.11% 0.0015 144.21);
   --separator: oklch(25.00% 0.0015 144.21);
+  --specials: oklch(82% 0.16 92);
+  --specials-foreground: oklch(20% 0.02 90);
   --success: oklch(73.29% 0.1941 137.66);
   --success-foreground: oklch(21.03% 0.0059 137.66);
   --surface: oklch(21.03% 0.0030 144.21);

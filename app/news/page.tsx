@@ -98,7 +98,7 @@ export default function NewsPage() {
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Latest Updates
           </p>
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground lg:text-5xl">
+          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
             News
           </h1>
           <p className="text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
@@ -127,7 +127,7 @@ export default function NewsPage() {
                 <p className="mb-4 font-mono text-xs font-medium uppercase tracking-widest text-accent">
                   {featured.category}
                 </p>
-                <h2 className="mb-4 text-2xl font-bold leading-snug tracking-tight text-foreground lg:text-3xl">
+                <h2 className="mb-4 font-display text-2xl font-extrabold leading-snug tracking-tight text-foreground lg:text-3xl">
                   {featured.title}
                 </h2>
                 <p className="text-sm leading-relaxed text-muted">

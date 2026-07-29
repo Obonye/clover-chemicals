@@ -70,7 +70,7 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex min-h-[55vh] items-end overflow-hidden">
+      <section className="relative -mt-16 flex min-h-[55vh] items-end overflow-hidden">
         <Image
           alt="Clover Chemical Industries"
           className="object-cover object-center"
@@ -83,7 +83,7 @@ export default function AboutPage() {
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Est. 1987
           </p>
-          <h1 className="text-5xl font-bold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "16ch" }}>
+          <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "16ch" }}>
             37 years of chemical precision.
           </h1>
         </div>
@@ -133,7 +133,7 @@ export default function AboutPage() {
       <section className="border-y border-separator bg-accent py-24">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <p
-            className="font-bold leading-tight tracking-tight text-white"
+            className="font-display font-extrabold leading-tight tracking-tight text-white"
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)", maxWidth: "22ch" }}
           >
             We don&apos;t just supply chemicals. We supply certainty.
@@ -150,7 +150,7 @@ export default function AboutPage() {
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Our History
           </p>
-          <h2 className="mb-16 text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-16 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
             From a single facility to a regional force.
           </h2>
           <div className="flex flex-col">
@@ -177,7 +177,7 @@ export default function AboutPage() {
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             What Sets Us Apart
           </p>
-          <h2 className="mb-12 text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
             Built on compliance, backed by global brands.
           </h2>
           <div className="grid grid-cols-1 gap-px bg-separator sm:grid-cols-2">
@@ -204,7 +204,7 @@ export default function AboutPage() {
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Our Partners
           </p>
-          <h2 className="mb-12 text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
             Trusted agents for the world&apos;s leading manufacturers.
           </h2>
           <div className="grid grid-cols-2 gap-px bg-separator sm:grid-cols-3 lg:grid-cols-5">
@@ -227,7 +227,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mb-2 text-2xl font-bold tracking-tight text-foreground lg:text-3xl">
+              <h2 className="mb-2 font-display text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
                 Ready to work with us?
               </h2>
               <p className="text-base text-muted" style={{ maxWidth: "48ch" }}>

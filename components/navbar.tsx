@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
+import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
 
@@ -36,10 +37,30 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
+
+  // Routes with a full-bleed hero image directly beneath the navbar.
+  const isHeroRoute =
+    pathname === "/" ||
+    pathname === "/about" ||
+    (pathname.startsWith("/products/") && pathname !== "/products/");
+  const isTransparent = isHeroRoute && !isScrolled;
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    function handleScroll() {
+      setIsScrolled(window.scrollY > 8);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -56,11 +77,20 @@ export const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const navLinkClass =
-    "text-sm font-semibold text-foreground hover:text-accent transition-colors duration-150 tracking-wide uppercase";
+  const navLinkClass = clsx(
+    "text-sm font-semibold transition-colors duration-150 tracking-wide uppercase hover:text-accent",
+    isTransparent ? "text-white" : "text-foreground",
+  );
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-background">
+    <nav
+      className={clsx(
+        "fixed top-0 z-40 w-full transition-colors duration-300",
+        isTransparent
+          ? "bg-transparent"
+          : "border-b border-separator bg-background",
+      )}
+    >
       <header className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-6 px-6">
         {/* Logo */}
         <NextLink className="flex flex-shrink-0 items-center gap-2.5" href="/">
@@ -73,10 +103,20 @@ export const Navbar = () => {
             </svg>
           </span>
           <div className="flex flex-col leading-none">
-            <span className="text-sm font-bold tracking-tight text-foreground">
+            <span
+              className={clsx(
+                "text-sm font-bold tracking-tight transition-colors duration-150",
+                isTransparent ? "text-white" : "text-foreground",
+              )}
+            >
               CLOVER
             </span>
-            <span className="text-[10px] font-medium tracking-[0.12em] text-muted uppercase">
+            <span
+              className={clsx(
+                "text-[10px] font-medium tracking-[0.12em] uppercase transition-colors duration-150",
+                isTransparent ? "text-white/70" : "text-muted",
+              )}
+            >
               Chemical Industries
             </span>
           </div>
@@ -148,14 +188,24 @@ export const Navbar = () => {
           {mounted && (
             <button
               aria-label="Toggle theme"
-              className="rounded p-2 text-muted transition-colors hover:text-foreground"
+              className={clsx(
+                "rounded p-2 transition-colors",
+                isTransparent
+                  ? "text-white/80 hover:text-white"
+                  : "text-muted hover:text-foreground",
+              )}
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               {theme === "dark" ? <SunIcon /> : <MoonIcon />}
             </button>
           )}
           <NextLink
-            className="rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide text-muted transition-colors hover:text-foreground"
+            className={clsx(
+              "rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
+              isTransparent
+                ? "text-white/80 hover:text-white"
+                : "text-muted hover:text-foreground",
+            )}
             href="/contact"
           >
             Get a Quote
@@ -172,7 +222,12 @@ export const Navbar = () => {
         <button
           aria-expanded={isMenuOpen}
           aria-label="Toggle menu"
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded text-muted hover:text-foreground transition-colors lg:hidden"
+          className={clsx(
+            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded transition-colors lg:hidden",
+            isTransparent
+              ? "text-white/80 hover:text-white"
+              : "text-muted hover:text-foreground",
+          )}
           style={{ touchAction: "manipulation" }}
           type="button"
           onClick={() => setIsMenuOpen((prev) => !prev)}

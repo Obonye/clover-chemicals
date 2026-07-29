@@ -21,7 +21,7 @@ export default function CategoryPage() {
   return (
     <>
       {/* Category hero */}
-      <section className="relative flex min-h-[40vh] items-end overflow-hidden">
+      <section className="relative -mt-16 flex min-h-[40vh] items-end overflow-hidden">
         <Image
           alt={active.label}
           className="object-cover object-center"
@@ -40,7 +40,7 @@ export default function CategoryPage() {
           <p className="mb-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Product Range
           </p>
-          <h1 className="text-4xl font-bold tracking-tight text-white lg:text-5xl">
+          <h1 className="font-display text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
             {active.label}
           </h1>
           <p className="mt-3 text-base text-white/70" style={{ maxWidth: "52ch" }}>
@@ -143,7 +143,7 @@ export default function CategoryPage() {
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mb-1 text-xl font-bold tracking-tight text-foreground">
+              <h2 className="mb-1 font-display text-xl font-extrabold tracking-tight text-foreground">
                 Need something specific?
               </h2>
               <p className="text-sm text-muted">

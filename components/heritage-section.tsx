@@ -22,7 +22,7 @@ const pillars = [
 
 export const HeritageSection = () => {
   return (
-    <section className="py-24" style={{ backgroundColor: "oklch(21.03% 0.0015 144.21)" }}>
+    <section className="bg-[oklch(0.9280_0.0020_67.8)] py-24 dark:bg-[oklch(21.03%_0.0015_144.21)]">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
 
         {/* Top: two-column editorial + spec table */}
@@ -34,19 +34,19 @@ export const HeritageSection = () => {
               Est. 1987
             </p>
             <h2
-              className="mb-8 text-4xl font-bold leading-[1.1] tracking-tight text-white lg:text-5xl"
+              className="mb-8 font-display text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground lg:text-5xl"
               style={{ maxWidth: "18ch" }}
             >
               Rooted in Botswana. Trusted by global industry.
             </h2>
-            <p className="mb-5 text-base leading-[1.75] text-white/60" style={{ maxWidth: "55ch" }}>
+            <p className="mb-5 text-base leading-[1.75] text-foreground/60" style={{ maxWidth: "55ch" }}>
               Clover Chemical Industries was established in Botswana in 1987 to
               manufacture and supply chemicals for domestic and industrial use. As
               demand grew, so did our scope, and today we are authorised agents for
               some of the world's leading manufacturers, including Johnson Diversey,
               Kimberly Clark, and Columbus.
             </p>
-            <p className="text-base leading-[1.75] text-white/60" style={{ maxWidth: "55ch" }}>
+            <p className="text-base leading-[1.75] text-foreground/60" style={{ maxWidth: "55ch" }}>
               Our Medical & Laboratory division, representing Philips Medical,
               Thermo Fisher, Shimadzu, Eppendorf, and others, is our fastest-growing
               business. With a recent investment in Zambia, we are bringing the same
@@ -56,23 +56,20 @@ export const HeritageSection = () => {
 
           {/* Right — specification table */}
           <div className="flex flex-col justify-center">
-            <p className="mb-6 font-mono text-[10px] uppercase tracking-[0.25em] text-white/35">
+            <p className="mb-6 font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/35">
               Company Data
             </p>
             <div>
               {stats.map((stat, i) => (
                 <div
                   key={stat.label}
-                  className="flex items-baseline justify-between py-5 last:border-b"
-                  style={{
-                    animationDelay: `${i * 80}ms`,
-                    borderTop: "1px solid rgba(255,255,255,0.10)",
-                  }}
+                  className="flex items-baseline justify-between border-t border-foreground/10 py-5 last:border-b"
+                  style={{ animationDelay: `${i * 80}ms` }}
                 >
-                  <span className="text-xs font-medium uppercase tracking-widest text-white/45">
+                  <span className="text-xs font-medium uppercase tracking-widest text-foreground/45">
                     {stat.label}
                   </span>
-                  <span className="font-mono text-2xl font-medium tabular-nums text-white">
+                  <span className="font-mono text-2xl font-medium tabular-nums text-foreground">
                     {stat.value}
                   </span>
                 </div>
@@ -82,7 +79,7 @@ export const HeritageSection = () => {
         </div>
 
         {/* Divider */}
-        <div className="my-20 h-px" style={{ backgroundColor: "rgba(255,255,255,0.10)" }} />
+        <div className="my-20 h-px bg-foreground/10" />
 
         {/* Bottom: three pillars — horizontal, no cards */}
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-3">
@@ -94,10 +91,10 @@ export const HeritageSection = () => {
               >
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mb-3 text-base font-semibold tracking-tight text-white">
+              <h3 className="mb-3 text-base font-semibold tracking-tight text-foreground">
                 {pillar.heading}
               </h3>
-              <p className="text-sm leading-relaxed text-white/55" style={{ maxWidth: "38ch" }}>
+              <p className="text-sm leading-relaxed text-foreground/55" style={{ maxWidth: "38ch" }}>
                 {pillar.body}
               </p>
             </div>
