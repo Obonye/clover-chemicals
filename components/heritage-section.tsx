@@ -1,7 +1,9 @@
+import { siteConfig } from "@/config/site";
+
 const stats = [
-  { label: "Year Founded",     value: "1987"  },
-  { label: "Global Partners",  value: "10+"   },
-  { label: "Divisions",        value: "4"     },
+  { label: "Year Founded",     value: String(siteConfig.foundedYear) },
+  { label: "Global Partners",  value: "6"     },
+  { label: "Divisions",        value: "8"     },
   { label: "Certification",    value: "EDD"   },
 ];
 
@@ -12,11 +14,11 @@ const pillars = [
   },
   {
     heading: "Global Brands, Local Support",
-    body: "Authorised agents for Johnson Diversey, Kimberly Clark, Philips Medical, Thermo Fisher, Shimadzu, Eppendorf, and more, with world-class products backed by a team on the ground in Botswana.",
+    body: "Authorised distributor for Diversey, Kimberly Clark, Columbus, Coopers, Shimadzu, and Philips Medical, with world-class products backed by a team on the ground in Botswana.",
   },
   {
-    heading: "Medical & Lab Leadership",
-    body: "Our fastest-growing division and top revenue generator, serving hospitals, clinics, and research facilities across the region with leading scientific instrumentation and equipment.",
+    heading: "Foremost in Medical & Lab Solutions",
+    body: "One of Botswana's foremost providers of innovative healthcare and scientific instrumentation, serving hospitals, clinics, and research facilities across the region.",
   },
 ];
 
@@ -31,7 +33,7 @@ export const HeritageSection = () => {
           {/* Left — heritage narrative */}
           <div className="flex flex-col justify-center">
             <p className="mb-6 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
-              Est. 1987
+              Est. {siteConfig.foundedYear}
             </p>
             <h2
               className="mb-8 font-display text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground lg:text-5xl"
@@ -40,17 +42,17 @@ export const HeritageSection = () => {
               Rooted in Botswana. Trusted by global industry.
             </h2>
             <p className="mb-5 text-base leading-[1.75] text-foreground/60" style={{ maxWidth: "55ch" }}>
-              Clover Chemical Industries was established in Botswana in 1987 to
-              manufacture and supply chemicals for domestic and industrial use. As
-              demand grew, so did our scope, and today we are authorised agents for
-              some of the world's leading manufacturers, including Johnson Diversey,
-              Kimberly Clark, and Columbus.
+              Clover Chemical Industries was established in Botswana in{" "}
+              {siteConfig.foundedYear} to manufacture and supply chemicals for
+              domestic and industrial use. As demand grew, so did our scope, and
+              today we're authorised distributors for some of the world's leading
+              manufacturers, including Diversey, Kimberly Clark, and Columbus.
             </p>
             <p className="text-base leading-[1.75] text-foreground/60" style={{ maxWidth: "55ch" }}>
-              Our Medical & Laboratory division, representing Philips Medical,
-              Thermo Fisher, Shimadzu, Eppendorf, and others, is our fastest-growing
-              business. With a recent investment in Zambia, we are bringing the same
-              standard of supply to new markets across the region.
+              Our Medical &amp; Laboratory division brings equipment from Philips
+              Medical and Shimadzu to hospitals, clinics, and research facilities —
+              one of eight divisions built around a single strategy: circle the
+              customer.
             </p>
           </div>
 

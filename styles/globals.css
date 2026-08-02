@@ -25,7 +25,7 @@ body {
 [data-theme="light"],
 [data-theme="default"] {
   /* Theme Colors (Light Mode) */
-  --accent: oklch(62% 0.165 133.83);
+  --accent: oklch(0.768059 0.198378 127.1031);
   --accent-foreground: oklch(15% 0.0300 144.21);
   --background: oklch(0.9564 0.0025 48.72);
   --border: oklch(90.00% 0.0015 144.21);
@@ -72,7 +72,7 @@ body {
 [data-theme="dark"] {
   color-scheme: dark;
   /* Theme Colors (Dark Mode) */
-  --accent: oklch(75.62% 0.1583 133.83);
+  --accent: oklch(0.768059 0.198378 127.1031);
   --accent-foreground: oklch(15% 0.0300 144.21);
   --background: oklch(0.1448 0 0);
   --border: oklch(28.00% 0.0015 144.21);

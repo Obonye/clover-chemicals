@@ -1,10 +1,12 @@
 import Image from "next/image";
 import NextLink from "next/link";
 
+import { siteConfig } from "@/config/site";
+
 const stats = [
-  { value: "1987", label: "Year Founded" },
-  { value: "10+", label: "Global Partners" },
-  { value: "4", label: "Divisions" },
+  { value: String(siteConfig.foundedYear), label: "Year Founded" },
+  { value: "6", label: "Global Partners" },
+  { value: "8", label: "Divisions" },
   { value: "EDD", label: "Certified" },
 ];
 
@@ -17,56 +19,66 @@ const pillars = [
   {
     index: "02",
     heading: "Global Brands, Local Support",
-    body: "Authorised agents for Johnson Diversey, Kimberly Clark, Philips Medical, Thermo Fisher, Shimadzu, Eppendorf, and more — with world-class products backed by a team on the ground in Botswana.",
+    body: "Authorised distributor for Diversey, Kimberly Clark, Columbus, Coopers, Shimadzu, and Philips Medical — with world-class products backed by a team on the ground in Botswana.",
   },
   {
     index: "03",
-    heading: "Medical & Lab Leadership",
-    body: "Our fastest-growing division and top revenue generator, serving hospitals, clinics, and research facilities across the region with leading scientific instrumentation and equipment.",
+    heading: "Foremost in Medical & Lab Solutions",
+    body: "One of Botswana's foremost providers of innovative healthcare and scientific instrumentation, from ventilators and patient monitors to autoclaves and analytical equipment.",
   },
   {
     index: "04",
-    heading: "Regional Expansion",
-    body: "With a recent investment in Zambia, we are bringing the same standard of precision chemical supply to new markets across southern Africa, building on 37 years of trust in Botswana.",
+    heading: "One-Stop, Total Solutions",
+    body: "Our strategy is to circle the customer — adding new products, equipment, and services so you get chemicals, equipment, and expertise from a single, trusted partner.",
+  },
+];
+
+const values = [
+  {
+    heading: "Innovation",
+    body: "Flexibility is the key to our offerings — the same spirit of innovation runs through our products and services, from the first purchase through installation and customer support.",
+  },
+  {
+    heading: "Insight",
+    body: "Our team draws on decades of vision, skill, and professionalism to foresee industry trends and meet demanding customer needs, keeping our offering competitive at all times.",
+  },
+  {
+    heading: "Integrity",
+    body: "The very soul of our company — reflected in our finances and in the trusted relationships we share with our customers and business partners.",
   },
 ];
 
 const partners = [
-  "Johnson Diversey",
+  "Diversey",
   "Kimberly Clark",
   "Columbus",
-  "Philips Medical",
-  "Carestream",
-  "Thermo Fisher",
+  "Coopers",
   "Shimadzu",
-  "Erweka",
-  "Eppendorf",
+  "Philips Medical",
 ];
 
 const timeline = [
   {
-    year: "1987",
+    year: String(siteConfig.foundedYear),
     event: "Founded in Gaborone, Botswana to manufacture and supply chemicals for domestic and industrial use.",
   },
   {
-    year: "1990s",
-    event: "Expanded scope to become authorised agents for international chemical manufacturers, including Johnson Diversey and Kimberly Clark.",
+    year: "Expansion",
+    event: "Grew into distribution, becoming an authorised agent for global brands including Diversey, Kimberly Clark, Columbus, Coopers, Shimadzu, and Philips Medical.",
   },
   {
-    year: "2000s",
-    event: "Established our Medical & Laboratory division, representing Philips Medical, Thermo Fisher, Shimadzu, and Eppendorf across the region.",
-  },
-  {
-    year: "2010s",
-    event: "Achieved EDD certification and deepened our focus on government and institutional procurement compliance.",
+    year: "Compliance",
+    event: "Registered under the EDD and certified in Agrochemicals, Manufacturing, Radiation, Workshop, and Public Health, holding BOBS standards for dishwash, disinfectant, and sanitiser.",
   },
   {
     year: "Today",
-    event: "Operating across four divisions with investments in Zambia, bringing the same precision supply to new southern African markets.",
+    event: "Operating eight divisions — from cleaning and paper products to PPE, pool care, lab & scientific, and medical equipment — under one strategy: circle the customer.",
   },
 ];
 
 export default function AboutPage() {
+  const years = new Date().getFullYear() - siteConfig.foundedYear;
+
   return (
     <>
       {/* Hero */}
@@ -81,10 +93,10 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-24 lg:px-12">
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
-            Est. 1987
+            Est. {siteConfig.foundedYear}
           </p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "16ch" }}>
-            37 years of chemical precision.
+            {years} years of chemical precision.
           </h1>
         </div>
       </section>
@@ -93,16 +105,18 @@ export default function AboutPage() {
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-20 lg:px-12 lg:py-24">
           <p className="mb-8 text-xl font-medium leading-relaxed text-foreground lg:text-2xl" style={{ maxWidth: "36ch" }}>
-            Clover Chemical Industries was established in Botswana in 1987 to
-            manufacture and supply chemicals for domestic and industrial use.
-            As demand grew, so did our scope.
+            Clover Chemical Industries was established in Botswana in{" "}
+            {siteConfig.foundedYear} to manufacture and supply chemicals for
+            domestic and industrial use. As demand grew, so did our scope.
           </p>
           <p className="text-base leading-relaxed text-muted" style={{ maxWidth: "48ch" }}>
-            Today we are authorised agents for some of the world&apos;s leading
-            manufacturers, serving agriculture, medicine, laboratory science,
-            and heavy industry. Our Medical &amp; Laboratory division is our
-            fastest-growing business, and our recent investment in Zambia marks
-            the next chapter in our regional expansion.
+            Today we&apos;re 100% citizen-owned and registered under the Economic
+            Diversification Drive (EDD) — manufacturing our own range of
+            cleaning chemicals while serving as authorised distributor for
+            world-leading brands including Diversey, Kimberly Clark, Columbus,
+            Coopers, Shimadzu, and Philips Medical. From cleaning solutions and
+            PPE to laboratory instruments and medical equipment, our strategy
+            is simple: circle the customer.
           </p>
         </div>
       </section>
@@ -139,8 +153,51 @@ export default function AboutPage() {
             We don&apos;t just supply chemicals. We supply certainty.
           </p>
           <p className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-white/60">
-            — Clover Chemical Industries, Est. 1987
+            — Clover Chemical Industries, Est. {siteConfig.foundedYear}
           </p>
+        </div>
+      </section>
+
+      {/* Vision, Mission & Values */}
+      <section className="border-b border-separator bg-background py-20">
+        <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
+          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+            Vision, Mission &amp; Values
+          </p>
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+            &ldquo;Lift as you rise.&rdquo;
+          </h2>
+          <div className="mb-16 grid grid-cols-1 gap-10 sm:grid-cols-2">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted">
+                Vision
+              </p>
+              <p className="text-lg font-medium leading-relaxed text-foreground" style={{ maxWidth: "36ch" }}>
+                To become a one-stop total solutions provider.
+              </p>
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted">
+                Mission
+              </p>
+              <p className="text-lg font-medium leading-relaxed text-foreground" style={{ maxWidth: "36ch" }}>
+                To provide quality, state-of-the-art, affordable total
+                solutions through excellent customer service.
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
+            {values.map((value) => (
+              <div key={value.heading}>
+                <h3 className="mb-3 text-base font-semibold tracking-tight text-foreground">
+                  {value.heading}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted" style={{ maxWidth: "38ch" }}>
+                  {value.body}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -151,18 +208,18 @@ export default function AboutPage() {
             Our History
           </p>
           <h2 className="mb-16 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
-            From a single facility to a regional force.
+            From a single facility to a total solutions provider.
           </h2>
           <div className="flex flex-col">
             {timeline.map((item) => (
               <div
                 key={item.year}
-                className="grid grid-cols-[90px_1fr] items-start gap-8 border-t border-separator py-10 lg:grid-cols-[220px_1fr] lg:gap-20"
+                className="flex flex-col gap-3 border-t border-separator py-10 lg:grid lg:grid-cols-[220px_1fr] lg:items-start lg:gap-20"
               >
                 <p className="font-mono text-3xl font-bold tabular-nums text-accent lg:text-5xl">
                   {item.year}
                 </p>
-                <p className="pt-1 text-base leading-relaxed text-muted lg:pt-3" style={{ maxWidth: "52ch" }}>
+                <p className="text-base leading-relaxed text-muted lg:pt-3" style={{ maxWidth: "52ch" }}>
                   {item.event}
                 </p>
               </div>
@@ -207,7 +264,7 @@ export default function AboutPage() {
           <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
             Trusted agents for the world&apos;s leading manufacturers.
           </h2>
-          <div className="grid grid-cols-2 gap-px bg-separator sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-px bg-separator sm:grid-cols-3">
             {partners.map((partner) => (
               <div
                 key={partner}

@@ -45,7 +45,7 @@ export default function RootLayout({
           fontDisplay.variable,
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex min-h-screen flex-col overflow-x-hidden md:pb-8">
             <Navbar />
             <main className="flex-grow pt-16">

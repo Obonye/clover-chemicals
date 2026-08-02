@@ -116,7 +116,7 @@ export default function ContactPage() {
                       <input
                         className={fieldClass}
                         id="phone"
-                        placeholder="+267 000 0000"
+                        placeholder="+267 71 234 567"
                         type="tel"
                       />
                     </div>
@@ -170,32 +170,50 @@ export default function ContactPage() {
             <aside className="flex flex-col gap-10">
               <div>
                 <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-muted">
-                  Our Office
+                  Our Offices
                 </p>
                 <address className="flex flex-col gap-5 not-italic">
                   <div>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Address</p>
+                    <p className="mb-1 text-sm font-semibold text-foreground">Gaborone Branch</p>
                     <p className="text-sm leading-relaxed text-muted">
-                      123 Industrial Avenue<br />
+                      Plot 1277, Old Lobatse Road<br />
                       Gaborone, Botswana
+                    </p>
+                  </div>
+                  <div>
+                    <p className="mb-1 text-sm font-semibold text-foreground">Francistown Branch</p>
+                    <p className="text-sm leading-relaxed text-muted">
+                      Plot 31251, Somerset Industrial<br />
+                      Francistown, Botswana
                     </p>
                   </div>
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">Email</p>
                     <a
                       className="text-sm text-muted transition-colors hover:text-accent"
-                      href="mailto:info@cloverchemical.com"
+                      href="mailto:sales@cloverindustries.co.bw"
                     >
-                      info@cloverchemical.com
+                      sales@cloverindustries.co.bw
                     </a>
                   </div>
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">Phone</p>
                     <a
                       className="text-sm text-muted transition-colors hover:text-accent"
-                      href="tel:+26700000000"
+                      href="tel:+2673953035"
                     >
-                      +267 000 0000
+                      +267 395 3035
+                    </a>
+                  </div>
+                  <div>
+                    <p className="mb-1 text-sm font-semibold text-foreground">WhatsApp</p>
+                    <a
+                      className="text-sm text-muted transition-colors hover:text-accent"
+                      href="https://wa.me/26777816000"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      +267 77 816 000
                     </a>
                   </div>
                   <div>
@@ -203,6 +221,50 @@ export default function ContactPage() {
                     <p className="text-sm text-muted">Monday – Friday, 8:00 – 17:00 CAT</p>
                   </div>
                 </address>
+              </div>
+
+              <div className="border-t border-separator pt-10">
+                <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-muted">
+                  Department Contacts
+                </p>
+                <ul className="flex flex-col gap-4">
+                  <li>
+                    <p className="mb-1 text-sm font-semibold text-foreground">Lab Division</p>
+                    <a
+                      className="text-sm text-muted transition-colors hover:text-accent"
+                      href="mailto:labdivision@cloverindustries.co.bw"
+                    >
+                      labdivision@cloverindustries.co.bw
+                    </a>
+                  </li>
+                  <li>
+                    <p className="mb-1 text-sm font-semibold text-foreground">Medical Division</p>
+                    <a
+                      className="text-sm text-muted transition-colors hover:text-accent"
+                      href="mailto:madan.kumar@cloverindustries.co.bw"
+                    >
+                      madan.kumar@cloverindustries.co.bw
+                    </a>
+                  </li>
+                  <li>
+                    <p className="mb-1 text-sm font-semibold text-foreground">Technical Support — Dispensing &amp; Hygiene</p>
+                    <a
+                      className="text-sm text-muted transition-colors hover:text-accent"
+                      href="mailto:technical@cloverindustries.co.bw"
+                    >
+                      technical@cloverindustries.co.bw
+                    </a>
+                  </li>
+                  <li>
+                    <p className="mb-1 text-sm font-semibold text-foreground">Technical Support — Medical &amp; Lab Service</p>
+                    <a
+                      className="text-sm text-muted transition-colors hover:text-accent"
+                      href="mailto:service@cloverindustries.co.bw"
+                    >
+                      service@cloverindustries.co.bw
+                    </a>
+                  </li>
+                </ul>
               </div>
 
               <div className="border-t border-separator pt-10">

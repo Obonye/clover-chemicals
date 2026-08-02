@@ -4,12 +4,31 @@ import NextLink from "next/link";
 export const CtaBanner = () => {
   return (
     <section className="relative overflow-hidden bg-accent">
+      {/* Duotone filter def — shadows to near-black, highlights to the site's accent green */}
+      <svg aria-hidden="true" className="absolute h-0 w-0 overflow-hidden">
+        <filter colorInterpolationFilters="sRGB" id="cta-duotone">
+          <feColorMatrix
+            type="matrix"
+            values="0.3 0.3 0.3 0 0
+                    0.3 0.3 0.3 0 0
+                    0.3 0.3 0.3 0 0
+                    0   0   0   1 0"
+          />
+          <feComponentTransfer>
+            <feFuncR tableValues="0.02 0.57" type="table" />
+            <feFuncG tableValues="0.02 0.79" type="table" />
+            <feFuncB tableValues="0.02 0.03" type="table" />
+          </feComponentTransfer>
+        </filter>
+      </svg>
+
       {/* Background image */}
       <Image
         alt=""
-        className="object-cover object-center mix-blend-luminosity opacity-60"
+        className="object-cover object-center"
         fill
-        src="/CTA/CTA2.jpg"
+        src="/engineers_2.png"
+        style={{ filter: "url(#cta-duotone) brightness(0.75) contrast(1.1)" }}
       />
 
       <div className="relative z-10 mx-auto max-w-[1280px] px-6 py-32 lg:px-12">

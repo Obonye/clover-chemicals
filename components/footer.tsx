@@ -16,22 +16,28 @@ const legalLinks = [
 
 export const Footer = () => {
   return (
-    <footer className="bg-background">
+    <footer className="relative overflow-hidden bg-background">
+      {/* Clover watermark, bled off the right edge */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-y-0 right-[8%] w-[55%] opacity-[0.07]"
+        style={{
+          backgroundImage: "url('/clover-logo.svg')",
+          backgroundPosition: "right center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "contain",
+        }}
+      />
+
       {/* Main grid */}
-      <div className="mx-auto max-w-[1280px] px-6 pb-12 pt-16 lg:px-12">
+      <div className="relative z-10 mx-auto max-w-[1280px] px-6 pb-12 pt-16 lg:px-12">
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
 
           {/* Brand column */}
           <div>
             <NextLink className="mb-5 flex items-center gap-2.5" href="/">
-              <span className="flex h-8 w-8 items-center justify-center rounded-sm bg-accent">
-                <svg fill="none" height={18} viewBox="0 0 24 24" width={18}>
-                  <path
-                    d="M12 2C8 2 4 5 4 9c0 2.5 1.5 4.5 3 6l5 7 5-7c1.5-1.5 3-3.5 3-6 0-4-4-7-8-7z"
-                    fill="white"
-                  />
-                </svg>
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img alt="Clover Chemical Industries" className="h-9 w-9" src="/clover-logo.svg" />
               <div className="flex flex-col leading-none">
                 <span className="text-sm font-bold tracking-tight text-foreground">
                   CLOVER
@@ -42,11 +48,11 @@ export const Footer = () => {
               </div>
             </NextLink>
             <p className="mb-6 text-sm leading-relaxed text-foreground/50" style={{ maxWidth: "32ch" }}>
-              Precision chemical formulation for agriculture, medicine, laboratory,
-              and industry, since 1987.
+              Manufacturer and distributor of chemicals, equipment, and total
+              solutions for Botswana industry, since {siteConfig.foundedYear}.
             </p>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-foreground/25">
-              Est. 1987
+              Est. {siteConfig.foundedYear}
             </p>
           </div>
 
@@ -103,20 +109,20 @@ export const Footer = () => {
             </p>
             <address className="flex flex-col gap-3 not-italic">
               <p className="text-sm text-foreground/55">
-                123 Industrial Avenue<br />
+                Plot 1277, Old Lobatse Road<br />
                 Gaborone, Botswana
               </p>
               <a
                 className="text-sm text-foreground/55 transition-colors duration-150 hover:text-foreground"
-                href="mailto:info@cloverchemical.com"
+                href="mailto:sales@cloverindustries.co.bw"
               >
-                info@cloverchemical.com
+                sales@cloverindustries.co.bw
               </a>
               <a
                 className="text-sm text-foreground/55 transition-colors duration-150 hover:text-foreground"
-                href="tel:+26700000000"
+                href="tel:+2673953035"
               >
-                +267 000 0000
+                +267 395 3035
               </a>
             </address>
           </div>
@@ -125,7 +131,7 @@ export const Footer = () => {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-separator">
+      <div className="relative z-10 border-t border-separator">
         <div className="mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-4 px-6 py-5 sm:flex-row sm:items-center lg:px-12">
           <p className="text-xs text-foreground/30">
             © {new Date().getFullYear()} Clover Chemical Industries. All rights reserved.

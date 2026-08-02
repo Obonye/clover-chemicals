@@ -1,13 +1,10 @@
 const partners = [
-  "Johnson Diversey",
+  "Diversey",
   "Kimberly Clark",
   "Columbus",
-  "Philips Medical",
-  "Carestream",
-  "Thermo Fisher",
+  "Coopers",
   "Shimadzu",
-  "Erweka",
-  "Eppendorf",
+  "Philips Medical",
 ];
 
 export const PartnersStrip = () => {

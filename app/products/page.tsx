@@ -1,10 +1,10 @@
 "use client";
 
 import { Suspense } from "react";
-import Image from "next/image";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
 
+import { ProductCard } from "@/components/product-card";
 import { categories } from "@/lib/products";
 
 const allProducts = categories.flatMap((category) =>
@@ -61,66 +61,9 @@ function ProductsContent() {
             </div>
 
             {results.length > 0 ? (
-              <div className="grid grid-cols-1 gap-px bg-separator sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-4">
                 {results.map(({ category, product }) => (
-                  <article
-                    key={product.name}
-                    className="flex flex-col bg-background"
-                  >
-                    {/* Image */}
-                    <div className="relative h-48 overflow-hidden">
-                      <Image
-                        alt={product.name}
-                        className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                        fill
-                        src={product.image ?? category.image}
-                      />
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex flex-1 flex-col p-5">
-                      <NextLink
-                        className="mb-3 inline-block w-fit font-mono text-xs font-medium uppercase tracking-wider text-accent transition-colors hover:text-accent/75"
-                        href={category.href}
-                      >
-                        {category.label}
-                      </NextLink>
-
-                      <h3 className="mb-2 text-base font-bold leading-snug tracking-tight text-foreground">
-                        {product.name}
-                      </h3>
-
-                      <p className="mb-4 flex-1 text-sm leading-relaxed text-muted">
-                        {product.description}
-                      </p>
-
-                      {/* Pack sizes */}
-                      <div className="mb-5 border-t border-separator pt-4">
-                        <p className="mb-1.5 font-mono text-xs uppercase tracking-widest text-foreground/30">
-                          Pack Sizes
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {product.packSizes.map((size) => (
-                            <span
-                              key={size}
-                              className="rounded-sm border border-separator px-2 py-0.5 font-mono text-xs text-muted"
-                            >
-                              {size}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* CTA */}
-                      <NextLink
-                        className="inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-accent transition-colors hover:text-accent/75"
-                        href="/contact"
-                      >
-                        Request Quote
-                        <span aria-hidden="true">→</span>
-                      </NextLink>
-                    </div>
-                  </article>
+                  <ProductCard category={category} key={product.name} product={product} />
                 ))}
               </div>
             ) : (
@@ -190,64 +133,14 @@ function ProductsContent() {
                   </div>
 
                   {/* Product grid */}
-                  <div className="grid grid-cols-1 gap-px bg-separator sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-4">
                     {cat.products.map((product) => (
-                      <article
+                      <ProductCard
+                        category={cat}
+                        eyebrow={product.grade}
                         key={product.name}
-                        className="flex flex-col bg-background"
-                      >
-                        {/* Image */}
-                        <div className="relative h-48 overflow-hidden">
-                          <Image
-                            alt={product.name}
-                            className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                            fill
-                            src={product.image ?? cat.image}
-                          />
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex flex-1 flex-col p-5">
-                          {/* Grade badge */}
-                          <span className="mb-3 inline-block font-mono text-xs font-medium uppercase tracking-wider text-accent">
-                            {product.grade}
-                          </span>
-
-                          <h3 className="mb-2 text-base font-bold leading-snug tracking-tight text-foreground">
-                            {product.name}
-                          </h3>
-
-                          <p className="mb-4 flex-1 text-sm leading-relaxed text-muted">
-                            {product.description}
-                          </p>
-
-                          {/* Pack sizes */}
-                          <div className="mb-5 border-t border-separator pt-4">
-                            <p className="mb-1.5 font-mono text-xs uppercase tracking-widest text-foreground/30">
-                              Pack Sizes
-                            </p>
-                            <div className="flex flex-wrap gap-1.5">
-                              {product.packSizes.map((size) => (
-                                <span
-                                  key={size}
-                                  className="rounded-sm border border-separator px-2 py-0.5 font-mono text-xs text-muted"
-                                >
-                                  {size}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* CTA */}
-                          <NextLink
-                            className="inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-accent transition-colors hover:text-accent/75"
-                            href="/contact"
-                          >
-                            Request Quote
-                            <span aria-hidden="true">→</span>
-                          </NextLink>
-                        </div>
-                      </article>
+                        product={product}
+                      />
                     ))}
                   </div>
 

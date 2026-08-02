@@ -94,14 +94,8 @@ export const Navbar = () => {
       <header className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-6 px-6">
         {/* Logo */}
         <NextLink className="flex flex-shrink-0 items-center gap-2.5" href="/">
-          <span className="flex h-8 w-8 items-center justify-center rounded-sm bg-accent">
-            <svg fill="none" height={18} viewBox="0 0 24 24" width={18}>
-              <path
-                d="M12 2C8 2 4 5 4 9c0 2.5 1.5 4.5 3 6l5 7 5-7c1.5-1.5 3-3.5 3-6 0-4-4-7-8-7z"
-                fill="white"
-              />
-            </svg>
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img alt="Clover Chemical Industries" className="h-9 w-9" src="/clover-logo.svg" />
           <div className="flex flex-col leading-none">
             <span
               className={clsx(

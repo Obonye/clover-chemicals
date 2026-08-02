@@ -16,7 +16,7 @@ export const ProductsSection = () => {
 
   return (
     <section className="bg-background py-20">
-      {/* Dither filter def, shared by every panel's resting-state image */}
+      {/* Duotone filter def, shared by every panel's resting-state image */}
       <svg aria-hidden="true" className="absolute h-0 w-0 overflow-hidden">
         <filter colorInterpolationFilters="sRGB" id="product-line-dither">
           <feColorMatrix
@@ -26,11 +26,11 @@ export const ProductsSection = () => {
                     0.3 0.3 0.3 0 0
                     0   0   0   1 0"
           />
-          {/* Duotone posterize — shadows to near-black, highlights to the site's accent green */}
+          {/* Duotone — shadows to near-black, highlights to the site's accent green */}
           <feComponentTransfer>
-            <feFuncR tableValues="0.04 0.18 0.31 0.45" type="discrete" />
-            <feFuncG tableValues="0.04 0.28 0.53 0.77" type="discrete" />
-            <feFuncB tableValues="0.04 0.1 0.16 0.22" type="discrete" />
+            <feFuncR tableValues="0.04 0.57" type="table" />
+            <feFuncG tableValues="0.04 0.79" type="table" />
+            <feFuncB tableValues="0.04 0.03" type="table" />
           </feComponentTransfer>
         </filter>
       </svg>
@@ -53,7 +53,7 @@ export const ProductsSection = () => {
       </div>
 
       {/* Full-width horizontal accordion — desktop/tablet */}
-      <div className="hidden h-[480px] w-full border-y border-separator lg:flex lg:h-[560px]">
+      <div className="hidden h-[480px] w-full gap-1 border-y border-separator py-1 lg:flex lg:h-[560px]">
         {siteConfig.products.map((product, index) => {
           const isHovered = hoveredIndex === index;
           const isCompressed = hoveredIndex !== null && !isHovered;
@@ -66,7 +66,7 @@ export const ProductsSection = () => {
           return (
             <NextLink
               key={product.href}
-              className="product-row relative flex flex-col justify-end overflow-hidden border-r border-separator last:border-r-0"
+              className="product-row relative flex flex-col justify-end overflow-hidden rounded"
               href={product.href}
               style={{
                 animationDelay: `${index * 90}ms`,
@@ -135,9 +135,29 @@ export const ProductsSection = () => {
                 {String(index + 1).padStart(2, "0")}
               </span>
 
+              {/* Vertical label — shown only while this tile is compressed */}
+              <h3
+                aria-hidden={!isCompressed}
+                className="pointer-events-none absolute bottom-6 left-6 whitespace-nowrap text-lg font-bold tracking-tight text-white lg:text-xl"
+                style={{
+                  opacity: isCompressed ? 1 : 0,
+                  transform: "rotate(180deg)",
+                  transition: `opacity 300ms ${EASE}`,
+                  writingMode: "vertical-rl",
+                }}
+              >
+                {product.label}
+              </h3>
+
               {/* Label + description + arrow */}
               <div className="relative flex flex-col gap-3 p-6">
-                <h3 className="text-xl font-bold leading-tight tracking-tight text-white lg:text-2xl">
+                <h3
+                  className="text-xl font-bold leading-tight tracking-tight text-white lg:text-2xl"
+                  style={{
+                    opacity: isCompressed ? 0 : 1,
+                    transition: `opacity 300ms ${EASE}`,
+                  }}
+                >
                   {product.label}
                 </h3>
 
@@ -174,7 +194,7 @@ export const ProductsSection = () => {
 
       {/* Vertical accordion — mobile/tablet */}
       <div className="mx-auto max-w-[1280px] px-6 lg:hidden">
-        <div className="border-t border-separator">
+        <div className="flex flex-col gap-1">
           {siteConfig.products.map((product, index) => {
             const isHovered = hoveredIndex === index;
             const py = isHovered ? "6rem" : "1.75rem";
@@ -182,7 +202,7 @@ export const ProductsSection = () => {
             return (
               <NextLink
                 key={product.href}
-                className="product-row relative flex items-center justify-between overflow-hidden border-b border-separator px-4"
+                className="product-row relative flex items-center justify-between overflow-hidden rounded px-4"
                 href={product.href}
                 style={{
                   animationDelay: `${index * 90}ms`,

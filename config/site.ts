@@ -2,8 +2,9 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Clover Chemical Industries",
+  foundedYear: 1980,
   description:
-    "37 years of chemical precision — industrial, agricultural, medical, and laboratory solutions.",
+    "Botswana's one-stop chemical and equipment partner — manufacturing and distribution for industry, agriculture, healthcare, and the laboratory, since 1980.",
   products: [
     {
       label: "Agricultural Chemicals",
@@ -32,13 +33,13 @@ export const siteConfig = {
     {
       label: "Personal Protective Equipment",
       href: "/products/PPE",
-      description: "Process chemicals for manufacturing and heavy industry.",
+      description: "Boots, gloves, masks, and protective clothing for construction, medical, and industrial safety.",
       image: "/product_categories/PPE.jpg",
     },
     {
       label: "Pool Chemicals",
       href: "/products/pool",
-      description: "Process chemicals for manufacturing and heavy industry.",
+      description: "Chlorine, test kits, pool acid, and chemicals for domestic and commercial pools.",
       image: "/product_categories/pool.jpg",
     },
   ],

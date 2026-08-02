@@ -80,9 +80,9 @@ export default function CategoryPage() {
             {active.products.length} products
           </p>
 
-          <div className="grid grid-cols-1 gap-px bg-separator sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
             {active.products.map((product) => (
-              <article key={product.name} className="flex flex-col bg-background">
+              <article key={product.name} className="flex flex-col overflow-hidden rounded bg-background">
                 {/* Image */}
                 <div className="relative h-56 overflow-hidden">
                   <Image

@@ -1,6 +1,6 @@
-import Image from "next/image";
 import NextLink from "next/link";
 
+import { ProductCard } from "@/components/product-card";
 import { getCategoryById } from "@/lib/products";
 
 const featured = [
@@ -37,67 +37,9 @@ export const BestSellers = () => {
         </div>
 
         {/* Product grid */}
-        <div className="grid grid-cols-1 gap-px bg-separator sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map(({ category, product }) => (
-            <article className="flex flex-col bg-background" key={product.name}>
-              {/* Image — links to the product's category */}
-              <NextLink
-                className="relative block h-48 overflow-hidden"
-                href={category.href}
-              >
-                <Image
-                  alt={product.name}
-                  className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                  fill
-                  src={product.image ?? category.image}
-                />
-              </NextLink>
-
-              {/* Content */}
-              <div className="flex flex-1 flex-col p-5">
-                <span className="mb-3 inline-block font-mono text-xs font-medium uppercase tracking-wider text-accent">
-                  {product.grade}
-                </span>
-
-                <h3 className="mb-2 text-base font-bold leading-snug tracking-tight text-foreground">
-                  {product.name}
-                </h3>
-
-                <p className="mb-4 flex-1 text-sm leading-relaxed text-muted">
-                  {product.description}
-                </p>
-
-                {/* Pack sizes */}
-                <div className="mb-5 border-t border-separator pt-4">
-                  <p className="mb-1.5 font-mono text-xs uppercase tracking-widest text-foreground/30">
-                    Pack Sizes
-                  </p>
-                  <p className="font-mono text-xs text-muted">
-                    {product.packSizes.join(" / ")}
-                  </p>
-                </div>
-
-                {/* CTA */}
-                <div className="flex items-center gap-3">
-                  <NextLink
-                    className="inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-accent transition-colors hover:text-accent/75"
-                    href="/contact"
-                  >
-                    Request Quote
-                    <span aria-hidden="true">→</span>
-                  </NextLink>
-
-                  <span aria-hidden="true" className="h-3 w-px bg-separator" />
-
-                  <NextLink
-                    className="font-mono text-xs font-medium uppercase tracking-wider text-muted transition-colors hover:text-foreground"
-                    href="#"
-                  >
-                    Spec Sheet
-                  </NextLink>
-                </div>
-              </div>
-            </article>
+            <ProductCard category={category} key={product.name} product={product} />
           ))}
         </div>
 
