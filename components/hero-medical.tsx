@@ -1,14 +1,17 @@
 import NextLink from "next/link";
 
 import { Spotlight } from "@/components/ui/spotlight-new";
+import { MedicalHighlights } from "@/components/medical-highlights";
 
 export const HeroMedical = () => {
   return (
-    <section className="relative -mt-16 flex min-h-[75vh] items-center overflow-hidden bg-background">
+    <section className="relative -mt-16 overflow-hidden bg-background">
       {/* Light-theme spotlight — same sweeping-beam mechanic as the
           Aceternity original, re-tuned (higher alpha, no near-white base)
           so the purple actually reads against a light background instead
-          of the light-glow-on-dark treatment it ships with by default. */}
+          of the light-glow-on-dark treatment it ships with by default.
+          Covers the whole section (text + highlights below), so there's
+          no seam where the glow would otherwise stop dead. */}
       <Spotlight
         gradientFirst="radial-gradient(68.54% 68.72% at 55.02% 31.46%, hsla(252, 90%, 60%, .22) 0, hsla(252, 90%, 55%, .08) 50%, hsla(252, 90%, 45%, 0) 80%)"
         gradientSecond="radial-gradient(50% 50% at 50% 50%, hsla(252, 90%, 60%, .16) 0, hsla(252, 90%, 55%, .06) 80%, transparent 100%)"
@@ -16,7 +19,7 @@ export const HeroMedical = () => {
       />
 
       {/* Text — centered */}
-      <div className="relative mx-auto max-w-[1280px] px-6 py-16 text-center md:py-24 lg:px-12">
+      <div className="relative mx-auto max-w-[1280px] px-6 pt-32 pb-16 text-center md:pt-40 md:pb-20 lg:px-12">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-medical">
           A Division of Clover Industries
         </p>
@@ -48,6 +51,8 @@ export const HeroMedical = () => {
           </NextLink>
         </div>
       </div>
+
+      <MedicalHighlights />
     </section>
   );
 };

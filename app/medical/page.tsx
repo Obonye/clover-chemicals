@@ -2,7 +2,6 @@ import NextLink from "next/link";
 
 import { HeroMedical } from "@/components/hero-medical";
 import { MedicalPartners } from "@/components/medical-partners";
-import { MedicalHighlights } from "@/components/medical-highlights";
 import { MedicalQuote } from "@/components/medical-quote";
 import { MedicalWhyPartner } from "@/components/medical-why-partner";
 import { MedicalProductBento } from "@/components/medical-product-bento";
@@ -13,8 +12,6 @@ export default function MedicalPage() {
   return (
     <>
       <HeroMedical />
-
-      <MedicalHighlights />
 
       <MedicalPartners />
 

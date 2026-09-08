@@ -19,10 +19,12 @@ const WrenchIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+// Content only — no own <section>/background/overflow. Rendered inside
+// HeroMedical's own box so the Spotlight (clipped to whatever box contains
+// it) covers this too, instead of stopping dead at a section boundary.
 export const MedicalHighlights = () => {
   return (
-    <section className="relative bg-background py-10 md:py-14">
-      <div className="relative mx-auto flex max-w-[1400px] flex-col gap-4 px-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between lg:px-12">
+    <div className="relative mx-auto flex max-w-[1400px] flex-col gap-4 px-6 pt-10 pb-10 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between lg:px-12 lg:pb-14">
         {/* Photo card — tall (arc end) */}
         <div className="relative h-56 overflow-hidden rounded-2xl sm:h-72 sm:w-[23%] lg:h-[26rem]">
           <Image
@@ -77,7 +79,6 @@ export const MedicalHighlights = () => {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+    </div>
   );
 };
