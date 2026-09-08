@@ -5,8 +5,9 @@ import clsx from "clsx";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontDisplay, fontSans } from "@/config/fonts";
+import { fontDisplay, fontMedicalDisplay, fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
+import { UtilityBar } from "@/components/utility-bar";
 import { Footer } from "@/components/footer";
 import { QuickLinksBar } from "@/components/quick-links-bar";
 
@@ -43,12 +44,14 @@ export default function RootLayout({
           "min-h-screen text-foreground bg-background font-sans antialiased",
           fontSans.variable,
           fontDisplay.variable,
+          fontMedicalDisplay.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex min-h-screen flex-col overflow-x-hidden md:pb-8">
+            <UtilityBar />
             <Navbar />
-            <main className="flex-grow pt-16">
+            <main className="flex-grow pt-24">
               {children}
             </main>
             <Footer />

@@ -1,10 +1,15 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+@custom-variant dark (&:is(.dark *));
+
 @theme inline {
   --font-display: var(--font-archivo);
   --color-specials: var(--specials);
   --color-specials-foreground: var(--specials-foreground);
+  --color-medical: var(--medical);
+  --color-medical-foreground: var(--medical-foreground);
+  --color-heading: var(--heading);
 }
 
 html,
@@ -25,7 +30,7 @@ body {
 [data-theme="light"],
 [data-theme="default"] {
   /* Theme Colors (Light Mode) */
-  --accent: oklch(0.768059 0.198378 127.1031);
+  --accent: oklch(0.62 0.19 127.1031);
   --accent-foreground: oklch(15% 0.0300 144.21);
   --background: oklch(0.9564 0.0025 48.72);
   --border: oklch(90.00% 0.0015 144.21);
@@ -39,6 +44,9 @@ body {
   --field-placeholder: oklch(55.17% 0.0030 144.21);
   --focus: oklch(67.31% 0.1625 144.21);
   --foreground: oklch(0.1543 0 0);
+  --heading: var(--foreground);
+  --medical: #5227ff;
+  --medical-foreground: #ffffff;
   --muted: oklch(55.17% 0.0030 144.21);
   --overlay: oklch(100.00% 0.0004 144.21);
   --overlay-foreground: oklch(21.03% 0.0015 144.21);
@@ -72,7 +80,7 @@ body {
 [data-theme="dark"] {
   color-scheme: dark;
   /* Theme Colors (Dark Mode) */
-  --accent: oklch(0.768059 0.198378 127.1031);
+  --accent: oklch(0.62 0.19 127.1031);
   --accent-foreground: oklch(15% 0.0300 144.21);
   --background: oklch(0.1448 0 0);
   --border: oklch(28.00% 0.0015 144.21);
@@ -86,6 +94,9 @@ body {
   --field-placeholder: oklch(70.50% 0.0030 144.21);
   --focus: oklch(67.31% 0.1625 144.21);
   --foreground: oklch(99.11% 0.0015 144.21);
+  --heading: var(--foreground);
+  --medical: #5227ff;
+  --medical-foreground: #ffffff;
   --muted: oklch(70.50% 0.0030 144.21);
   --overlay: oklch(21.03% 0.0030 144.21);
   --overlay-foreground: oklch(99.11% 0.0015 144.21);
@@ -105,6 +116,31 @@ body {
   --surface-tertiary-foreground: oklch(99.11% 0.0015 144.21);
   --warning: oklch(82.03% 0.1392 63.19);
   --warning-foreground: oklch(21.03% 0.0059 63.19);
+}
+
+/*
+ * Clover Medical theme.
+ * `[data-division="medical"]` is a zero-footprint marker rendered by
+ * app/medical/layout.tsx (display:contents). `:has()` lets us detect it
+ * from body and repoint the shared --accent token at --medical for the
+ * whole tree — nav, footer, buttons, cards all follow without per-component
+ * changes. Higher specificity than the base :root/.dark blocks above, so
+ * source order doesn't matter here.
+ */
+body:has([data-division="medical"]) {
+  --accent: var(--medical);
+  --accent-foreground: var(--medical-foreground);
+  /* --font-display is inlined straight to var(--font-archivo) at build time
+     by `@theme inline`, so the override has to target that source variable
+     directly rather than --font-display itself. */
+  --font-archivo: var(--font-sora);
+  --heading: #343434;
+}
+
+/* Dark mode: keep headings on the normal near-white foreground — #343434
+   would be unreadable against a dark background. */
+:is(.dark, [data-theme="dark"]) body:has([data-division="medical"]) {
+  --heading: var(--foreground);
 }
 
 @keyframes marquee {

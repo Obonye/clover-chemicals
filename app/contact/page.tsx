@@ -4,6 +4,7 @@ import { useState } from "react";
 import NextLink from "next/link";
 
 import { categories } from "@/lib/products";
+import { ContactDivisionMarker } from "@/components/contact-division-marker";
 
 type FormState = "idle" | "submitting" | "success";
 
@@ -25,6 +26,8 @@ export default function ContactPage() {
 
   return (
     <>
+      <ContactDivisionMarker />
+
       {/* Page header */}
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-16 lg:px-12">

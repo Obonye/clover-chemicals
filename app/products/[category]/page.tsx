@@ -50,7 +50,7 @@ export default function CategoryPage() {
       </section>
 
       {/* Category filter tabs */}
-      <div className="sticky top-16 z-30 border-b border-separator bg-background/95 backdrop-blur-sm">
+      <div className="sticky top-24 z-30 border-b border-separator bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <nav className="flex overflow-x-auto">
             {categories.map((cat) => {

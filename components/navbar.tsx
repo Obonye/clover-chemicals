@@ -42,12 +42,31 @@ export const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
 
-  // Routes with a full-bleed hero image directly beneath the navbar.
+  // Routes with a full-bleed hero directly beneath the navbar.
+  const isMedicalRoute = pathname.startsWith("/medical");
   const isHeroRoute =
     pathname === "/" ||
     pathname === "/about" ||
+    isMedicalRoute ||
     (pathname.startsWith("/products/") && pathname !== "/products/");
   const isTransparent = isHeroRoute && !isScrolled;
+
+  // The Medical hero is light (not a dark photo), so transparent-state text
+  // needs to stay dark there instead of the white used over the dark heroes.
+  const heroText = isMedicalRoute ? "text-heading" : "text-white";
+  const heroTextMuted = isMedicalRoute ? "text-muted" : "text-white/70";
+  const heroControl = isMedicalRoute
+    ? "text-muted hover:text-heading"
+    : "text-white/80 hover:text-white";
+
+  // Functional destinations — keep the nav inside whichever division you're
+  // browsing instead of always routing back to Chemicals.
+  const homeHref = isMedicalRoute ? "/medical" : "/";
+  const browseLabel = isMedicalRoute ? "Explore Product Lines" : "Browse Products";
+  const browseHref = isMedicalRoute ? "/medical#product-lines" : "/products";
+  const mobileNavItems = isMedicalRoute
+    ? [{ label: "Product Lines", href: "/medical#product-lines" }]
+    : siteConfig.navMenuItems;
 
   useEffect(() => setMounted(true), []);
 
@@ -79,13 +98,13 @@ export const Navbar = () => {
 
   const navLinkClass = clsx(
     "text-sm font-semibold transition-colors duration-150 tracking-wide uppercase hover:text-accent",
-    isTransparent ? "text-white" : "text-foreground",
+    isTransparent ? heroText : "text-foreground",
   );
 
   return (
     <nav
       className={clsx(
-        "fixed top-0 z-40 w-full transition-colors duration-300",
+        "fixed top-8 z-40 w-full transition-colors duration-300",
         isTransparent
           ? "bg-transparent"
           : "border-b border-separator bg-background",
@@ -93,14 +112,14 @@ export const Navbar = () => {
     >
       <header className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-6 px-6">
         {/* Logo */}
-        <NextLink className="flex flex-shrink-0 items-center gap-2.5" href="/">
+        <NextLink className="flex flex-shrink-0 items-center gap-2.5" href={homeHref}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Clover Chemical Industries" className="h-9 w-9" src="/clover-logo.svg" />
           <div className="flex flex-col leading-none">
             <span
               className={clsx(
                 "text-sm font-bold tracking-tight transition-colors duration-150",
-                isTransparent ? "text-white" : "text-foreground",
+                isTransparent ? heroText : "text-foreground",
               )}
             >
               CLOVER
@@ -108,65 +127,74 @@ export const Navbar = () => {
             <span
               className={clsx(
                 "text-[10px] font-medium tracking-[0.12em] uppercase transition-colors duration-150",
-                isTransparent ? "text-white/70" : "text-muted",
+                isTransparent ? heroTextMuted : "text-muted",
               )}
             >
-              Chemical Industries
+              Industries
             </span>
           </div>
         </NextLink>
 
         {/* Desktop nav */}
         <ul className="hidden items-center gap-8 lg:flex">
-          {/* Products dropdown */}
-          <li ref={dropdownRef} className="relative">
-            <button
-              aria-expanded={isProductsOpen}
-              aria-haspopup="true"
-              className={clsx(
-                navLinkClass,
-                "group flex cursor-pointer items-center",
-                isProductsOpen && "text-accent",
-              )}
-              data-open={isProductsOpen}
-              onClick={() => setIsProductsOpen((prev) => !prev)}
-            >
-              Products
-              <ChevronDown />
-            </button>
+          {/* Products dropdown — Chemicals only; Medical's product lines
+              don't have per-category pages yet, so it's a plain link there. */}
+          {isMedicalRoute ? (
+            <li>
+              <NextLink className={navLinkClass} href="/medical#product-lines">
+                Product Lines
+              </NextLink>
+            </li>
+          ) : (
+            <li ref={dropdownRef} className="relative">
+              <button
+                aria-expanded={isProductsOpen}
+                aria-haspopup="true"
+                className={clsx(
+                  navLinkClass,
+                  "group flex cursor-pointer items-center",
+                  isProductsOpen && "text-accent",
+                )}
+                data-open={isProductsOpen}
+                onClick={() => setIsProductsOpen((prev) => !prev)}
+              >
+                Products
+                <ChevronDown />
+              </button>
 
-            {isProductsOpen && (
-              <div className="absolute left-0 top-full mt-2 w-72 rounded border border-separator bg-surface shadow-md">
-                <ul className="py-1">
-                  {siteConfig.products.map((product) => (
-                    <li key={product.href}>
+              {isProductsOpen && (
+                <div className="absolute left-0 top-full mt-2 w-72 rounded border border-separator bg-surface shadow-md">
+                  <ul className="py-1">
+                    {siteConfig.products.map((product) => (
+                      <li key={product.href}>
+                        <NextLink
+                          className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
+                          href={product.href}
+                          onClick={() => setIsProductsOpen(false)}
+                        >
+                          <span className="block text-sm font-semibold text-foreground">
+                            {product.label}
+                          </span>
+                          <span className="mt-0.5 block text-xs text-muted leading-snug">
+                            {product.description}
+                          </span>
+                        </NextLink>
+                      </li>
+                    ))}
+                    <li className="mx-4 mt-1 mb-2 border-t border-separator pt-2">
                       <NextLink
-                        className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
-                        href={product.href}
+                        className="text-xs font-semibold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors"
+                        href="/products"
                         onClick={() => setIsProductsOpen(false)}
                       >
-                        <span className="block text-sm font-semibold text-foreground">
-                          {product.label}
-                        </span>
-                        <span className="mt-0.5 block text-xs text-muted leading-snug">
-                          {product.description}
-                        </span>
+                        View all products →
                       </NextLink>
                     </li>
-                  ))}
-                  <li className="mx-4 mt-1 mb-2 border-t border-separator pt-2">
-                    <NextLink
-                      className="text-xs font-semibold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors"
-                      href="/products"
-                      onClick={() => setIsProductsOpen(false)}
-                    >
-                      View all products →
-                    </NextLink>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </li>
+                  </ul>
+                </div>
+              )}
+            </li>
+          )}
 
           {siteConfig.navItems.map((item) => (
             <li key={item.href}>
@@ -184,9 +212,7 @@ export const Navbar = () => {
               aria-label="Toggle theme"
               className={clsx(
                 "rounded p-2 transition-colors",
-                isTransparent
-                  ? "text-white/80 hover:text-white"
-                  : "text-muted hover:text-foreground",
+                isTransparent ? heroControl : "text-muted hover:text-foreground",
               )}
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
@@ -196,19 +222,17 @@ export const Navbar = () => {
           <NextLink
             className={clsx(
               "rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
-              isTransparent
-                ? "text-white/80 hover:text-white"
-                : "text-muted hover:text-foreground",
+              isTransparent ? heroControl : "text-muted hover:text-foreground",
             )}
-            href="/contact"
+            href={isMedicalRoute ? "/contact?division=medical" : "/contact"}
           >
             Get a Quote
           </NextLink>
           <NextLink
             className="rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-            href="/products"
+            href={browseHref}
           >
-            Browse Products
+            {browseLabel}
           </NextLink>
         </div>
 
@@ -218,9 +242,7 @@ export const Navbar = () => {
           aria-label="Toggle menu"
           className={clsx(
             "flex min-h-[44px] min-w-[44px] items-center justify-center rounded transition-colors lg:hidden",
-            isTransparent
-              ? "text-white/80 hover:text-white"
-              : "text-muted hover:text-foreground",
+            isTransparent ? heroControl : "text-muted hover:text-foreground",
           )}
           style={{ touchAction: "manipulation" }}
           type="button"
@@ -254,10 +276,10 @@ export const Navbar = () => {
       {/* Mobile menu — always in DOM, toggled via CSS to avoid iOS rendering issues */}
       <div
         aria-hidden={!isMenuOpen}
-        className={`fixed inset-x-0 top-16 z-50 border-t border-separator bg-background shadow-lg lg:hidden ${isMenuOpen ? "block" : "hidden"}`}
+        className={`fixed inset-x-0 top-24 z-50 border-t border-separator bg-background shadow-lg lg:hidden ${isMenuOpen ? "block" : "hidden"}`}
       >
         <ul className="flex flex-col gap-1 px-6 py-4">
-          {siteConfig.navMenuItems.map((item) => (
+          {mobileNavItems.map((item) => (
             <li key={item.href}>
               <NextLink
                 className="block py-2.5 text-sm font-semibold uppercase tracking-wide text-muted hover:text-accent transition-colors"
@@ -284,10 +306,10 @@ export const Navbar = () => {
           )}
           <NextLink
             className="block w-full rounded bg-accent px-4 py-2.5 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground hover:bg-accent/90 transition-colors"
-            href="/products"
+            href={browseHref}
             onClick={() => setIsMenuOpen(false)}
           >
-            Browse Products
+            {browseLabel}
           </NextLink>
         </div>
       </div>

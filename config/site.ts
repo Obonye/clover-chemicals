@@ -43,7 +43,24 @@ export const siteConfig = {
       image: "/product_categories/pool.jpg",
     },
   ],
+  divisions: [
+    {
+      id: "chemicals",
+      name: "Clover Chemicals",
+      tagline: "Chemicals, equipment & PPE for industry, agriculture, and the lab.",
+      href: "/products",
+      image: "/clover large.jpg",
+    },
+    {
+      id: "medical",
+      name: "Clover Medical",
+      tagline: "Advanced medical, life sciences, and laboratory solutions for Botswana's healthcare sector.",
+      href: "/medical",
+      image: "/clover medical (2).jpg",
+    },
+  ],
   navItems: [
+    { label: "Clover Medical", href: "/medical" },
     { label: "About Us", href: "/about" },
     { label: "News", href: "/news" },
     { label: "Contact Us", href: "/contact" },
@@ -56,6 +73,7 @@ export const siteConfig = {
     { label: "Industrial Solutions", href: "/products/industrial" },
     { label: "Personal Protective Equipment", href: "/products/PPE" },
     { label: "Pool Chemicals", href: "/products/pool" },
+    { label: "Clover Medical", href: "/medical" },
   ],
   footerItems: [
     { label: "Products", href: "/products" },
