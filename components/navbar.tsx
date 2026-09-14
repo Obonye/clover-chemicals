@@ -7,6 +7,8 @@ import clsx from "clsx";
 import { useTheme } from "next-themes";
 
 import { siteConfig } from "@/config/site";
+import { categoryHref } from "@/sanity/lib/format";
+import type { ProductCategory } from "@/sanity/lib/types";
 
 const SunIcon = () => (
   <svg fill="none" height={18} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" width={18}>
@@ -33,7 +35,14 @@ const ChevronDown = () => (
   </svg>
 );
 
-export const Navbar = () => {
+type NavbarProps = {
+  /** Live Sanity categories — the Products dropdown and mobile menu are
+   *  scoped to the Chemicals division below, since this dropdown only
+   *  renders on non-medical routes. */
+  categories: ProductCategory[];
+};
+
+export const Navbar = ({ categories }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -41,6 +50,7 @@ export const Navbar = () => {
   const dropdownRef = useRef<HTMLLIElement>(null);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  const chemicalCategories = categories.filter((cat) => cat.division === "chemicals");
 
   // Routes with a full-bleed hero directly beneath the navbar.
   const isMedicalRoute = pathname.startsWith("/medical");
@@ -66,7 +76,14 @@ export const Navbar = () => {
   const browseHref = isMedicalRoute ? "/medical#product-lines" : "/products";
   const mobileNavItems = isMedicalRoute
     ? [{ label: "Product Lines", href: "/medical#product-lines" }]
-    : siteConfig.navMenuItems;
+    : [
+        { label: "Products", href: "/products" },
+        ...chemicalCategories.map((cat) => ({
+          label: cat.label ?? "",
+          href: categoryHref(cat.slug),
+        })),
+        { label: "Clover Medical", href: "/medical" },
+      ];
 
   useEffect(() => setMounted(true), []);
 
@@ -165,18 +182,18 @@ export const Navbar = () => {
               {isProductsOpen && (
                 <div className="absolute left-0 top-full mt-2 w-72 rounded border border-separator bg-surface shadow-md">
                   <ul className="py-1">
-                    {siteConfig.products.map((product) => (
-                      <li key={product.href}>
+                    {chemicalCategories.map((cat) => (
+                      <li key={cat._id}>
                         <NextLink
                           className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
-                          href={product.href}
+                          href={categoryHref(cat.slug)}
                           onClick={() => setIsProductsOpen(false)}
                         >
                           <span className="block text-sm font-semibold text-foreground">
-                            {product.label}
+                            {cat.label}
                           </span>
                           <span className="mt-0.5 block text-xs text-muted leading-snug">
-                            {product.description}
+                            {cat.description}
                           </span>
                         </NextLink>
                       </li>
