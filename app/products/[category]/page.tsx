@@ -1,34 +1,80 @@
-"use client";
+import type { Metadata } from "next";
 
-import { useParams, useRouter, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import NextLink from "next/link";
+import { stegaClean } from "next-sanity";
 
-import { categories } from "@/lib/products";
+import { loadQuery } from "@/sanity/lib/fetch";
+import {
+  CATEGORIES_QUERY,
+  CATEGORY_QUERY,
+  CATEGORY_SLUGS_QUERY,
+} from "@/sanity/lib/queries";
+import { imageUrl } from "@/sanity/lib/image";
+import { packLabel } from "@/sanity/lib/format";
+import type { CategoryWithProducts, ProductCategory } from "@/sanity/lib/types";
 
-export default function CategoryPage() {
-  const params = useParams();
-  const router = useRouter();
-  const slug = params.category as string;
+type Props = {
+  params: Promise<{ category: string }>;
+};
 
-  const active = categories.find((c) => c.id === slug);
+export async function generateStaticParams() {
+  const slugs = await loadQuery<{ slug: string | null }[]>(CATEGORY_SLUGS_QUERY, {
+    perspective: "published",
+    stega: false,
+  });
 
-  if (!active) {
-    notFound();
-    return null;
-  }
+  return slugs
+    .map((c) => c.slug)
+    .filter((slug): slug is string => Boolean(slug))
+    .map((category) => ({ category }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { category } = await params;
+  const data = await loadQuery<CategoryWithProducts | null>(CATEGORY_QUERY, {
+    params: { slug: category },
+    stega: false,
+  });
+
+  if (!data) return {};
+
+  return {
+    title: data.label ?? "Products",
+    description: data.description ?? undefined,
+  };
+}
+
+export default async function CategoryPage({ params }: Props) {
+  const { category } = await params;
+
+  const [active, allCategories] = await Promise.all([
+    loadQuery<CategoryWithProducts | null>(CATEGORY_QUERY, {
+      params: { slug: category },
+    }),
+    loadQuery<ProductCategory[]>(CATEGORIES_QUERY),
+  ]);
+
+  if (!active) notFound();
+
+  const cat = active;
+  const categories = allCategories;
+  const heroSrc = imageUrl(cat.image, { width: 1920, height: 900 });
 
   return (
     <>
       {/* Category hero */}
       <section className="relative -mt-16 flex min-h-[40vh] items-end overflow-hidden">
-        <Image
-          alt={active.label}
-          className="object-cover object-center"
-          fill
-          priority
-          src={active.image}
-        />
+        {heroSrc && (
+          <Image
+            alt={cat.image?.alt ?? cat.label ?? ""}
+            className="object-cover object-center"
+            fill
+            priority
+            src={heroSrc}
+          />
+        )}
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-12 pt-24 lg:px-12">
           <NextLink
@@ -41,10 +87,10 @@ export default function CategoryPage() {
             Product Range
           </p>
           <h1 className="font-display text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
-            {active.label}
+            {cat.label}
           </h1>
           <p className="mt-3 text-base text-white/70" style={{ maxWidth: "52ch" }}>
-            {active.description}
+            {cat.description}
           </p>
         </div>
       </section>
@@ -53,19 +99,20 @@ export default function CategoryPage() {
       <div className="sticky top-24 z-30 border-b border-separator bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <nav className="flex overflow-x-auto">
-            {categories.map((cat) => {
-              const isActive = cat.id === slug;
+            {categories.map((tab) => {
+              const isActive = stegaClean(tab.slug ?? "") === category;
+
               return (
                 <NextLink
-                  key={cat.id}
+                  key={tab._id}
                   className={`shrink-0 border-b-2 px-4 py-4 font-mono text-sm font-medium uppercase tracking-wider transition-colors ${
                     isActive
                       ? "border-accent text-accent"
                       : "border-transparent text-muted hover:text-foreground"
                   }`}
-                  href={`/products/${cat.id}`}
+                  href={`/products/${stegaClean(tab.slug ?? "")}`}
                 >
-                  {cat.label}
+                  {tab.label}
                 </NextLink>
               );
             })}
@@ -77,63 +124,70 @@ export default function CategoryPage() {
       <section className="bg-background py-16">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <p className="mb-8 font-mono text-xs uppercase tracking-widest text-muted">
-            {active.products.length} products
+            {cat.products.length} products
           </p>
 
           <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
-            {active.products.map((product) => (
-              <article key={product.name} className="flex flex-col overflow-hidden rounded bg-background">
-                {/* Image */}
-                <div className="relative h-56 overflow-hidden">
-                  <Image
-                    alt={product.name}
-                    className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                    fill
-                    src={product.image ?? active.image}
-                  />
-                </div>
+            {cat.products.map((product) => {
+              const src =
+                imageUrl(product.image, { width: 700, height: 500 }) ??
+                imageUrl(cat.image, { width: 700, height: 500 });
 
-                {/* Content */}
-                <div className="flex flex-1 flex-col p-6">
-                  <span className="mb-3 inline-block font-mono text-xs font-medium uppercase tracking-wider text-accent">
-                    {product.grade}
-                  </span>
-
-                  <h2 className="mb-3 text-lg font-bold leading-snug tracking-tight text-foreground">
-                    {product.name}
-                  </h2>
-
-                  <p className="mb-6 flex-1 text-sm leading-relaxed text-muted">
-                    {product.description}
-                  </p>
-
-                  {/* Pack sizes */}
-                  <div className="mb-6 border-t border-separator pt-5">
-                    <p className="mb-2 font-mono text-xs uppercase tracking-widest text-foreground/35">
-                      Available Pack Sizes
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {product.packSizes.map((size) => (
-                        <span
-                          key={size}
-                          className="rounded-sm border border-separator px-2.5 py-1 font-mono text-xs text-muted"
-                        >
-                          {size}
-                        </span>
-                      ))}
-                    </div>
+              return (
+                <article
+                  key={product._id}
+                  className="flex flex-col overflow-hidden rounded bg-background"
+                >
+                  <div className="relative h-56 overflow-hidden">
+                    {src && (
+                      <Image
+                        alt={product.image?.alt ?? product.name ?? ""}
+                        className="object-cover object-center transition-transform duration-500 hover:scale-105"
+                        fill
+                        src={src}
+                      />
+                    )}
                   </div>
 
-                  {/* CTA */}
-                  <NextLink
-                    className="inline-flex w-full items-center justify-center rounded border border-accent px-4 py-2.5 font-mono text-sm font-medium uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
-                    href="/contact"
-                  >
-                    Request a Quote
-                  </NextLink>
-                </div>
-              </article>
-            ))}
+                  <div className="flex flex-1 flex-col p-6">
+                    <span className="mb-3 inline-block font-mono text-xs font-medium uppercase tracking-wider text-accent">
+                      {product.grade}
+                    </span>
+
+                    <h2 className="mb-3 text-lg font-bold leading-snug tracking-tight text-foreground">
+                      {product.name}
+                    </h2>
+
+                    <p className="mb-6 flex-1 text-sm leading-relaxed text-muted">
+                      {product.description}
+                    </p>
+
+                    <div className="mb-6 border-t border-separator pt-5">
+                      <p className="mb-2 font-mono text-xs uppercase tracking-widest text-foreground/35">
+                        Available Pack Sizes
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {(product.packSizes ?? []).map((size) => (
+                          <span
+                            key={size._key}
+                            className="rounded-sm border border-separator px-2.5 py-1 font-mono text-xs text-muted"
+                          >
+                            {packLabel(size)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <NextLink
+                      className="inline-flex w-full items-center justify-center rounded border border-accent px-4 py-2.5 font-mono text-sm font-medium uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
+                      href="/contact"
+                    >
+                      Request a Quote
+                    </NextLink>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>

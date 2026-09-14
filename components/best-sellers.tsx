@@ -1,23 +1,15 @@
 import NextLink from "next/link";
 
 import { ProductCard } from "@/components/product-card";
-import { getCategoryById } from "@/lib/products";
+import { loadQuery } from "@/sanity/lib/fetch";
+import { FEATURED_PRODUCTS_QUERY } from "@/sanity/lib/queries";
+import type { ProductWithCategory } from "@/sanity/lib/types";
 
-const featured = [
-  { categoryId: "agro", productName: "Clover Pure Lawn" },
-  { categoryId: "medical", productName: "Isopropyl Alcohol 70%" },
-  { categoryId: "laboratory", productName: "Hydrochloric Acid 37%" },
-  { categoryId: "industrial", productName: "Clover Multi-Surface Cleaner" },
-]
-  .map(({ categoryId, productName }) => {
-    const category = getCategoryById(categoryId);
-    const product = category?.products.find((p) => p.name === productName);
+export const BestSellers = async () => {
+  const featured = await loadQuery<ProductWithCategory[]>(FEATURED_PRODUCTS_QUERY);
 
-    return category && product ? { category, product } : null;
-  })
-  .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
+  if (featured.length === 0) return null;
 
-export const BestSellers = () => {
   return (
     <section className="bg-background py-20">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
@@ -38,8 +30,14 @@ export const BestSellers = () => {
 
         {/* Product grid */}
         <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-4">
-          {featured.map(({ category, product }) => (
-            <ProductCard category={category} key={product.name} product={product} />
+          {featured.map((product) => (
+            <ProductCard
+              key={product._id}
+              category={
+                product.category ?? { label: null, slug: null, image: null }
+              }
+              product={product}
+            />
           ))}
         </div>
 

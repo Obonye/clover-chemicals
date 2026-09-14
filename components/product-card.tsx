@@ -4,7 +4,9 @@ import Image from "next/image";
 import NextLink from "next/link";
 
 import { DocumentIcon } from "@/components/icons";
-import type { Category, Product } from "@/lib/products";
+import { imageUrl } from "@/sanity/lib/image";
+import { categoryHref, packLabel } from "@/sanity/lib/format";
+import type { Product, ProductCategory } from "@/sanity/lib/types";
 
 const ArrowRightIcon = () => (
   <svg
@@ -25,68 +27,78 @@ const ArrowRightIcon = () => (
 
 type ProductCardProps = {
   product: Product;
-  category: Category;
+  category: Pick<ProductCategory, "label" | "slug" | "image">;
   /** Small label above the product name. Defaults to the category name. */
   eyebrow?: ReactNode;
 };
 
-export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) => (
-  <article className="group flex flex-col overflow-hidden rounded-2xl border border-separator bg-surface transition-shadow duration-200 hover:shadow-md">
-    {/* Image — links to the product's category */}
-    <NextLink
-      className="relative block h-44 shrink-0 overflow-hidden bg-surface-secondary"
-      href={category.href}
-    >
-      <Image
-        alt={product.name}
-        className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-        fill
-        src={product.image ?? category.image}
-      />
-    </NextLink>
+export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) => {
+  const href = categoryHref(category.slug);
+  const src =
+    imageUrl(product.image, { width: 600, height: 360 }) ??
+    imageUrl(category.image, { width: 600, height: 360 });
+  const packSizes = (product.packSizes ?? []).map(packLabel).filter(Boolean);
 
-    {/* Content */}
-    <div className="flex flex-1 flex-col p-5">
-      <span className="mb-2 inline-block w-fit font-mono text-[10px] font-semibold uppercase tracking-wider text-accent">
-        {eyebrow ?? category.label}
-      </span>
+  return (
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-separator bg-surface transition-shadow duration-200 hover:shadow-md">
+      {/* Image — links to the product's category */}
+      <NextLink
+        className="relative block h-44 shrink-0 overflow-hidden bg-surface-secondary"
+        href={href}
+      >
+        {src ? (
+          <Image
+            alt={product.image?.alt ?? product.name ?? ""}
+            className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            fill
+            src={src}
+          />
+        ) : null}
+      </NextLink>
 
-      <h3 className="mb-1 text-base font-bold leading-snug tracking-tight text-foreground">
-        {product.name}
-      </h3>
+      {/* Content */}
+      <div className="flex flex-1 flex-col p-5">
+        <span className="mb-2 inline-block w-fit font-mono text-[10px] font-semibold uppercase tracking-wider text-accent">
+          {eyebrow ?? category.label}
+        </span>
 
-      <p className="mb-4 line-clamp-2 flex-1 text-sm leading-relaxed text-muted">
-        {product.description}
-      </p>
+        <h3 className="mb-1 text-base font-bold leading-snug tracking-tight text-foreground">
+          {product.name}
+        </h3>
 
-      {/* Grade + pack sizes */}
-      <div className="mb-4 border-t border-separator pt-4">
-        <p className="mb-0.5 font-mono text-[10px] uppercase tracking-widest text-foreground/30">
-          {product.grade}
+        <p className="mb-4 line-clamp-2 flex-1 text-sm leading-relaxed text-muted">
+          {product.description}
         </p>
-        <p className="font-mono text-xs text-muted">
-          {product.packSizes.join(" / ")}
-        </p>
-      </div>
 
-      {/* CTAs — side by side */}
-      <div className="flex items-center justify-between">
-        <NextLink
-          className="inline-flex shrink-0 items-center gap-1.5 rounded border border-accent px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
-          href="/contact"
-        >
-          Quote
-          <ArrowRightIcon />
-        </NextLink>
+        {/* Grade + pack sizes */}
+        <div className="mb-4 border-t border-separator pt-4">
+          <p className="mb-0.5 font-mono text-[10px] uppercase tracking-widest text-foreground/30">
+            {product.grade}
+          </p>
+          {packSizes.length > 0 && (
+            <p className="font-mono text-xs text-muted">{packSizes.join(" / ")}</p>
+          )}
+        </div>
 
-        <NextLink
-          className="inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-muted transition-colors hover:text-foreground"
-          href="#"
-        >
-          <DocumentIcon />
-          Spec Sheet
-        </NextLink>
+        {/* CTAs — side by side */}
+        <div className="flex items-center justify-between">
+          <NextLink
+            className="inline-flex shrink-0 items-center gap-1.5 rounded border border-accent px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
+            href="/contact"
+          >
+            Quote
+            <ArrowRightIcon />
+          </NextLink>
+
+          <NextLink
+            className="inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-muted transition-colors hover:text-foreground"
+            href="#"
+          >
+            <DocumentIcon />
+            Spec Sheet
+          </NextLink>
+        </div>
       </div>
-    </div>
-  </article>
-);
+    </article>
+  );
+};
