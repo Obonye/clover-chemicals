@@ -5,13 +5,15 @@ export const siteConfig = {
   foundedYear: 1980,
   description:
     "Botswana's one-stop chemical and equipment partner — manufacturing and distribution for industry, agriculture, healthcare, and the laboratory, since 1980.",
-  // NOTE: static list — same drift risk fixed on the homepage's category
-  // section (which now reads live Sanity categories via CATEGORIES_QUERY
-  // instead of this array). PPE and Pool Chemicals below have no matching
-  // Sanity category yet, so their /products/PPE and /products/pool links
-  // 404. Still used by navbar.tsx (mega-menu) and footer.tsx (Products
-  // column) — migrating those to CATEGORIES_QUERY the same way is a
+  // NOTE: static list — same drift risk already fixed on the homepage's
+  // category section and the navbar's Products dropdown, both of which now
+  // read live Sanity categories via CATEGORIES_QUERY instead of this array.
+  // Only footer.tsx still uses this list — migrating it the same way is a
   // straightforward fast-follow, not done here to stay in scope.
+  // PPE below (href "/products/PPE") now has a real Sanity category, but
+  // its actual slug is "personal-protective-equipment" — this static href
+  // is stale and 404s. Pool Chemicals still has no matching category at
+  // all. Both are exactly the kind of drift this list keeps accumulating.
   products: [
     {
       label: "Agricultural Chemicals",
