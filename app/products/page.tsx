@@ -24,7 +24,9 @@ export default async function ProductsPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHeader />
+      {/* Visually hidden — keeps a page heading for a11y/SEO without the
+          headline block the page no longer shows. */}
+      <h1 className="sr-only">All Products</h1>
       <ProductCatalogue
         categories={categories}
         initialCategory={params.category ?? "all"}
@@ -35,24 +37,6 @@ export default async function ProductsPage({ searchParams }: Props) {
       />
       <BottomCta />
     </>
-  );
-}
-
-function PageHeader() {
-  return (
-    <section className="border-b border-separator bg-background">
-      <div className="mx-auto max-w-[1280px] px-6 py-8 lg:px-12">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4">
-          <h1 className="font-display text-xl font-extrabold tracking-tight text-foreground">
-            All Products
-          </h1>
-          <p className="text-sm text-muted" style={{ maxWidth: "60ch" }}>
-            Agricultural, medical, laboratory, and industrial chemical
-            solutions. Contact us for specifications, pricing, and availability.
-          </p>
-        </div>
-      </div>
-    </section>
   );
 }
 

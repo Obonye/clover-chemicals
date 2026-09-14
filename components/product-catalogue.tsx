@@ -156,11 +156,11 @@ export const ProductCatalogue = ({
     setCategory(firstKey<string>(keys, "all"));
   }
 
-  const divisionToggle = (
+  const renderDivisionToggle = (orientation: "horizontal" | "vertical") => (
     <ToggleButtonGroup
       aria-label="Filter by division"
       disallowEmptySelection
-      orientation="vertical"
+      orientation={orientation}
       selectedKeys={new Set<Key>([division])}
       selectionMode="single"
       onSelectionChange={handleDivisionChange}
@@ -175,12 +175,7 @@ export const ProductCatalogue = ({
   );
 
   const sortSelect = (
-    <Select
-      aria-label="Sort products"
-      className="w-full"
-      value={sort}
-      onChange={(value) => setSort(value as SortKey)}
-    >
+    <Select aria-label="Sort products" value={sort} onChange={(value) => setSort(value as SortKey)}>
       <Select.Trigger>
         <Select.Value />
         <Select.Indicator />
@@ -201,9 +196,9 @@ export const ProductCatalogue = ({
   return (
     <>
       {/* Category pills — plain row up top, not part of the sticky sidebar */}
-      <div className="border-b border-separator bg-background">
+      <div className="bg-background">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-          {/* Mobile-only: search + Filters trigger (the sidebar below is desktop-only) */}
+          {/* Mobile-only: search + Filters trigger (the desktop toolbar below is lg-only) */}
           <div className="flex items-center gap-3 py-4 lg:hidden">
             <ProductSearch className="flex-1" value={query} onChange={setQuery} />
 
@@ -220,14 +215,15 @@ export const ProductCatalogue = ({
             </Badge.Anchor>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto py-4 lg:flex-wrap lg:overflow-visible">
+          <div className="flex gap-3 overflow-x-auto py-6 lg:flex-wrap lg:overflow-visible">
             <TagGroup
               aria-label="Filter by category"
               selectedKeys={new Set<Key>([category])}
               selectionMode="single"
+              size="lg"
               onSelectionChange={handleCategoryChange}
             >
-              <TagGroup.List className="flex flex-nowrap gap-2 lg:flex-wrap">
+              <TagGroup.List className="flex flex-nowrap gap-3 lg:flex-wrap">
                 <Tag id="all">All</Tag>
                 {visibleCategories.map((cat) => (
                   <Tag key={cat._id} id={cat.slug ?? cat._id}>
@@ -254,14 +250,14 @@ export const ProductCatalogue = ({
                   <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
                     Division
                   </span>
-                  {divisionToggle}
+                  {renderDivisionToggle("vertical")}
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
                     Sort by
                   </span>
-                  {sortSelect}
+                  <div className="w-full">{sortSelect}</div>
                 </div>
               </Drawer.Body>
               <Drawer.Footer>
@@ -284,38 +280,24 @@ export const ProductCatalogue = ({
         </Drawer.Backdrop>
       </Drawer>
 
-      {/* Sidebar (desktop) + results */}
+      {/* Toolbar (desktop) + results */}
       <div className="bg-background">
-        <div className="mx-auto max-w-[1280px] px-6 py-8 lg:flex lg:items-start lg:gap-10 lg:px-12">
-          {/* Search / division / sort — vertical, sticky, desktop only */}
-          <aside className="hidden shrink-0 lg:sticky lg:top-24 lg:block lg:w-56">
-            <div className="flex flex-col gap-6">
-              <ProductSearch className="w-full" value={query} onChange={setQuery} />
-
-              <div className="flex flex-col gap-2">
-                <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
-                  Division
-                </span>
-                {divisionToggle}
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
-                  Sort by
-                </span>
-                {sortSelect}
-              </div>
-            </div>
-          </aside>
+        <div className="mx-auto max-w-[1280px] px-6 py-8 lg:px-12">
+          {/* Search + division + sort — full width, sits above the grid, desktop only */}
+          <div className="mb-6 hidden items-center gap-4 lg:flex">
+            <ProductSearch className="flex-1" value={query} onChange={setQuery} />
+            {renderDivisionToggle("horizontal")}
+            <div className="w-48 shrink-0">{sortSelect}</div>
+          </div>
 
           {/* Results */}
-          <div className="min-w-0 flex-1">
+          <div>
             <p aria-live="polite" className="mb-6 text-sm text-muted">
               {results.length} product{results.length === 1 ? "" : "s"}
             </p>
 
             {results.length > 0 ? (
-              <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-4">
                 {results.map((product) => (
                   <ProductCard
                     key={product._id}
