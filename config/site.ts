@@ -5,6 +5,13 @@ export const siteConfig = {
   foundedYear: 1980,
   description:
     "Botswana's one-stop chemical and equipment partner — manufacturing and distribution for industry, agriculture, healthcare, and the laboratory, since 1980.",
+  // NOTE: static list — same drift risk fixed on the homepage's category
+  // section (which now reads live Sanity categories via CATEGORIES_QUERY
+  // instead of this array). PPE and Pool Chemicals below have no matching
+  // Sanity category yet, so their /products/PPE and /products/pool links
+  // 404. Still used by navbar.tsx (mega-menu) and footer.tsx (Products
+  // column) — migrating those to CATEGORIES_QUERY the same way is a
+  // straightforward fast-follow, not done here to stay in scope.
   products: [
     {
       label: "Agricultural Chemicals",

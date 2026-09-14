@@ -37,7 +37,7 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
   const src =
     imageUrl(product.image, { width: 600, height: 360 }) ??
     imageUrl(category.image, { width: 600, height: 360 });
-  const packSizes = (product.packSizes ?? []).map(packLabel).filter(Boolean);
+  const packSizes = (product.packSizes ?? []).filter((size) => packLabel(size));
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-separator bg-surface transition-shadow duration-200 hover:shadow-md">
@@ -76,7 +76,16 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
             {product.grade}
           </p>
           {packSizes.length > 0 && (
-            <p className="font-mono text-xs text-muted">{packSizes.join(" / ")}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {packSizes.map((size) => (
+                <span
+                  key={size._key}
+                  className="rounded-sm border border-separator px-2.5 py-1 font-mono text-xs text-muted"
+                >
+                  {packLabel(size)}
+                </span>
+              ))}
+            </div>
           )}
         </div>
 

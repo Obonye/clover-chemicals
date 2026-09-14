@@ -5,6 +5,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { stegaClean } from "next-sanity";
 
+import { ProductCard } from "@/components/product-card";
 import { loadQuery } from "@/sanity/lib/fetch";
 import {
   CATEGORIES_QUERY,
@@ -12,7 +13,6 @@ import {
   CATEGORY_SLUGS_QUERY,
 } from "@/sanity/lib/queries";
 import { imageUrl } from "@/sanity/lib/image";
-import { packLabel } from "@/sanity/lib/format";
 import type { CategoryWithProducts, ProductCategory } from "@/sanity/lib/types";
 
 type Props = {
@@ -127,67 +127,15 @@ export default async function CategoryPage({ params }: Props) {
             {cat.products.length} products
           </p>
 
-          <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
-            {cat.products.map((product) => {
-              const src =
-                imageUrl(product.image, { width: 700, height: 500 }) ??
-                imageUrl(cat.image, { width: 700, height: 500 });
-
-              return (
-                <article
-                  key={product._id}
-                  className="flex flex-col overflow-hidden rounded bg-background"
-                >
-                  <div className="relative h-56 overflow-hidden">
-                    {src && (
-                      <Image
-                        alt={product.image?.alt ?? product.name ?? ""}
-                        className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                        fill
-                        src={src}
-                      />
-                    )}
-                  </div>
-
-                  <div className="flex flex-1 flex-col p-6">
-                    <span className="mb-3 inline-block font-mono text-xs font-medium uppercase tracking-wider text-accent">
-                      {product.grade}
-                    </span>
-
-                    <h2 className="mb-3 text-lg font-bold leading-snug tracking-tight text-foreground">
-                      {product.name}
-                    </h2>
-
-                    <p className="mb-6 flex-1 text-sm leading-relaxed text-muted">
-                      {product.description}
-                    </p>
-
-                    <div className="mb-6 border-t border-separator pt-5">
-                      <p className="mb-2 font-mono text-xs uppercase tracking-widest text-foreground/35">
-                        Available Pack Sizes
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {(product.packSizes ?? []).map((size) => (
-                          <span
-                            key={size._key}
-                            className="rounded-sm border border-separator px-2.5 py-1 font-mono text-xs text-muted"
-                          >
-                            {packLabel(size)}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <NextLink
-                      className="inline-flex w-full items-center justify-center rounded border border-accent px-4 py-2.5 font-mono text-sm font-medium uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
-                      href="/contact"
-                    >
-                      Request a Quote
-                    </NextLink>
-                  </div>
-                </article>
-              );
-            })}
+          <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-4">
+            {cat.products.map((product) => (
+              <ProductCard
+                key={product._id}
+                category={cat}
+                eyebrow={product.grade}
+                product={product}
+              />
+            ))}
           </div>
         </div>
       </section>

@@ -4,14 +4,23 @@ import { useState } from "react";
 import Image from "next/image";
 import NextLink from "next/link";
 
-import { siteConfig } from "@/config/site";
+import { categoryHref } from "@/sanity/lib/format";
+import { imageUrl } from "@/sanity/lib/image";
+import type { ProductCategory } from "@/sanity/lib/types";
 
 const EASE = "cubic-bezier(0.25, 1, 0.5, 1)";
 const EXPANDED_BASIS = 46;
 
-export const ProductsSection = () => {
+type ProductsSectionProps = {
+  categories: ProductCategory[];
+};
+
+export const ProductsSection = ({ categories }: ProductsSectionProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const total = siteConfig.products.length;
+
+  if (categories.length === 0) return null;
+
+  const total = categories.length;
   const compressedBasis = (100 - EXPANDED_BASIS) / (total - 1);
 
   return (
@@ -54,7 +63,7 @@ export const ProductsSection = () => {
 
       {/* Full-width horizontal accordion — desktop/tablet */}
       <div className="hidden h-[480px] w-full gap-1 border-y border-separator py-1 lg:flex lg:h-[560px]">
-        {siteConfig.products.map((product, index) => {
+        {categories.map((cat, index) => {
           const isHovered = hoveredIndex === index;
           const isCompressed = hoveredIndex !== null && !isHovered;
           const basis = isHovered
@@ -62,12 +71,13 @@ export const ProductsSection = () => {
             : isCompressed
               ? compressedBasis
               : 100 / total;
+          const src = imageUrl(cat.image, { width: 1200, height: 800 });
 
           return (
             <NextLink
-              key={product.href}
+              key={cat._id}
               className="product-row relative flex flex-col justify-end overflow-hidden rounded"
-              href={product.href}
+              href={categoryHref(cat.slug)}
               style={{
                 animationDelay: `${index * 90}ms`,
                 flexBasis: `${basis}%`,
@@ -77,33 +87,37 @@ export const ProductsSection = () => {
               onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Dithered resting-state image */}
-              <Image
-                alt=""
-                className="object-cover object-center"
-                fill
-                sizes="50vw"
-                src={product.image}
-                style={{
-                  filter:
-                    "url(#product-line-dither) brightness(0.55) contrast(1.1)",
-                  opacity: isHovered ? 0 : 1,
-                  transition: `opacity 500ms ${EASE}`,
-                }}
-              />
+              {src && (
+                <Image
+                  alt=""
+                  className="object-cover object-center"
+                  fill
+                  sizes="50vw"
+                  src={src}
+                  style={{
+                    filter:
+                      "url(#product-line-dither) brightness(0.55) contrast(1.1)",
+                    opacity: isHovered ? 0 : 1,
+                    transition: `opacity 500ms ${EASE}`,
+                  }}
+                />
+              )}
 
               {/* Full-color image — revealed on hover */}
-              <Image
-                alt=""
-                className="object-cover object-center"
-                fill
-                sizes="50vw"
-                src={product.image}
-                style={{
-                  opacity: isHovered ? 1 : 0,
-                  scale: isHovered ? "1.03" : "1",
-                  transition: `opacity 500ms ${EASE}`,
-                }}
-              />
+              {src && (
+                <Image
+                  alt=""
+                  className="object-cover object-center"
+                  fill
+                  sizes="50vw"
+                  src={src}
+                  style={{
+                    opacity: isHovered ? 1 : 0,
+                    scale: isHovered ? "1.03" : "1",
+                    transition: `opacity 500ms ${EASE}`,
+                  }}
+                />
+              )}
 
               {/* Dark overlay so text stays legible */}
               <div
@@ -146,7 +160,7 @@ export const ProductsSection = () => {
                   writingMode: "vertical-rl",
                 }}
               >
-                {product.label}
+                {cat.label}
               </h3>
 
               {/* Label + description + arrow */}
@@ -158,7 +172,7 @@ export const ProductsSection = () => {
                     transition: `opacity 300ms ${EASE}`,
                   }}
                 >
-                  {product.label}
+                  {cat.label}
                 </h3>
 
                 <p
@@ -169,7 +183,7 @@ export const ProductsSection = () => {
                     transition: `opacity 300ms ${EASE}`,
                   }}
                 >
-                  {product.description}
+                  {cat.description}
                 </p>
 
                 <span
@@ -195,15 +209,16 @@ export const ProductsSection = () => {
       {/* Vertical accordion — mobile/tablet */}
       <div className="mx-auto max-w-[1280px] px-6 lg:hidden">
         <div className="flex flex-col gap-1">
-          {siteConfig.products.map((product, index) => {
+          {categories.map((cat, index) => {
             const isHovered = hoveredIndex === index;
             const py = isHovered ? "6rem" : "1.75rem";
+            const src = imageUrl(cat.image, { width: 1200, height: 800 });
 
             return (
               <NextLink
-                key={product.href}
+                key={cat._id}
                 className="product-row relative flex items-center justify-between overflow-hidden rounded px-4"
-                href={product.href}
+                href={categoryHref(cat.slug)}
                 style={{
                   animationDelay: `${index * 90}ms`,
                   paddingBottom: py,
@@ -214,18 +229,20 @@ export const ProductsSection = () => {
                 onMouseLeave={() => setHoveredIndex(null)}
               >
                 {/* Category background image */}
-                <Image
-                  alt=""
-                  className="object-cover object-center"
-                  fill
-                  sizes="100vw"
-                  src={product.image}
-                  style={{
-                    opacity: isHovered ? 1 : 0,
-                    scale: isHovered ? "1.03" : "1",
-                    transition: `opacity 500ms ${EASE}`,
-                  }}
-                />
+                {src && (
+                  <Image
+                    alt=""
+                    className="object-cover object-center"
+                    fill
+                    sizes="100vw"
+                    src={src}
+                    style={{
+                      opacity: isHovered ? 1 : 0,
+                      scale: isHovered ? "1.03" : "1",
+                      transition: `opacity 500ms ${EASE}`,
+                    }}
+                  />
+                )}
 
                 {/* Dark overlay so text stays legible */}
                 <div
@@ -264,7 +281,7 @@ export const ProductsSection = () => {
                       transition: `color 300ms ${EASE}`,
                     }}
                   >
-                    {product.label}
+                    {cat.label}
                   </h3>
                 </div>
 
@@ -277,7 +294,7 @@ export const ProductsSection = () => {
                       transition: `color 300ms ${EASE}`,
                     }}
                   >
-                    {product.description}
+                    {cat.description}
                   </p>
                   <span
                     aria-hidden="true"
