@@ -10,7 +10,10 @@ import { CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory } from "@/sanity/lib/types";
 
 export default async function Home() {
-  const categories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
+  const allCategories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
+  // This is the Chemicals division's homepage — Medical & Pharma (division:
+  // "medical") belongs on /medical, not here.
+  const categories = allCategories.filter((c) => c.division === "chemicals");
 
   return (
     <>
