@@ -7,8 +7,13 @@ import clsx from "clsx";
 import { useTheme } from "next-themes";
 
 import { siteConfig } from "@/config/site";
-import { categoryHref } from "@/sanity/lib/format";
 import type { ProductCategory } from "@/sanity/lib/types";
+
+// Nav category links jump straight into the unified, filterable /products
+// grid with that category pre-selected, rather than the standalone
+// /products/[category] landing page (kept for SEO/hero value elsewhere).
+const categoryFilterHref = (slug: string | null | undefined): string =>
+  slug ? `/products?category=${encodeURIComponent(slug)}` : "/products";
 
 const SunIcon = () => (
   <svg fill="none" height={18} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" width={18}>
@@ -80,7 +85,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
         { label: "Products", href: "/products" },
         ...chemicalCategories.map((cat) => ({
           label: cat.label ?? "",
-          href: categoryHref(cat.slug),
+          href: categoryFilterHref(cat.slug),
         })),
         { label: "Clover Medical", href: "/medical" },
       ];
@@ -186,7 +191,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                       <li key={cat._id}>
                         <NextLink
                           className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
-                          href={categoryHref(cat.slug)}
+                          href={categoryFilterHref(cat.slug)}
                           onClick={() => setIsProductsOpen(false)}
                         >
                           <span className="block text-sm font-semibold text-foreground">
