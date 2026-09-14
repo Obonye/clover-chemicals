@@ -60,7 +60,6 @@ export const siteConfig = {
     },
   ],
   navItems: [
-    { label: "Clover Medical", href: "/medical" },
     { label: "About Us", href: "/about" },
     { label: "News", href: "/news" },
     { label: "Contact Us", href: "/contact" },
@@ -73,7 +72,6 @@ export const siteConfig = {
     { label: "Industrial Solutions", href: "/products/industrial" },
     { label: "Personal Protective Equipment", href: "/products/PPE" },
     { label: "Pool Chemicals", href: "/products/pool" },
-    { label: "Clover Medical", href: "/medical" },
   ],
   footerItems: [
     { label: "Products", href: "/products" },

@@ -120,14 +120,15 @@ body {
 
 /*
  * Clover Medical theme.
- * `[data-division="medical"]` is a zero-footprint marker rendered by
- * app/medical/layout.tsx (display:contents). `:has()` lets us detect it
- * from body and repoint the shared --accent token at --medical for the
- * whole tree — nav, footer, buttons, cards all follow without per-component
- * changes. Higher specificity than the base :root/.dark blocks above, so
- * source order doesn't matter here.
+ * `data-division` is set on <body> by the root layout, from a cookie
+ * middleware.ts writes whenever someone enters through "/" or "/medical".
+ * That repoints the shared --accent token at --medical for the whole tree —
+ * nav, footer, buttons, cards all follow without per-component changes —
+ * and keeps shared pages (Products, About, News) in whichever division's
+ * colors the visitor last navigated from. Higher specificity than the base
+ * :root/.dark blocks above, so source order doesn't matter here.
  */
-body:has([data-division="medical"]) {
+body[data-division="medical"] {
   --accent: var(--medical);
   --accent-foreground: var(--medical-foreground);
   /* --font-display is inlined straight to var(--font-archivo) at build time
@@ -139,7 +140,7 @@ body:has([data-division="medical"]) {
 
 /* Dark mode: keep headings on the normal near-white foreground — #343434
    would be unreadable against a dark background. */
-:is(.dark, [data-theme="dark"]) body:has([data-division="medical"]) {
+:is(.dark, [data-theme="dark"]) body[data-division="medical"] {
   --heading: var(--foreground);
 }
 

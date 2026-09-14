@@ -1,6 +1,8 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
+import { cookies, draftMode } from "next/headers";
+import { VisualEditing } from "next-sanity/visual-editing";
 
 import { Providers } from "./providers";
 
@@ -10,6 +12,8 @@ import { Navbar } from "@/components/navbar";
 import { UtilityBar } from "@/components/utility-bar";
 import { Footer } from "@/components/footer";
 import { QuickLinksBar } from "@/components/quick-links-bar";
+import { DisableDraftMode } from "@/components/disable-draft-mode";
+import { SanityLive } from "@/sanity/lib/live";
 
 export const metadata: Metadata = {
   title: {
@@ -31,11 +35,21 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
+  // Products, About, and News are shared across both divisions and have no
+  // division segment of their own in the URL — so the color they render in
+  // follows whichever division the visitor last entered through (set by
+  // middleware.ts), not the current route.
+  const cookieStore = await cookies();
+  const division =
+    cookieStore.get("division")?.value === "medical" ? "medical" : "chemical";
+
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -46,10 +60,11 @@ export default function RootLayout({
           fontDisplay.variable,
           fontMedicalDisplay.variable,
         )}
+        data-division={division}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex min-h-screen flex-col overflow-x-hidden md:pb-8">
-            <UtilityBar />
+            <UtilityBar initialDivision={division} />
             <Navbar />
             <main className="flex-grow pt-24">
               {children}
@@ -58,6 +73,13 @@ export default function RootLayout({
             <QuickLinksBar />
           </div>
         </Providers>
+        <SanityLive />
+        {isDraftMode && (
+          <>
+            <VisualEditing />
+            <DisableDraftMode />
+          </>
+        )}
       </body>
     </html>
   );

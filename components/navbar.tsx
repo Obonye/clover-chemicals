@@ -60,13 +60,13 @@ export const Navbar = () => {
     : "text-white/80 hover:text-white";
 
   // Functional destinations — keep the nav inside whichever division you're
-  // browsing instead of always routing back to Chemicals.
+  // browsing instead of always routing back to Chemicals. Products, About,
+  // and News are shared across both divisions, so they don't branch here.
   const homeHref = isMedicalRoute ? "/medical" : "/";
-  const browseLabel = isMedicalRoute ? "Explore Product Lines" : "Browse Products";
-  const browseHref = isMedicalRoute ? "/medical#product-lines" : "/products";
-  const mobileNavItems = isMedicalRoute
-    ? [{ label: "Product Lines", href: "/medical#product-lines" }]
-    : siteConfig.navMenuItems;
+  const browseLabel = "Browse Products";
+  const browseHref = "/products";
+
+  const mobileNavItems = siteConfig.navMenuItems;
 
   useEffect(() => setMounted(true), []);
 
@@ -97,7 +97,7 @@ export const Navbar = () => {
   }, []);
 
   const navLinkClass = clsx(
-    "text-sm font-semibold transition-colors duration-150 tracking-wide uppercase hover:text-accent",
+    "text-sm font-semibold whitespace-nowrap transition-colors duration-150 tracking-wide uppercase hover:text-accent",
     isTransparent ? heroText : "text-foreground",
   );
 
@@ -114,7 +114,11 @@ export const Navbar = () => {
         {/* Logo */}
         <NextLink className="flex flex-shrink-0 items-center gap-2.5" href={homeHref}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Clover Chemical Industries" className="h-9 w-9" src="/clover-logo.svg" />
+          <img
+            alt={isMedicalRoute ? "Clover Medical" : "Clover Chemical"}
+            className="h-9 w-9"
+            src="/clover-logo.svg"
+          />
           <div className="flex flex-col leading-none">
             <span
               className={clsx(
@@ -130,71 +134,63 @@ export const Navbar = () => {
                 isTransparent ? heroTextMuted : "text-muted",
               )}
             >
-              Industries
+              {isMedicalRoute ? "Medical" : "Chemical"}
             </span>
           </div>
         </NextLink>
 
         {/* Desktop nav */}
         <ul className="hidden items-center gap-8 lg:flex">
-          {/* Products dropdown — Chemicals only; Medical's product lines
-              don't have per-category pages yet, so it's a plain link there. */}
-          {isMedicalRoute ? (
-            <li>
-              <NextLink className={navLinkClass} href="/medical#product-lines">
-                Product Lines
-              </NextLink>
-            </li>
-          ) : (
-            <li ref={dropdownRef} className="relative">
-              <button
-                aria-expanded={isProductsOpen}
-                aria-haspopup="true"
-                className={clsx(
-                  navLinkClass,
-                  "group flex cursor-pointer items-center",
-                  isProductsOpen && "text-accent",
-                )}
-                data-open={isProductsOpen}
-                onClick={() => setIsProductsOpen((prev) => !prev)}
-              >
-                Products
-                <ChevronDown />
-              </button>
+          {/* Products is shared across both divisions — /products already
+              lists chemical and medical categories side by side. */}
+          <li ref={dropdownRef} className="relative">
+            <button
+              aria-expanded={isProductsOpen}
+              aria-haspopup="true"
+              className={clsx(
+                navLinkClass,
+                "group flex cursor-pointer items-center",
+                isProductsOpen && "text-accent",
+              )}
+              data-open={isProductsOpen}
+              onClick={() => setIsProductsOpen((prev) => !prev)}
+            >
+              Products
+              <ChevronDown />
+            </button>
 
-              {isProductsOpen && (
-                <div className="absolute left-0 top-full mt-2 w-72 rounded border border-separator bg-surface shadow-md">
-                  <ul className="py-1">
-                    {siteConfig.products.map((product) => (
-                      <li key={product.href}>
-                        <NextLink
-                          className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
-                          href={product.href}
-                          onClick={() => setIsProductsOpen(false)}
-                        >
-                          <span className="block text-sm font-semibold text-foreground">
-                            {product.label}
-                          </span>
-                          <span className="mt-0.5 block text-xs text-muted leading-snug">
-                            {product.description}
-                          </span>
-                        </NextLink>
-                      </li>
-                    ))}
-                    <li className="mx-4 mt-1 mb-2 border-t border-separator pt-2">
+            {isProductsOpen && (
+              <div className="absolute left-0 top-full mt-2 w-72 rounded border border-separator bg-surface shadow-md">
+                <ul className="py-1">
+                  {siteConfig.products.map((product) => (
+                    <li key={product.href}>
                       <NextLink
-                        className="text-xs font-semibold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors"
-                        href="/products"
+                        className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
+                        href={product.href}
                         onClick={() => setIsProductsOpen(false)}
                       >
-                        View all products →
+                        <span className="block text-sm font-semibold text-foreground">
+                          {product.label}
+                        </span>
+                        <span className="mt-0.5 block text-xs text-muted leading-snug">
+                          {product.description}
+                        </span>
                       </NextLink>
                     </li>
-                  </ul>
-                </div>
-              )}
-            </li>
-          )}
+                  ))}
+                  <li className="mx-4 mt-1 mb-2 border-t border-separator pt-2">
+                    <NextLink
+                      className="text-xs font-semibold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors"
+                      href="/products"
+                      onClick={() => setIsProductsOpen(false)}
+                    >
+                      View all products →
+                    </NextLink>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </li>
 
           {siteConfig.navItems.map((item) => (
             <li key={item.href}>
@@ -221,7 +217,7 @@ export const Navbar = () => {
           )}
           <NextLink
             className={clsx(
-              "rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
+              "whitespace-nowrap rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
               isTransparent ? heroControl : "text-muted hover:text-foreground",
             )}
             href={isMedicalRoute ? "/contact?division=medical" : "/contact"}
@@ -229,7 +225,7 @@ export const Navbar = () => {
             Get a Quote
           </NextLink>
           <NextLink
-            className="rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+            className="whitespace-nowrap rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
             href={browseHref}
           >
             {browseLabel}
