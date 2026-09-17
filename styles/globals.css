@@ -120,16 +120,34 @@ body {
 
 /*
  * Clover Medical theme.
- * `[data-division="medical"]` is a zero-footprint marker rendered by
- * app/medical/layout.tsx (display:contents). `:has()` lets us detect it
- * from body and repoint the shared --accent token at --medical for the
- * whole tree — nav, footer, buttons, cards all follow without per-component
- * changes. Higher specificity than the base :root/.dark blocks above, so
- * source order doesn't matter here.
+ * `data-division` is set on <body> by the root layout, from a cookie
+ * middleware.ts writes whenever someone enters through "/" or "/medical".
+ * That repoints the shared --accent token at --medical for the whole tree —
+ * nav, footer, buttons, cards all follow without per-component changes —
+ * and keeps shared pages (Products, About, News) in whichever division's
+ * colors the visitor last navigated from. Higher specificity than the base
+ * :root/.dark blocks above, so source order doesn't matter here.
  */
-body:has([data-division="medical"]) {
+body[data-division="medical"] {
   --accent: var(--medical);
   --accent-foreground: var(--medical-foreground);
+  /* HeroUI's own default theme ties --focus to --accent; this project's
+     :root/.dark blocks above pin it to a fixed green instead, which left
+     focus rings (search field, select, etc.) stuck green on medical pages.
+     Repointing it here keeps that field-level feedback in sync with the
+     division too. */
+  --focus: var(--medical);
+  /* HeroUI derives these --accent-hover/-soft tokens (selected chips, tags,
+     toggle buttons) from --accent once at :root, so they bake in with the
+     chemical green and don't recompute just because --accent changes lower
+     in the tree. Re-deriving them here — using HeroUI's own light-mode
+     formulas from themes/default/variables.css — keeps selected pills/tags
+     in sync with the division too. The dark-mode percentages differ, so
+     those are re-derived again below. */
+  --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
+  --accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
+  --accent-soft-foreground: color-mix(in oklab, var(--accent) 70%, var(--foreground) 30%);
+  --accent-soft-hover: color-mix(in oklab, var(--accent) 20%, transparent);
   /* --font-display is inlined straight to var(--font-archivo) at build time
      by `@theme inline`, so the override has to target that source variable
      directly rather than --font-display itself. */
@@ -138,9 +156,13 @@ body:has([data-division="medical"]) {
 }
 
 /* Dark mode: keep headings on the normal near-white foreground — #343434
-   would be unreadable against a dark background. */
-:is(.dark, [data-theme="dark"]) body:has([data-division="medical"]) {
+   would be unreadable against a dark background — and re-derive the
+   --accent-soft tokens above with HeroUI's dark-mode percentages. */
+:is(.dark, [data-theme="dark"]) body[data-division="medical"] {
   --heading: var(--foreground);
+  --accent-soft: color-mix(in oklab, var(--accent) 12%, transparent);
+  --accent-soft-foreground: color-mix(in oklab, var(--accent) 80%, var(--foreground) 30%);
+  --accent-soft-hover: color-mix(in oklab, var(--accent) 16%, transparent);
 }
 
 @keyframes marquee {

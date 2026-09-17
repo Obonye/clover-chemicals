@@ -132,7 +132,7 @@ export const MedicalProductCarousel = () => {
           </h2>
           <NextLink
             className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-medical transition-colors hover:text-medical/80"
-            href="#product-lines"
+            href="/products?division=medical"
           >
             View All Products
             <span aria-hidden="true">→</span>

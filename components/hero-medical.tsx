@@ -39,7 +39,7 @@ export const HeroMedical = () => {
         <div className="flex flex-wrap justify-center gap-4">
           <NextLink
             className="rounded-full bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
-            href="#product-lines"
+            href="/products?division=medical"
           >
             Explore Product Lines
           </NextLink>
