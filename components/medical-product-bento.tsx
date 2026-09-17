@@ -66,6 +66,7 @@ export const MedicalProductBento = () => {
                 alt={line.heading}
                 className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 fill
+                sizes="(min-width: 768px) 50vw, 100vw"
                 src={line.image}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />

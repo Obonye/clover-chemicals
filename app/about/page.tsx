@@ -88,6 +88,7 @@ export default function AboutPage() {
           className="object-cover object-center"
           fill
           priority
+          sizes="100vw"
           src="/clover large.jpg"
         />
         <div className="absolute inset-0 bg-black/65" />

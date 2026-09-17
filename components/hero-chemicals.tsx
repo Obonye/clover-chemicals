@@ -14,6 +14,7 @@ export const HeroChemicals = () => {
         className="object-cover object-center"
         fill
         priority
+        sizes="100vw"
         src="/clover large.jpg"
       />
 

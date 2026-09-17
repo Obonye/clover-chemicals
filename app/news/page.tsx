@@ -119,6 +119,7 @@ export default function NewsPage() {
                 className="object-cover object-center transition-transform duration-700 hover:scale-105"
                 fill
                 priority
+                sizes="(min-width: 1024px) 860px, 100vw"
                 src={featured.image}
               />
             </div>
@@ -159,6 +160,7 @@ export default function NewsPage() {
                     alt={article.title}
                     className="object-cover object-center transition-transform duration-500 hover:scale-105"
                     fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     src={article.image}
                   />
                 </div>

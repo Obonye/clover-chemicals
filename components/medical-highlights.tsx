@@ -31,6 +31,7 @@ export const MedicalHighlights = () => {
             alt="Clover Medical diagnostic imaging team"
             className="object-cover object-center"
             fill
+            sizes="(min-width: 640px) 23vw, 100vw"
             src="/medical-team.jpg"
           />
           <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-lg">
