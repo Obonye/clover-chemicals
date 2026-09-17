@@ -77,6 +77,10 @@ const medicalProducts: MedicalProduct[] = [
 export const MedicalProductCarousel = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  // How many cards are visible at once — measured, not assumed, since it
+  // depends on the track's actual rendered width and breakpoint-driven card
+  // width (280px / 320px), not something derivable from a single class.
+  const [visibleCount, setVisibleCount] = useState(1);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -107,6 +111,35 @@ export const MedicalProductCarousel = () => {
     return () => track.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const track = trackRef.current;
+
+    if (!track) return;
+
+    const measure = () => {
+      const cards = Array.from(track.children) as HTMLElement[];
+
+      if (cards.length === 0) return;
+
+      // Distance between two cards' left edges already accounts for the
+      // gap, so it doesn't need to duplicate the `gap-5` value here.
+      const step =
+        cards.length > 1
+          ? cards[1].getBoundingClientRect().left - cards[0].getBoundingClientRect().left
+          : cards[0].getBoundingClientRect().width;
+
+      setVisibleCount(Math.max(1, Math.round(track.clientWidth / step)));
+    };
+
+    measure();
+
+    const observer = new ResizeObserver(measure);
+
+    observer.observe(track);
+
+    return () => observer.disconnect();
+  }, []);
+
   const scrollToCard = (index: number) => {
     const track = trackRef.current;
     const card = track?.children[index] as HTMLElement | undefined;
@@ -120,8 +153,36 @@ export const MedicalProductCarousel = () => {
     track.scrollTo({ behavior: "smooth", left: targetLeft });
   };
 
+  // The track can't scroll a leading card past `length - visibleCount` —
+  // once that many cards remain, they already fill the rest of the width
+  // and the browser clamps scrollLeft there. "Last" has to mean that clamp
+  // point, not `length - 1`, which `active` (a leading-card index) can
+  // never actually reach once more than one card is visible at a time.
+  const maxLeadingIndex = Math.max(0, medicalProducts.length - visibleCount);
   const isFirst = active === 0;
-  const isLast = active === medicalProducts.length - 1;
+  const isLast = active >= maxLeadingIndex;
+
+  // Dots represent pages (groups of `visibleCount` cards that scroll
+  // together), not individual products — one dot per product would
+  // overstate how much distinct content is behind the carousel when
+  // several cards are visible at once, since adjacent stops would mostly
+  // show the same cards with just one swapped in or out.
+  //
+  // Page starts can't just be `page * visibleCount` either, for the same
+  // clamping reason: with 6 items and 4 visible, "page 1" would compute to
+  // index 4, but the track can never scroll there — it clamps at index 2.
+  // floor(2 / 4) is always 0, so the last dot could never light up. Instead,
+  // each page's start is clamped the same way the browser clamps scroll, so
+  // it always matches a position the track can actually reach.
+  const pageCount = Math.max(1, Math.ceil(medicalProducts.length / visibleCount));
+  const pageStarts = Array.from({ length: pageCount }, (_, page) =>
+    Math.min(page * visibleCount, maxLeadingIndex),
+  );
+  const activePage = pageStarts.reduce(
+    (closest, start, page) =>
+      Math.abs(start - active) < Math.abs(pageStarts[closest] - active) ? page : closest,
+    0,
+  );
 
   return (
     <section className="bg-background py-16">
@@ -176,20 +237,22 @@ export const MedicalProductCarousel = () => {
           </div>
         </div>
 
-        {/* Pagination dots */}
-        <div className="mt-6 flex items-center justify-center gap-2">
-          {medicalProducts.map(({ product }, i) => (
-            <button
-              key={product.name}
-              aria-label={`Go to ${product.name}`}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === active ? "w-6 bg-medical" : "w-2 bg-separator"
-              }`}
-              type="button"
-              onClick={() => scrollToCard(i)}
-            />
-          ))}
-        </div>
+        {/* Pagination dots — one per page, not per product (see pageCount) */}
+        {pageCount > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-2">
+            {Array.from({ length: pageCount }, (_, page) => (
+              <button
+                key={page}
+                aria-label={`Go to page ${page + 1}`}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  page === activePage ? "w-6 bg-medical" : "w-2 bg-separator"
+                }`}
+                type="button"
+                onClick={() => scrollToCard(pageStarts[page])}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
