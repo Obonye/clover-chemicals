@@ -5,17 +5,20 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
-type Division = "chemical" | "medical";
+import {
+  DIVISION_CHANGE_EVENT,
+  DIVISION_STORAGE_KEY,
+  persistDivision,
+  type DivisionChangeEvent,
+  type SiteDivision,
+} from "@/lib/division";
 
-const DIVISION_STORAGE_KEY = "division";
-const DIVISION_COOKIE_MAX_AGE = 60 * 60 * 24 * 180; // 180 days
-
-const siblings: { label: string; href: string; division: Division }[] = [
+const siblings: { label: string; href: string; division: SiteDivision }[] = [
   { label: "Clover Chemical", href: "/", division: "chemical" },
   { label: "Clover Medical", href: "/medical", division: "medical" },
 ];
 
-function resolveDivision(pathname: string, fallback: Division): Division {
+function resolveDivision(pathname: string, fallback: SiteDivision): SiteDivision {
   if (pathname.startsWith("/medical")) return "medical";
   if (pathname === "/") return "chemical";
 
@@ -28,12 +31,12 @@ interface UtilityBarProps {
    *  hard page load. Every client-side navigation after that is resolved
    *  below instead, since the root layout that computed this prop doesn't
    *  re-render on a soft navigation. */
-  initialDivision: Division;
+  initialDivision: SiteDivision;
 }
 
 export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
   const pathname = usePathname();
-  const [division, setDivision] = useState<Division>(() =>
+  const [division, setDivision] = useState<SiteDivision>(() =>
     resolveDivision(pathname, initialDivision),
   );
 
@@ -41,7 +44,7 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
   // though the shared root layout itself doesn't re-render), and keeps the
   // shared --accent color token — driven by body[data-division] — in sync.
   useEffect(() => {
-    let remembered: Division = initialDivision;
+    let remembered: SiteDivision = initialDivision;
 
     try {
       const stored = localStorage.getItem(DIVISION_STORAGE_KEY);
@@ -56,15 +59,25 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
     setDivision(resolved);
     document.body.dataset.division = resolved;
 
+    // Only "/" and "/medical" are division-exclusive — persisting here too
+    // would overwrite the remembered preference just from browsing a
+    // shared page like /products in whatever division it last resolved to.
     if (pathname === "/" || pathname.startsWith("/medical")) {
-      try {
-        localStorage.setItem(DIVISION_STORAGE_KEY, resolved);
-      } catch {
-        // Ignore — the cookie below still covers the next hard load.
-      }
-      document.cookie = `division=${resolved}; path=/; max-age=${DIVISION_COOKIE_MAX_AGE}; samesite=lax`;
+      persistDivision(resolved);
     }
   }, [pathname, initialDivision]);
+
+  // Something other than navigation changed the division — e.g. the
+  // /products page's own division filter — so pick it up without a reload.
+  useEffect(() => {
+    function handleDivisionChange(event: Event) {
+      setDivision((event as DivisionChangeEvent).detail);
+    }
+
+    window.addEventListener(DIVISION_CHANGE_EVENT, handleDivisionChange);
+
+    return () => window.removeEventListener(DIVISION_CHANGE_EVENT, handleDivisionChange);
+  }, []);
 
   return (
     <div className="fixed top-0 z-50 w-full bg-[#111111] text-white">

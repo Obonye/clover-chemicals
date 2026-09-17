@@ -79,9 +79,9 @@ export const Navbar = ({ categories }: NavbarProps) => {
   // and News are shared across both divisions, so they don't branch here.
   const homeHref = isMedicalRoute ? "/medical" : "/";
   const browseLabel = isMedicalRoute ? "Explore Product Lines" : "Browse Products";
-  const browseHref = isMedicalRoute ? "/medical#product-lines" : "/products";
+  const browseHref = isMedicalRoute ? "/products?division=medical" : "/products";
   const mobileNavItems = isMedicalRoute
-    ? [{ label: "Product Lines", href: "/medical#product-lines" }]
+    ? [{ label: "Product Lines", href: "/products?division=medical" }]
     : [
         { label: "Products", href: "/products" },
         ...chemicalCategories.map((cat) => ({

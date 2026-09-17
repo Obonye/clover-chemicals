@@ -21,9 +21,7 @@ export default function MedicalPage() {
 
       <MedicalWhyPartner />
 
-      <div id="product-lines">
-        <MedicalProductBento />
-      </div>
+      <MedicalProductBento />
 
       <MedicalServices />
 
