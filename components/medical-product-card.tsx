@@ -14,6 +14,7 @@ export const MedicalProductCard = ({ product, tag }: MedicalProductCardProps) =>
       alt={product.name}
       className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
       fill
+      sizes="(min-width: 640px) 320px, 280px"
       src={product.image!}
     />
     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/5" />

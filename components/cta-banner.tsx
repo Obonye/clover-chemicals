@@ -27,6 +27,7 @@ export const CtaBanner = () => {
         alt=""
         className="object-cover object-center"
         fill
+        sizes="100vw"
         src="/engineers_2.png"
         style={{ filter: "url(#cta-duotone) brightness(0.75) contrast(1.1)" }}
       />

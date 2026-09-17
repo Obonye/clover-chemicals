@@ -72,6 +72,7 @@ export default async function CategoryPage({ params }: Props) {
             className="object-cover object-center"
             fill
             priority
+            sizes="100vw"
             src={heroSrc}
           />
         )}

@@ -2,11 +2,14 @@ import NextLink from "next/link";
 
 import { ProductCard } from "@/components/product-card";
 import { loadQuery } from "@/sanity/lib/fetch";
-import { FEATURED_PRODUCTS_QUERY } from "@/sanity/lib/queries";
+import { HOMEPAGE_FEATURED_QUERY } from "@/sanity/lib/queries";
 import type { ProductWithCategory } from "@/sanity/lib/types";
 
 export const BestSellers = async () => {
-  const featured = await loadQuery<ProductWithCategory[]>(FEATURED_PRODUCTS_QUERY);
+  const featured =
+    (await loadQuery<ProductWithCategory[] | null>(HOMEPAGE_FEATURED_QUERY, {
+      params: { id: "homepage-chemicals" },
+    })) ?? [];
 
   if (featured.length === 0) return null;
 

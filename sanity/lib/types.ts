@@ -43,8 +43,9 @@ export type Product = {
   packSizes: PackSize[] | null;
   image: SanityImage | null;
   tag: string | null;
-  featured: boolean | null;
   available: boolean | null;
+  isFeatured: boolean;
+  isOnPromotion: boolean;
 };
 
 export type ProductWithCategory = Product & {
@@ -53,4 +54,12 @@ export type ProductWithCategory = Product & {
 
 export type CategoryWithProducts = ProductCategory & {
   products: Product[];
+};
+
+export type Promotion = {
+  _id: string;
+  headline: string | null;
+  description: string | null;
+  image: SanityImage | null;
+  endDate: string | null;
 };

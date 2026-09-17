@@ -12,6 +12,7 @@ import {
   Drawer,
   ListBox,
   Select,
+  Switch,
   Tag,
   TagGroup,
   ToggleButton,
@@ -58,6 +59,7 @@ type ProductCatalogueProps = {
   initialQuery: string;
   initialCategory: string;
   initialDivision: string;
+  initialOnPromotion: boolean;
   initialSort: string;
 };
 
@@ -67,6 +69,7 @@ export const ProductCatalogue = ({
   initialQuery,
   initialCategory,
   initialDivision,
+  initialOnPromotion,
   initialSort,
 }: ProductCatalogueProps) => {
   const router = useRouter();
@@ -78,6 +81,7 @@ export const ProductCatalogue = ({
       ? initialDivision
       : "all",
   );
+  const [onPromotion, setOnPromotion] = useState(initialOnPromotion);
   const [sort, setSort] = useState<SortKey>(initialSort === "featured" ? "featured" : "name");
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
@@ -96,12 +100,13 @@ export const ProductCatalogue = ({
     if (query.trim()) params.set("q", query.trim());
     if (category !== "all") params.set("category", category);
     if (division !== "all") params.set("division", division);
+    if (onPromotion) params.set("promotion", "true");
     if (sort !== "name") params.set("sort", sort);
 
     const qs = params.toString();
 
     router.replace(qs ? `/products?${qs}` : "/products", { scroll: false });
-  }, [query, category, division, sort, router]);
+  }, [query, category, division, onPromotion, sort, router]);
 
   // Categories available for the chosen division — narrows the pill row so a
   // division + category combo can never land on a dead zero-result page.
@@ -127,6 +132,10 @@ export const ProductCatalogue = ({
       list = list.filter((product) => product.category?.slug === category);
     }
 
+    if (onPromotion) {
+      list = list.filter((product) => product.isOnPromotion);
+    }
+
     const needle = stegaClean(query).trim().toLowerCase();
 
     if (needle) {
@@ -140,19 +149,25 @@ export const ProductCatalogue = ({
     }
 
     if (sort === "featured") {
-      list = [...list].sort((a, b) => Number(b.featured) - Number(a.featured));
+      list = [...list].sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured));
     }
 
     return list;
-  }, [products, division, category, query, sort]);
+  }, [products, division, category, onPromotion, query, sort]);
 
-  const activeFilterCount = (division !== "all" ? 1 : 0) + (sort !== "name" ? 1 : 0);
+  // Only worth showing the toggle at all when something is actually on
+  // promotion — otherwise it's a control that can never do anything.
+  const hasPromotion = products.some((product) => product.isOnPromotion);
+
+  const activeFilterCount =
+    (division !== "all" ? 1 : 0) + (onPromotion ? 1 : 0) + (sort !== "name" ? 1 : 0);
   const hasActiveFilters = activeFilterCount > 0 || category !== "all" || query.trim() !== "";
 
   function clearFilters() {
     setQuery("");
     setCategory("all");
     setDivision("all");
+    setOnPromotion(false);
     setSort("name");
   }
 
@@ -208,6 +223,15 @@ export const ProductCatalogue = ({
     </Select>
   );
 
+  const promotionSwitch = (
+    <Switch isSelected={onPromotion} onChange={setOnPromotion}>
+      <Switch.Control>
+        <Switch.Thumb />
+      </Switch.Control>
+      <Switch.Content>On Promotion</Switch.Content>
+    </Switch>
+  );
+
   return (
     <>
       {/* Category pills — plain row up top, not part of the sticky sidebar */}
@@ -254,6 +278,11 @@ export const ProductCatalogue = ({
               </TagGroup.List>
             </TagGroup>
           </div>
+
+          {/* Mobile-only: kept out of the Filters drawer since it'd be too
+              easy to miss tucked away in there — sits right under the chips
+              instead. Desktop shows it in the toolbar below. */}
+          {hasPromotion && <div className="pb-6 lg:hidden">{promotionSwitch}</div>}
         </div>
       </div>
 
@@ -287,6 +316,7 @@ export const ProductCatalogue = ({
                   variant="ghost"
                   onPress={() => {
                     setDivision("all");
+                    setOnPromotion(false);
                     setSort("name");
                   }}
                 >
@@ -305,10 +335,13 @@ export const ProductCatalogue = ({
       <div className="bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-8 lg:px-12">
           {/* Search + division + sort — full width, sits above the grid, desktop only */}
-          <div className="mb-6 hidden items-center gap-4 lg:flex">
-            <ProductSearch className="min-w-0 flex-1" value={query} onChange={setQuery} />
-            {renderDivisionToggle()}
-            <div className="w-48 shrink-0">{sortSelect}</div>
+          <div className="mb-6 hidden flex-col gap-4 lg:flex">
+            <div className="flex items-center gap-4">
+              <ProductSearch className="min-w-0 flex-1" value={query} onChange={setQuery} />
+              {renderDivisionToggle()}
+              <div className="w-48 shrink-0">{sortSelect}</div>
+            </div>
+            {hasPromotion && promotionSwitch}
           </div>
 
           {/* Results */}
