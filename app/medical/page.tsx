@@ -15,13 +15,13 @@ export default function MedicalPage() {
 
       <MedicalPartners />
 
-      <MedicalQuote />
-
       <MedicalProductCarousel />
 
-      <MedicalWhyPartner />
-
       <MedicalProductBento />
+
+      <MedicalQuote />
+
+      <MedicalWhyPartner />
 
       <MedicalServices />
 

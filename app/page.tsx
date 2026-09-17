@@ -21,10 +21,11 @@ export default async function Home() {
 
       <PartnersStrip />
 
+      <ProductsSection categories={categories} />
+      <BestSellers />
+
       <SpecialsBanner />
 
-      <BestSellers />
-      <ProductsSection categories={categories} />
       <HeritageSection />
       <CtaBanner />
     </>
