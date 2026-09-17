@@ -10,6 +10,7 @@ type Props = {
     q?: string;
     category?: string;
     division?: string;
+    promotion?: string;
     sort?: string;
   }>;
 };
@@ -31,6 +32,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         categories={categories}
         initialCategory={params.category ?? "all"}
         initialDivision={params.division ?? "all"}
+        initialOnPromotion={params.promotion === "true"}
         initialQuery={params.q ?? ""}
         initialSort={params.sort ?? "name"}
         products={products}
