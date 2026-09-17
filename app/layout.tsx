@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
-import { draftMode } from "next/headers";
+import { cookies, draftMode } from "next/headers";
 import { VisualEditing } from "next-sanity/visual-editing";
 
 import { Providers } from "./providers";
@@ -49,6 +49,14 @@ export default async function RootLayout({
   // so this doesn't add fetch latency to every page load.
   const categories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
 
+  // Products, About, and News are shared across both divisions and have no
+  // division segment of their own in the URL — so the color they render in
+  // follows whichever division the visitor last entered through (set by
+  // middleware.ts), not the current route.
+  const cookieStore = await cookies();
+  const division =
+    cookieStore.get("division")?.value === "medical" ? "medical" : "chemical";
+
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -59,10 +67,11 @@ export default async function RootLayout({
           fontDisplay.variable,
           fontMedicalDisplay.variable,
         )}
+        data-division={division}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex min-h-screen flex-col overflow-x-hidden md:pb-8">
-            <UtilityBar />
+            <UtilityBar initialDivision={division} />
             <Navbar categories={categories} />
             <main className="flex-grow pt-24">
               {children}
