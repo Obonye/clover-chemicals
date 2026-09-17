@@ -20,6 +20,7 @@ import {
 
 import { ProductCard } from "@/components/product-card";
 import { ProductSearch } from "@/components/product-search";
+import { persistDivision } from "@/lib/division";
 import type { Division, ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
 
 type SortKey = "name" | "featured";
@@ -79,6 +80,13 @@ export const ProductCatalogue = ({
   );
   const [sort, setSort] = useState<SortKey>(initialSort === "featured" ? "featured" : "name");
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+
+  // A ?division= link (e.g. the medical CTAs) can be someone's first-ever
+  // page load, before middleware.ts has ever set the cookie — repaint to
+  // match on mount so the theme doesn't default to chemical underneath it.
+  useEffect(() => {
+    if (division !== "all") persistDivision(division === "chemicals" ? "chemical" : "medical");
+  }, []);
 
   // Keep the URL in sync so results stay shareable/bookmarkable — default
   // values are omitted entirely so a filter-free view stays at bare /products.
@@ -149,18 +157,25 @@ export const ProductCatalogue = ({
   }
 
   function handleDivisionChange(keys: Selection) {
-    setDivision(firstKey<DivisionFilter>(keys, "all"));
+    const next = firstKey<DivisionFilter>(keys, "all");
+
+    setDivision(next);
+
+    // "All" has no single division to theme the page as, so leave the
+    // current accent/cookie alone — only a specific pick repaints it.
+    if (next !== "all") persistDivision(next === "chemicals" ? "chemical" : "medical");
   }
 
   function handleCategoryChange(keys: Selection) {
     setCategory(firstKey<string>(keys, "all"));
   }
 
-  const renderDivisionToggle = (orientation: "horizontal" | "vertical") => (
+  const renderDivisionToggle = (fullWidth = false) => (
     <ToggleButtonGroup
       aria-label="Filter by division"
       disallowEmptySelection
-      orientation={orientation}
+      fullWidth={fullWidth}
+      orientation="horizontal"
       selectedKeys={new Set<Key>([division])}
       selectionMode="single"
       onSelectionChange={handleDivisionChange}
@@ -200,7 +215,7 @@ export const ProductCatalogue = ({
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           {/* Mobile-only: search + Filters trigger (the desktop toolbar below is lg-only) */}
           <div className="flex items-center gap-3 py-4 lg:hidden">
-            <ProductSearch className="flex-1" value={query} onChange={setQuery} />
+            <ProductSearch className="min-w-0 flex-1" value={query} onChange={setQuery} />
 
             <Badge.Anchor>
               <Button aria-label="Filters" variant="outline" onPress={() => setIsFilterSheetOpen(true)}>
@@ -224,9 +239,15 @@ export const ProductCatalogue = ({
               onSelectionChange={handleCategoryChange}
             >
               <TagGroup.List className="flex flex-nowrap gap-3 lg:flex-wrap">
-                <Tag id="all">All</Tag>
+                <Tag className="shrink-0 whitespace-nowrap" id="all">
+                  All
+                </Tag>
                 {visibleCategories.map((cat) => (
-                  <Tag key={cat._id} id={cat.slug ?? cat._id}>
+                  <Tag
+                    key={cat._id}
+                    className="shrink-0 whitespace-nowrap"
+                    id={cat.slug ?? cat._id}
+                  >
                     {cat.label}
                   </Tag>
                 ))}
@@ -250,7 +271,7 @@ export const ProductCatalogue = ({
                   <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
                     Division
                   </span>
-                  {renderDivisionToggle("vertical")}
+                  {renderDivisionToggle(true)}
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -285,8 +306,8 @@ export const ProductCatalogue = ({
         <div className="mx-auto max-w-[1280px] px-6 py-8 lg:px-12">
           {/* Search + division + sort — full width, sits above the grid, desktop only */}
           <div className="mb-6 hidden items-center gap-4 lg:flex">
-            <ProductSearch className="flex-1" value={query} onChange={setQuery} />
-            {renderDivisionToggle("horizontal")}
+            <ProductSearch className="min-w-0 flex-1" value={query} onChange={setQuery} />
+            {renderDivisionToggle()}
             <div className="w-48 shrink-0">{sortSelect}</div>
           </div>
 
