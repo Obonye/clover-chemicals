@@ -46,11 +46,17 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
         className="relative block h-44 shrink-0 overflow-hidden bg-surface-secondary"
         href={href}
       >
+        {product.isOnPromotion && (
+          <span className="absolute left-3 top-3 z-10 rounded-sm bg-specials px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-specials-foreground">
+            On Promotion
+          </span>
+        )}
         {src ? (
           <Image
             alt={product.image?.alt ?? product.name ?? ""}
             className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
             fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
             src={src}
           />
         ) : null}

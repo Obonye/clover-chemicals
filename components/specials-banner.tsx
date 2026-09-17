@@ -1,9 +1,28 @@
 import Image from "next/image";
 import NextLink from "next/link";
 
-const validUntil = "31 August 2026";
+import { loadQuery } from "@/sanity/lib/fetch";
+import { imageUrl } from "@/sanity/lib/image";
+import { ACTIVE_PROMOTION_QUERY } from "@/sanity/lib/queries";
+import type { Promotion } from "@/sanity/lib/types";
 
-export const SpecialsBanner = () => {
+export const SpecialsBanner = async () => {
+  const promotion = await loadQuery<Promotion | null>(ACTIVE_PROMOTION_QUERY, {
+    params: { division: "chemicals" },
+  });
+
+  if (!promotion) return null;
+
+  const validUntil = promotion.endDate
+    ? new Date(promotion.endDate).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "Africa/Gaborone",
+      })
+    : null;
+  const bannerImage = imageUrl(promotion.image, { width: 1200, height: 600 });
+
   return (
     <section className="bg-background py-12">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
@@ -29,10 +48,11 @@ export const SpecialsBanner = () => {
           {/* Image */}
           <div className="relative h-64 lg:h-auto">
             <Image
-              alt="Current specials"
+              alt={promotion.image?.alt ?? promotion.headline ?? "Current specials"}
               className="object-cover object-center"
               fill
-              src="/CTA/sale.jpg"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              src={bannerImage ?? "/CTA/sale.jpg"}
               style={{ filter: "url(#sale-dither) contrast(1.1)" }}
             />
           </div>
@@ -43,23 +63,26 @@ export const SpecialsBanner = () => {
               <span className="inline-block w-fit rounded-sm bg-specials px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-specials-foreground">
                 Current Specials
               </span>
-              <span className="font-mono text-xs uppercase tracking-widest text-muted">
-                Valid until {validUntil}
-              </span>
+              {validUntil && (
+                <span className="font-mono text-xs uppercase tracking-widest text-muted">
+                  Valid until {validUntil}
+                </span>
+              )}
             </div>
 
             <h3 className="mt-4 font-display text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
-              Seasonal savings on select agro &amp; industrial lines
+              {promotion.headline}
             </h3>
 
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
-              Ask about volume pricing on our best-selling formulations —
-              available for a limited time while stock lasts.
-            </p>
+            {promotion.description && (
+              <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
+                {promotion.description}
+              </p>
+            )}
 
             <NextLink
               className="mt-6 inline-flex w-fit items-center gap-1.5 rounded bg-specials px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-specials-foreground transition-colors hover:bg-specials/90"
-              href="/products"
+              href="/products?promotion=true"
             >
               Browse Products
               <span aria-hidden="true">→</span>

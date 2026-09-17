@@ -11,8 +11,14 @@ const PRODUCT_FIELDS = /* groq */ `
   packSizes[]{ _key, value, unit, label },
   image,
   tag,
-  featured,
-  available
+  available,
+  "isFeatured": count(*[_type == "homepage" && references(^._id)]) > 0,
+  "isOnPromotion": count(*[
+    _type == "promotion" &&
+    references(^._id) &&
+    dateTime(now()) >= dateTime(startDate) &&
+    dateTime(now()) <= dateTime(endDate)
+  ]) > 0
 `;
 
 const CATEGORY_FIELDS = /* groq */ `
@@ -67,10 +73,29 @@ export const ALL_PRODUCTS_QUERY = defineQuery(`
   }
 `);
 
-/** Homepage best-sellers. */
-export const FEATURED_PRODUCTS_QUERY = defineQuery(`
-  *[_type == "product" && featured == true] | order(name asc) [0...8] {
+/** A division's homepage — curated, ordered featured products. */
+export const HOMEPAGE_FEATURED_QUERY = defineQuery(`
+  *[_id == $id][0].featuredProducts[]->{
     ${PRODUCT_FIELDS},
     category->{ ${CATEGORY_FIELDS} }
+  }
+`);
+
+/**
+ * The active promotion for a division, if any — the one closest to ending
+ * wins when more than one is running at once.
+ */
+export const ACTIVE_PROMOTION_QUERY = defineQuery(`
+  *[
+    _type == "promotion" &&
+    division == $division &&
+    dateTime(now()) >= dateTime(startDate) &&
+    dateTime(now()) <= dateTime(endDate)
+  ] | order(endDate asc) [0] {
+    _id,
+    headline,
+    description,
+    image,
+    endDate
   }
 `);
