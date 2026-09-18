@@ -45,7 +45,7 @@ body {
   --focus: oklch(67.31% 0.1625 144.21);
   --foreground: oklch(0.1543 0 0);
   --heading: var(--foreground);
-  --medical: #5227ff;
+  --medical: #0074a8;
   --medical-foreground: #ffffff;
   --muted: oklch(55.17% 0.0030 144.21);
   --overlay: oklch(100.00% 0.0004 144.21);
@@ -95,7 +95,7 @@ body {
   --focus: oklch(67.31% 0.1625 144.21);
   --foreground: oklch(99.11% 0.0015 144.21);
   --heading: var(--foreground);
-  --medical: #5227ff;
+  --medical: #0074a8;
   --medical-foreground: #ffffff;
   --muted: oklch(70.50% 0.0030 144.21);
   --overlay: oklch(21.03% 0.0030 144.21);
