@@ -37,13 +37,13 @@ export const Footer = () => {
           <div>
             <NextLink className="mb-5 flex items-center gap-2.5" href="/">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="Clover Chemical Industries" className="h-9 w-9" src="/clover-logo.svg" />
+              <img alt={siteConfig.name} className="h-9 w-9" src="/clover-logo.svg" />
               <div className="flex flex-col leading-none">
                 <span className="text-sm font-bold tracking-tight text-foreground">
                   CLOVER
                 </span>
                 <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-foreground/40">
-                  Chemical Industries
+                  Industries
                 </span>
               </div>
             </NextLink>
@@ -134,7 +134,7 @@ export const Footer = () => {
       <div className="relative z-10 border-t border-separator">
         <div className="mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-4 px-6 py-5 sm:flex-row sm:items-center lg:px-12">
           <p className="text-xs text-foreground/30">
-            © {new Date().getFullYear()} Clover Chemical Industries. All rights reserved.
+            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
           <ul className="flex gap-6">
             {legalLinks.map((link) => (

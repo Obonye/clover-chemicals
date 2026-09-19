@@ -42,7 +42,7 @@ export const HeritageSection = () => {
               Rooted in Botswana. Trusted by global industry.
             </h2>
             <p className="mb-5 text-base leading-[1.75] text-foreground/60" style={{ maxWidth: "55ch" }}>
-              Clover Chemical Industries was established in Botswana in{" "}
+              {siteConfig.name} was established in Botswana in{" "}
               {siteConfig.foundedYear} to manufacture and supply chemicals for
               domestic and industrial use. As demand grew, so did our scope, and
               today we're authorised distributors for some of the world's leading
