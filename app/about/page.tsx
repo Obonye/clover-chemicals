@@ -84,12 +84,12 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="relative -mt-16 flex min-h-[55vh] items-end overflow-hidden">
         <Image
-          alt="Clover Chemical Industries"
+          alt={siteConfig.name}
           className="object-cover object-center"
           fill
           priority
           sizes="100vw"
-          src="/clover large.jpg"
+          src="/clover_about_us_2.jpg"
         />
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-24 lg:px-12">
@@ -97,7 +97,7 @@ export default function AboutPage() {
             Est. {siteConfig.foundedYear}
           </p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "16ch" }}>
-            {years} years of chemical precision.
+            {years} years of technical precision.
           </h1>
         </div>
       </section>
@@ -106,7 +106,7 @@ export default function AboutPage() {
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-20 lg:px-12 lg:py-24">
           <p className="mb-8 text-xl font-medium leading-relaxed text-foreground lg:text-2xl" style={{ maxWidth: "36ch" }}>
-            Clover Chemical Industries was established in Botswana in{" "}
+            {siteConfig.name} was established in Botswana in{" "}
             {siteConfig.foundedYear} to manufacture and supply chemicals for
             domestic and industrial use. As demand grew, so did our scope.
           </p>
@@ -151,10 +151,10 @@ export default function AboutPage() {
             className="font-display font-extrabold leading-tight tracking-tight text-white"
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)", maxWidth: "22ch" }}
           >
-            We don&apos;t just supply chemicals. We supply certainty.
+            We don&apos;t just supply. We supply certainty.
           </p>
           <p className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-white/60">
-            — Clover Chemical Industries, Est. {siteConfig.foundedYear}
+            — {siteConfig.name}, Est. {siteConfig.foundedYear}
           </p>
         </div>
       </section>
@@ -289,8 +289,8 @@ export default function AboutPage() {
                 Ready to work with us?
               </h2>
               <p className="text-base text-muted" style={{ maxWidth: "48ch" }}>
-                Speak to our technical team about your chemical supply needs. We
-                respond within one business day.
+                Speak to our technical team about your supply needs — chemical,
+                medical, or lab. We respond within one business day.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
