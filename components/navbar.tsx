@@ -7,6 +7,13 @@ import clsx from "clsx";
 import { useTheme } from "next-themes";
 
 import { siteConfig } from "@/config/site";
+import {
+  DIVISION_CHANGE_EVENT,
+  DIVISION_STORAGE_KEY,
+  resolveDivision,
+  type DivisionChangeEvent,
+  type SiteDivision,
+} from "@/lib/division";
 import type { ProductCategory } from "@/sanity/lib/types";
 
 // Nav category links jump straight into the unified, filterable /products
@@ -45,9 +52,14 @@ type NavbarProps = {
    *  scoped to the Chemicals division below, since this dropdown only
    *  renders on non-medical routes. */
   categories: ProductCategory[];
+  /** Division resolved server-side from the `division` cookie (see
+   *  middleware.ts) — used only to paint the first render correctly on a
+   *  hard page load. Every client-side navigation after that is resolved
+   *  below instead, mirroring the utility bar. */
+  initialDivision: SiteDivision;
 };
 
-export const Navbar = ({ categories }: NavbarProps) => {
+export const Navbar = ({ categories, initialDivision }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -57,30 +69,66 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const pathname = usePathname();
   const chemicalCategories = categories.filter((cat) => cat.division === "chemicals");
 
-  // Routes with a full-bleed hero directly beneath the navbar.
-  const isMedicalRoute = pathname.startsWith("/medical");
+  // Which page layout is under the navbar right now — strictly path-based,
+  // since it describes /medical's own light hero, not the visitor's
+  // division preference (see `division` below for that).
+  const isMedicalPath = pathname.startsWith("/medical");
   const isHeroRoute =
     pathname === "/" ||
     pathname === "/about" ||
-    isMedicalRoute ||
+    isMedicalPath ||
     (pathname.startsWith("/products/") && pathname !== "/products/");
   const isTransparent = isHeroRoute && !isScrolled;
 
   // The Medical hero is light (not a dark photo), so transparent-state text
   // needs to stay dark there instead of the white used over the dark heroes.
-  const heroText = isMedicalRoute ? "text-heading" : "text-white";
-  const heroTextMuted = isMedicalRoute ? "text-muted" : "text-white/70";
-  const heroControl = isMedicalRoute
+  const heroText = isMedicalPath ? "text-heading" : "text-white";
+  const heroTextMuted = isMedicalPath ? "text-muted" : "text-white/70";
+  const heroControl = isMedicalPath
     ? "text-muted hover:text-heading"
     : "text-white/80 hover:text-white";
 
+  // Which division's branding/destinations to show — same cookie-backed
+  // resolution as the utility bar, so shared routes like /about and /news
+  // keep showing whichever division the visitor is actually browsing
+  // instead of reverting to Chemicals just because those routes have no
+  // division segment of their own.
+  const [division, setDivision] = useState<SiteDivision>(() =>
+    resolveDivision(pathname, initialDivision),
+  );
+  const isMedicalDivision = division === "medical";
+
+  useEffect(() => {
+    let remembered: SiteDivision = initialDivision;
+
+    try {
+      const stored = localStorage.getItem(DIVISION_STORAGE_KEY);
+
+      if (stored === "chemical" || stored === "medical") remembered = stored;
+    } catch {
+      // Storage can be unavailable (private mode, blocked); ignore.
+    }
+
+    setDivision(resolveDivision(pathname, remembered));
+  }, [pathname, initialDivision]);
+
+  useEffect(() => {
+    function handleDivisionChange(event: Event) {
+      setDivision((event as DivisionChangeEvent).detail);
+    }
+
+    window.addEventListener(DIVISION_CHANGE_EVENT, handleDivisionChange);
+
+    return () => window.removeEventListener(DIVISION_CHANGE_EVENT, handleDivisionChange);
+  }, []);
+
   // Functional destinations — keep the nav inside whichever division you're
   // browsing instead of always routing back to Chemicals. Products, About,
-  // and News are shared across both divisions, so they don't branch here.
-  const homeHref = isMedicalRoute ? "/medical" : "/";
-  const browseLabel = isMedicalRoute ? "Explore Product Lines" : "Browse Products";
-  const browseHref = isMedicalRoute ? "/products?division=medical" : "/products";
-  const mobileNavItems = isMedicalRoute
+  // and News are shared across both divisions, so they don't branch on path.
+  const homeHref = isMedicalDivision ? "/medical" : "/";
+  const browseLabel = isMedicalDivision ? "Explore Product Lines" : "Browse Products";
+  const browseHref = isMedicalDivision ? "/products?division=medical" : "/products";
+  const mobileNavItems = isMedicalDivision
     ? [{ label: "Product Lines", href: "/products?division=medical" }]
     : [
         { label: "Products", href: "/products" },
@@ -138,7 +186,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
         <NextLink className="flex flex-shrink-0 items-center gap-2.5" href={homeHref}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            alt={isMedicalRoute ? "Clover Medical" : "Clover Chemical"}
+            alt={isMedicalDivision ? "Clover Medical" : "Clover Chemical"}
             className="h-9 w-9"
             src="/clover-logo.svg"
           />
@@ -157,7 +205,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                 isTransparent ? heroTextMuted : "text-muted",
               )}
             >
-              {isMedicalRoute ? "Medical" : "Chemical"}
+              {isMedicalDivision ? "Medical" : "Chemical"}
             </span>
           </div>
         </NextLink>
@@ -243,7 +291,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
               "whitespace-nowrap rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
               isTransparent ? heroControl : "text-muted hover:text-foreground",
             )}
-            href={isMedicalRoute ? "/contact?division=medical" : "/contact"}
+            href={isMedicalDivision ? "/contact?division=medical" : "/contact"}
           >
             Get a Quote
           </NextLink>
