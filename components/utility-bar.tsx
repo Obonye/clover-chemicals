@@ -9,6 +9,7 @@ import {
   DIVISION_CHANGE_EVENT,
   DIVISION_STORAGE_KEY,
   persistDivision,
+  resolveDivision,
   type DivisionChangeEvent,
   type SiteDivision,
 } from "@/lib/division";
@@ -17,13 +18,6 @@ const siblings: { label: string; href: string; division: SiteDivision }[] = [
   { label: "Clover Chemical", href: "/", division: "chemical" },
   { label: "Clover Medical", href: "/medical", division: "medical" },
 ];
-
-function resolveDivision(pathname: string, fallback: SiteDivision): SiteDivision {
-  if (pathname.startsWith("/medical")) return "medical";
-  if (pathname === "/") return "chemical";
-
-  return fallback;
-}
 
 interface UtilityBarProps {
   /** Division resolved server-side from the `division` cookie (see

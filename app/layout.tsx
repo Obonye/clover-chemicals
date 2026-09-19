@@ -72,7 +72,7 @@ export default async function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex min-h-screen flex-col overflow-x-hidden md:pb-8">
             <UtilityBar initialDivision={division} />
-            <Navbar categories={categories} />
+            <Navbar categories={categories} initialDivision={division} />
             <main className="flex-grow pt-24">
               {children}
             </main>

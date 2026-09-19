@@ -17,6 +17,20 @@ export const DIVISION_CHANGE_EVENT = "clover:division-change";
 export type DivisionChangeEvent = CustomEvent<SiteDivision>;
 
 /**
+ * Resolves the active division for a given pathname. "/" and "/medical" are
+ * division-exclusive and always win; every other (shared) route falls back
+ * to whichever division the visitor last entered through, so nav chrome on
+ * pages like /about and /news stays consistent with wherever they came from
+ * instead of always reverting to Chemicals.
+ */
+export function resolveDivision(pathname: string, fallback: SiteDivision): SiteDivision {
+  if (pathname.startsWith("/medical")) return "medical";
+  if (pathname === "/") return "chemical";
+
+  return fallback;
+}
+
+/**
  * Writes the division to localStorage + cookie, repaints the page via
  * body[data-division], and notifies other mounted components. Call this
  * any time the user explicitly picks a division somewhere other than by
