@@ -89,7 +89,7 @@ export default function AboutPage() {
           fill
           priority
           sizes="100vw"
-          src="/clover large.jpg"
+          src="/clover_about_us_2.jpg"
         />
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-24 lg:px-12">
