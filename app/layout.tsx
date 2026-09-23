@@ -73,7 +73,7 @@ export default async function RootLayout({
           <div className="relative flex min-h-screen flex-col overflow-x-hidden md:pb-8">
             <UtilityBar initialDivision={division} />
             <Navbar categories={categories} initialDivision={division} />
-            <main className="flex-grow pt-24">
+            <main className="flex-grow pt-28">
               {children}
             </main>
             <Footer />

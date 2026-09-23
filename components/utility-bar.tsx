@@ -75,14 +75,14 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
 
   return (
     <div className="fixed top-0 z-50 w-full bg-[#111111] text-white">
-      <div className="mx-auto flex h-8 max-w-[1280px] items-center gap-5 px-6 pb-1 sm:pb-0 lg:px-12">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-white/60">
+      <div className="mx-auto flex h-12 max-w-[1280px] items-center gap-6 px-6 lg:px-12">
+        <span className="text-sm font-semibold uppercase tracking-[0.1em] text-white/60">
           Clover Industries
         </span>
 
-        <span aria-hidden="true" className="h-3 w-px bg-white/20" />
+        <span aria-hidden="true" className="h-4 w-px bg-white/20" />
 
-        <ul className="flex items-center gap-5">
+        <ul className="flex items-center gap-6">
           {siblings.map((sibling) => {
             const isActive = sibling.division === division;
 
@@ -91,7 +91,7 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
                 <NextLink
                   aria-current={isActive ? "page" : undefined}
                   className={clsx(
-                    "flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
+                    "flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
                     isActive ? "text-accent" : "text-white/45 hover:text-white/75",
                   )}
                   href={sibling.href}
@@ -99,7 +99,7 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
                   <span
                     aria-hidden="true"
                     className={clsx(
-                      "h-1.5 w-1.5 rounded-full transition-colors duration-150",
+                      "h-2 w-2 rounded-full transition-colors duration-150",
                       isActive ? "bg-accent" : "bg-white/25",
                     )}
                   />
