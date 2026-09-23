@@ -5,6 +5,7 @@ import NextLink from "next/link";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
+import { Drawer } from "@heroui/react";
 
 import { siteConfig } from "@/config/site";
 import { divisions, getDivision } from "@/config/divisions";
@@ -50,6 +51,7 @@ type NavbarProps = {
 
 export const Navbar = ({ categories }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,10 +59,6 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const productsTriggerRef = useRef<HTMLButtonElement>(null);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
-  // Mobile menu's own, separate list — kept exactly as today; CI-5 rebuilds
-  // the mobile menu from shared data, so it isn't switched to
-  // divisionCategories below to avoid a second, out-of-scope behavior change.
-  const chemicalCategories = categories.filter((cat) => cat.division === "chemicals");
 
   // The URL's first segment is the only source of division now — "chemical"
   // or "medical" under app/[division]/, undefined on every shared route
@@ -99,19 +97,14 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const homeHref = division ? `/${division.slug}` : "/";
   const browseLabel = division?.browseLabel ?? "Browse Products";
   const browseHref = division ? `/${division.slug}/products` : "/products";
-  const isMedical = division?.slug === "medical";
-  const mobileNavItems = isMedical
-    ? [{ label: "Product Lines", href: "/medical/products" }]
-    : [
-        { label: "Products", href: "/products" },
-        ...chemicalCategories.map((cat) => ({
-          label: cat.label ?? "",
-          href: categoryFilterHref("/products", cat.slug),
-        })),
-        { label: "Clover Medical", href: "/medical" },
-      ];
 
   useEffect(() => setMounted(true), []);
+
+  // Collapse the mobile Products group back down each time the menu itself
+  // closes, so it doesn't reopen already-expanded next time.
+  useEffect(() => {
+    if (!isMenuOpen) setIsMobileProductsOpen(false);
+  }, [isMenuOpen]);
 
   useEffect(() => {
     function handleScroll() {
@@ -347,46 +340,138 @@ export const Navbar = ({ categories }: NavbarProps) => {
         </button>
       </header>
 
-      {/* Mobile menu — always in DOM, toggled via CSS to avoid iOS rendering issues */}
-      <div
-        aria-hidden={!isMenuOpen}
-        className={`fixed inset-x-0 top-28 z-50 border-t border-separator bg-background shadow-lg lg:hidden ${isMenuOpen ? "block" : "hidden"}`}
-      >
-        <ul className="flex flex-col gap-1 px-6 py-4">
-          {mobileNavItems.map((item) => (
-            <li key={item.href}>
-              <NextLink
-                className="block py-2.5 text-sm font-semibold uppercase tracking-wide text-muted hover:text-accent transition-colors"
-                href={item.href}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.label}
-              </NextLink>
-            </li>
-          ))}
-        </ul>
-        <div className="border-t border-separator px-6 py-4 flex flex-col gap-3">
-          {mounted && (
-            <button
-              aria-label="Toggle theme"
-              style={{ touchAction: "manipulation" }}
-              type="button"
-              className="flex items-center gap-2 py-2 text-sm font-semibold uppercase tracking-wide text-muted hover:text-foreground transition-colors"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-              {theme === "dark" ? "Light Mode" : "Dark Mode"}
-            </button>
-          )}
-          <NextLink
-            className="block w-full rounded bg-accent px-4 py-2.5 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground hover:bg-accent/90 transition-colors"
-            href={browseHref}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            {browseLabel}
-          </NextLink>
-        </div>
-      </div>
+      {/* Mobile menu — Drawer (React Aria Modal underneath) gives us
+          Escape-to-close, focus-trap + focus-return-to-trigger, and
+          body-scroll-lock for free; see product-catalogue.tsx's filter
+          sheet for the same pattern already in use elsewhere. */}
+      <Drawer>
+        <Drawer.Backdrop isOpen={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <Drawer.Content placement="right">
+            <Drawer.Dialog>
+              <Drawer.CloseTrigger />
+              <Drawer.Header>
+                <Drawer.Heading className="sr-only">Menu</Drawer.Heading>
+              </Drawer.Header>
+              <Drawer.Body className="flex flex-col gap-1">
+                {division ? (
+                  <>
+                    <button
+                      aria-expanded={isMobileProductsOpen}
+                      className="group flex min-h-[44px] w-full items-center justify-between text-sm font-semibold uppercase tracking-wide text-muted transition-colors hover:text-accent"
+                      data-open={isMobileProductsOpen}
+                      type="button"
+                      onClick={() => setIsMobileProductsOpen((prev) => !prev)}
+                    >
+                      Products
+                      <ChevronDown />
+                    </button>
+                    {isMobileProductsOpen && (
+                      <ul className="flex flex-col gap-1 pl-4">
+                        {divisionCategories.map((cat) => (
+                          <li key={cat._id}>
+                            <NextLink
+                              className="flex min-h-[44px] items-center text-sm text-muted transition-colors hover:text-accent"
+                              href={categoryFilterHref(`/${division.slug}/products`, cat.slug)}
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              {cat.label}
+                            </NextLink>
+                          </li>
+                        ))}
+                        <li>
+                          <NextLink
+                            className="flex min-h-[44px] items-center text-sm font-semibold text-accent"
+                            href={`/${division.slug}/products`}
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            View all products →
+                          </NextLink>
+                        </li>
+                      </ul>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <p className="mt-2 font-mono text-xs font-medium uppercase tracking-widest text-muted">
+                      Divisions
+                    </p>
+                    {divisions.map((d) => (
+                      <NextLink
+                        key={d.slug}
+                        className="flex min-h-[44px] items-center text-sm font-semibold uppercase tracking-wide text-muted transition-colors hover:text-accent"
+                        href={`/${d.slug}`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {d.name}
+                      </NextLink>
+                    ))}
+                  </>
+                )}
+
+                {siteConfig.navItems.map((item) => (
+                  <NextLink
+                    key={item.href}
+                    className="flex min-h-[44px] items-center text-sm font-semibold uppercase tracking-wide text-muted transition-colors hover:text-accent"
+                    href={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </NextLink>
+                ))}
+
+                {division && (
+                  <>
+                    <p className="mt-2 font-mono text-xs font-medium uppercase tracking-widest text-muted">
+                      Switch Division
+                    </p>
+                    {divisions
+                      .filter((d) => d.slug !== division.slug)
+                      .map((d) => (
+                        <NextLink
+                          key={d.slug}
+                          className="flex min-h-[44px] items-center text-sm font-semibold uppercase tracking-wide text-muted transition-colors hover:text-accent"
+                          href={`/${d.slug}`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {d.name}
+                        </NextLink>
+                      ))}
+                  </>
+                )}
+
+                {mounted && (
+                  <button
+                    aria-label="Toggle theme"
+                    className="mt-2 flex min-h-[44px] items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted transition-colors hover:text-foreground"
+                    style={{ touchAction: "manipulation" }}
+                    type="button"
+                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  >
+                    {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                  </button>
+                )}
+              </Drawer.Body>
+              <Drawer.Footer className="flex flex-col gap-3">
+                <NextLink
+                  className="block w-full rounded bg-accent px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                  href="/contact"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Get a Quote
+                </NextLink>
+                <NextLink
+                  className="block w-full rounded border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
+                  href={browseHref}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {browseLabel}
+                </NextLink>
+              </Drawer.Footer>
+            </Drawer.Dialog>
+          </Drawer.Content>
+        </Drawer.Backdrop>
+      </Drawer>
     </nav>
   );
 };
