@@ -175,7 +175,7 @@ export const Navbar = ({ categories, initialDivision }: NavbarProps) => {
   return (
     <nav
       className={clsx(
-        "fixed top-8 z-40 w-full transition-colors duration-300",
+        "fixed top-12 z-40 w-full transition-colors duration-300",
         isTransparent
           ? "bg-transparent"
           : "border-b border-separator bg-background",
@@ -343,7 +343,7 @@ export const Navbar = ({ categories, initialDivision }: NavbarProps) => {
       {/* Mobile menu — always in DOM, toggled via CSS to avoid iOS rendering issues */}
       <div
         aria-hidden={!isMenuOpen}
-        className={`fixed inset-x-0 top-24 z-50 border-t border-separator bg-background shadow-lg lg:hidden ${isMenuOpen ? "block" : "hidden"}`}
+        className={`fixed inset-x-0 top-28 z-50 border-t border-separator bg-background shadow-lg lg:hidden ${isMenuOpen ? "block" : "hidden"}`}
       >
         <ul className="flex flex-col gap-1 px-6 py-4">
           {mobileNavItems.map((item) => (
