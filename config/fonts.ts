@@ -22,9 +22,9 @@ export const fontDisplay = FontDisplay({
   variable: "--font-archivo",
 });
 
-// Clover Medical's display font — swapped in for --font-display only under
-// /medical (see the `body:has([data-division="medical"])` rule in
-// styles/globals.css).
+// Clover Medical's display font — swapped in for --font-display only on
+// /medical routes, via that division's `theme.displayFont` (see
+// config/divisions.ts's divisionCssVars).
 export const fontMedicalDisplay = FontMedicalDisplay({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
