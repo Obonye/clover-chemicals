@@ -125,7 +125,7 @@ export const Navbar = ({ categories, initialDivision }: NavbarProps) => {
   // Functional destinations — keep the nav inside whichever division you're
   // browsing instead of always routing back to Chemicals. Products, About,
   // and News are shared across both divisions, so they don't branch on path.
-  const homeHref = isMedicalDivision ? "/medical" : "/";
+  const homeHref = isMedicalDivision ? "/medical" : "/chemical";
   const browseLabel = isMedicalDivision ? "Explore Product Lines" : "Browse Products";
   const browseHref = isMedicalDivision ? "/products?division=medical" : "/products";
   const mobileNavItems = isMedicalDivision

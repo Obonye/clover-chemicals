@@ -15,7 +15,7 @@ import {
 } from "@/lib/division";
 
 const siblings: { label: string; href: string; division: SiteDivision }[] = [
-  { label: "Clover Chemical", href: "/", division: "chemical" },
+  { label: "Clover Chemical", href: "/chemical", division: "chemical" },
   { label: "Clover Medical", href: "/medical", division: "medical" },
 ];
 
@@ -53,10 +53,10 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
     setDivision(resolved);
     document.body.dataset.division = resolved;
 
-    // Only "/" and "/medical" are division-exclusive — persisting here too
-    // would overwrite the remembered preference just from browsing a
-    // shared page like /products in whatever division it last resolved to.
-    if (pathname === "/" || pathname.startsWith("/medical")) {
+    // Only "/chemical" and "/medical" are division-exclusive — persisting
+    // here too would overwrite the remembered preference just from browsing
+    // a shared page like /products in whatever division it last resolved to.
+    if (pathname.startsWith("/chemical") || pathname.startsWith("/medical")) {
       persistDivision(resolved);
     }
   }, [pathname, initialDivision]);
@@ -76,9 +76,12 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
   return (
     <div className="fixed top-0 z-50 w-full bg-[#111111] text-white">
       <div className="mx-auto flex h-12 max-w-[1280px] items-center gap-6 px-6 lg:px-12">
-        <span className="text-sm font-semibold uppercase tracking-[0.1em] text-white/60">
+        <NextLink
+          className="text-sm font-semibold uppercase tracking-[0.1em] text-white/60 transition-colors duration-150 hover:text-white/80"
+          href="/"
+        >
           Clover Industries
-        </span>
+        </NextLink>
 
         <span aria-hidden="true" className="h-4 w-px bg-white/20" />
 

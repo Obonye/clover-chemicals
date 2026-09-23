@@ -57,7 +57,7 @@ export const siteConfig = {
       id: "chemicals",
       name: "Clover Chemicals",
       tagline: "Chemicals, equipment & PPE for industry, agriculture, and the lab.",
-      href: "/products",
+      href: "/chemical",
       image: "/clover large.jpg",
     },
     {

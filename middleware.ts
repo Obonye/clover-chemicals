@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
 
   const division = pathname.startsWith("/medical")
     ? "medical"
-    : pathname === "/"
+    : pathname.startsWith("/chemical")
       ? "chemical"
       : null;
 
