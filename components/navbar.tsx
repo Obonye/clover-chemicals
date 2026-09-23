@@ -7,14 +7,14 @@ import clsx from "clsx";
 import { useTheme } from "next-themes";
 
 import { siteConfig } from "@/config/site";
-import { getDivision } from "@/config/divisions";
+import { divisions, getDivision } from "@/config/divisions";
 import type { ProductCategory } from "@/sanity/lib/types";
 
-// Nav category links jump straight into the unified, filterable /products
-// grid with that category pre-selected, rather than the standalone
-// /products/[category] landing page (kept for SEO/hero value elsewhere).
-const categoryFilterHref = (slug: string | null | undefined): string =>
-  slug ? `/products?category=${encodeURIComponent(slug)}` : "/products";
+// Nav category links jump straight into the filterable products grid with
+// that category pre-selected, rather than the standalone /products/[category]
+// landing page (kept for SEO/hero value elsewhere).
+const categoryFilterHref = (basePath: string, slug: string | null | undefined): string =>
+  slug ? `${basePath}?category=${encodeURIComponent(slug)}` : basePath;
 
 const SunIcon = () => (
   <svg fill="none" height={18} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" width={18}>
@@ -42,9 +42,9 @@ const ChevronDown = () => (
 );
 
 type NavbarProps = {
-  /** Live Sanity categories — the Products dropdown and mobile menu are
-   *  scoped to the Chemicals division below, since this dropdown only
-   *  renders on non-medical routes. */
+  /** Live Sanity categories — the desktop dropdown scopes these to the
+   *  current division (or lists divisions instead on shared routes); the
+   *  mobile menu still scopes to Chemicals only, pending CI-5. */
   categories: ProductCategory[];
 };
 
@@ -54,8 +54,12 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
+  const productsTriggerRef = useRef<HTMLButtonElement>(null);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  // Mobile menu's own, separate list — kept exactly as today; CI-5 rebuilds
+  // the mobile menu from shared data, so it isn't switched to
+  // divisionCategories below to avoid a second, out-of-scope behavior change.
   const chemicalCategories = categories.filter((cat) => cat.division === "chemicals");
 
   // The URL's first segment is the only source of division now — "chemical"
@@ -65,6 +69,11 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const segment = useSelectedLayoutSegment();
   const division = segment ? getDivision(segment) : undefined;
   const isDivisionHome = Boolean(division) && pathname === `/${segment}`;
+  // Desktop dropdown's own list — categories for the current division, or
+  // none at all on umbrella pages (where the dropdown lists divisions instead).
+  const divisionCategories = division
+    ? categories.filter((cat) => cat.division === division.sanityDivision)
+    : [];
 
   // Which page layout is under the navbar right now — strictly path-based,
   // since it describes a division home's own hero, not a fallback guess.
@@ -97,7 +106,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
         { label: "Products", href: "/products" },
         ...chemicalCategories.map((cat) => ({
           label: cat.label ?? "",
-          href: categoryFilterHref(cat.slug),
+          href: categoryFilterHref("/products", cat.slug),
         })),
         { label: "Clover Medical", href: "/medical" },
       ];
@@ -129,6 +138,19 @@ export const Navbar = ({ categories }: NavbarProps) => {
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape" && isProductsOpen) {
+        setIsProductsOpen(false);
+        productsTriggerRef.current?.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isProductsOpen]);
 
   const navLinkClass = clsx(
     "text-sm font-semibold whitespace-nowrap transition-colors duration-150 tracking-wide uppercase hover:text-accent",
@@ -175,10 +197,11 @@ export const Navbar = ({ categories }: NavbarProps) => {
 
         {/* Desktop nav */}
         <ul className="hidden items-center gap-8 lg:flex">
-          {/* Products is shared across both divisions — /products already
-              lists chemical and medical categories side by side. */}
+          {/* Scoped to the current division; on shared routes (no division
+              in the URL) it lists divisions instead — see `division` above. */}
           <li ref={dropdownRef} className="relative">
             <button
+              ref={productsTriggerRef}
               aria-expanded={isProductsOpen}
               aria-haspopup="true"
               className={clsx(
@@ -189,38 +212,59 @@ export const Navbar = ({ categories }: NavbarProps) => {
               data-open={isProductsOpen}
               onClick={() => setIsProductsOpen((prev) => !prev)}
             >
-              Products
+              {division ? "Products" : "Divisions"}
               <ChevronDown />
             </button>
 
             {isProductsOpen && (
               <div className="absolute left-0 top-full mt-2 w-72 rounded border border-separator bg-surface shadow-md">
                 <ul className="py-1">
-                  {chemicalCategories.map((cat) => (
-                    <li key={cat._id}>
-                      <NextLink
-                        className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
-                        href={categoryFilterHref(cat.slug)}
-                        onClick={() => setIsProductsOpen(false)}
-                      >
-                        <span className="block text-sm font-semibold text-foreground">
-                          {cat.label}
-                        </span>
-                        <span className="mt-0.5 block text-xs text-muted leading-snug">
-                          {cat.description}
-                        </span>
-                      </NextLink>
-                    </li>
-                  ))}
-                  <li className="mx-4 mt-1 mb-2 border-t border-separator pt-2">
-                    <NextLink
-                      className="text-xs font-semibold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors"
-                      href="/products"
-                      onClick={() => setIsProductsOpen(false)}
-                    >
-                      View all products →
-                    </NextLink>
-                  </li>
+                  {division ? (
+                    <>
+                      {divisionCategories.map((cat) => (
+                        <li key={cat._id}>
+                          <NextLink
+                            className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
+                            href={categoryFilterHref(`/${division.slug}/products`, cat.slug)}
+                            onClick={() => setIsProductsOpen(false)}
+                          >
+                            <span className="block text-sm font-semibold text-foreground">
+                              {cat.label}
+                            </span>
+                            <span className="mt-0.5 block text-xs text-muted leading-snug">
+                              {cat.description}
+                            </span>
+                          </NextLink>
+                        </li>
+                      ))}
+                      <li className="mx-4 mt-1 mb-2 border-t border-separator pt-2">
+                        <NextLink
+                          className="text-xs font-semibold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors"
+                          href={`/${division.slug}/products`}
+                          onClick={() => setIsProductsOpen(false)}
+                        >
+                          View all products →
+                        </NextLink>
+                      </li>
+                    </>
+                  ) : (
+                    divisions.map((d) => (
+                      <li key={d.slug}>
+                        <NextLink
+                          className="block px-4 py-3 transition-colors duration-150 hover:bg-surface-secondary"
+                          href={`/${d.slug}`}
+                          onClick={() => setIsProductsOpen(false)}
+                        >
+                          <span className="block text-sm font-semibold text-foreground">
+                            {d.name}
+                          </span>
+                          <span className="mt-0.5 block text-xs text-muted leading-snug">
+                            {d.tagline}
+                          </span>
+                        </NextLink>
+                      </li>
+                    ))
+                  )}
                 </ul>
               </div>
             )}
