@@ -60,7 +60,7 @@ export const MedicalProductBento = () => {
             <NextLink
               key={line.heading}
               className={`group relative block min-h-64 overflow-hidden rounded-2xl md:min-h-0 ${line.span}`}
-              href="/contact?division=medical"
+              href="/contact"
             >
               <Image
                 alt={line.heading}

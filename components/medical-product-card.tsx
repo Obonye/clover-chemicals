@@ -40,7 +40,7 @@ export const MedicalProductCard = ({ product, tag }: MedicalProductCardProps) =>
       <div className="flex items-center justify-between">
         <NextLink
           className="inline-flex shrink-0 items-center rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-white/90"
-          href="/contact?division=medical"
+          href="/contact"
         >
           Request Quote
         </NextLink>

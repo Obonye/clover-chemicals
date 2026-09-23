@@ -1,77 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import NextLink from "next/link";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 import clsx from "clsx";
 
-import {
-  DIVISION_CHANGE_EVENT,
-  DIVISION_STORAGE_KEY,
-  persistDivision,
-  resolveDivision,
-  type DivisionChangeEvent,
-  type SiteDivision,
-} from "@/lib/division";
+import { divisions } from "@/config/divisions";
 
-const siblings: { label: string; href: string; division: SiteDivision }[] = [
-  { label: "Clover Chemical", href: "/chemical", division: "chemical" },
-  { label: "Clover Medical", href: "/medical", division: "medical" },
-];
-
-interface UtilityBarProps {
-  /** Division resolved server-side from the `division` cookie (see
-   *  middleware.ts) — used only to paint the first render correctly on a
-   *  hard page load. Every client-side navigation after that is resolved
-   *  below instead, since the root layout that computed this prop doesn't
-   *  re-render on a soft navigation. */
-  initialDivision: SiteDivision;
-}
-
-export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
-  const pathname = usePathname();
-  const [division, setDivision] = useState<SiteDivision>(() =>
-    resolveDivision(pathname, initialDivision),
-  );
-
-  // Re-resolves on every client-side navigation (usePathname changes even
-  // though the shared root layout itself doesn't re-render), and keeps the
-  // shared --accent color token — driven by body[data-division] — in sync.
-  useEffect(() => {
-    let remembered: SiteDivision = initialDivision;
-
-    try {
-      const stored = localStorage.getItem(DIVISION_STORAGE_KEY);
-
-      if (stored === "chemical" || stored === "medical") remembered = stored;
-    } catch {
-      // Storage can be unavailable (private mode, blocked); ignore.
-    }
-
-    const resolved = resolveDivision(pathname, remembered);
-
-    setDivision(resolved);
-    document.body.dataset.division = resolved;
-
-    // Only "/chemical" and "/medical" are division-exclusive — persisting
-    // here too would overwrite the remembered preference just from browsing
-    // a shared page like /products in whatever division it last resolved to.
-    if (pathname.startsWith("/chemical") || pathname.startsWith("/medical")) {
-      persistDivision(resolved);
-    }
-  }, [pathname, initialDivision]);
-
-  // Something other than navigation changed the division — e.g. the
-  // /products page's own division filter — so pick it up without a reload.
-  useEffect(() => {
-    function handleDivisionChange(event: Event) {
-      setDivision((event as DivisionChangeEvent).detail);
-    }
-
-    window.addEventListener(DIVISION_CHANGE_EVENT, handleDivisionChange);
-
-    return () => window.removeEventListener(DIVISION_CHANGE_EVENT, handleDivisionChange);
-  }, []);
+export const UtilityBar = () => {
+  // The first path segment is a pure function of the URL — "chemical" or
+  // "medical" under app/[division]/, null everywhere else (shared routes
+  // have no division segment at all, so nothing here is ever active).
+  const segment = useSelectedLayoutSegment();
 
   return (
     <div className="fixed top-0 z-50 w-full bg-[#111111] text-white">
@@ -86,18 +25,18 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
         <span aria-hidden="true" className="h-4 w-px bg-white/20" />
 
         <ul className="flex items-center gap-6">
-          {siblings.map((sibling) => {
-            const isActive = sibling.division === division;
+          {divisions.map((division) => {
+            const isActive = division.slug === segment;
 
             return (
-              <li key={sibling.href}>
+              <li key={division.slug}>
                 <NextLink
                   aria-current={isActive ? "page" : undefined}
                   className={clsx(
                     "flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
                     isActive ? "text-accent" : "text-white/45 hover:text-white/75",
                   )}
-                  href={sibling.href}
+                  href={`/${division.slug}`}
                 >
                   <span
                     aria-hidden="true"
@@ -106,7 +45,7 @@ export const UtilityBar = ({ initialDivision }: UtilityBarProps) => {
                       isActive ? "bg-accent" : "bg-white/25",
                     )}
                   />
-                  {sibling.label}
+                  {division.name}
                 </NextLink>
               </li>
             );

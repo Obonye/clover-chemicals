@@ -5,6 +5,25 @@ const nextConfig = {
   // requests by default, which otherwise loads the page but leaves it
   // unhydrated with no working scripts.
   allowedDevOrigins: ["192.168.31.239"],
+  // /products?division=<x> was the old way to reach a division's catalogue,
+  // before it had its own route (see app/[division]/products). Other query
+  // params (q, category, promotion, sort) pass through automatically.
+  async redirects() {
+    return [
+      {
+        source: "/products",
+        has: [{ type: "query", key: "division", value: "medical" }],
+        destination: "/medical/products",
+        permanent: true,
+      },
+      {
+        source: "/products",
+        has: [{ type: "query", key: "division", value: "chemicals" }],
+        destination: "/chemical/products",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

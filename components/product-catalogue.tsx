@@ -21,7 +21,7 @@ import {
 
 import { ProductCard } from "@/components/product-card";
 import { ProductSearch } from "@/components/product-search";
-import { persistDivision } from "@/lib/division";
+import { divisionCssVars, getDivisionBySanityValue } from "@/config/divisions";
 import type { Division, ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
 
 type SortKey = "name" | "featured";
@@ -58,9 +58,16 @@ type ProductCatalogueProps = {
   categories: ProductCategory[];
   initialQuery: string;
   initialCategory: string;
-  initialDivision: string;
+  /** Ignored when lockedDivision is set. */
+  initialDivision?: string;
   initialOnPromotion: boolean;
   initialSort: string;
+  /** Set on /[division]/products — locks the grid to one division (theming
+   *  already comes from that route's own layout) and hides the toggle,
+   *  since there's nothing to switch to. */
+  lockedDivision?: Division;
+  /** Where the URL-sync effect below rewrites to. Defaults to /products. */
+  basePath?: string;
 };
 
 export const ProductCatalogue = ({
@@ -71,42 +78,60 @@ export const ProductCatalogue = ({
   initialDivision,
   initialOnPromotion,
   initialSort,
+  lockedDivision,
+  basePath = "/products",
 }: ProductCatalogueProps) => {
   const router = useRouter();
 
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState(initialCategory || "all");
-  const [division, setDivision] = useState<DivisionFilter>(
-    initialDivision === "chemicals" || initialDivision === "medical"
+  const [division, setDivision] = useState<DivisionFilter>(() => {
+    if (lockedDivision) return lockedDivision;
+
+    return initialDivision === "chemicals" || initialDivision === "medical"
       ? initialDivision
-      : "all",
-  );
+      : "all";
+  });
   const [onPromotion, setOnPromotion] = useState(initialOnPromotion);
   const [sort, setSort] = useState<SortKey>(initialSort === "featured" ? "featured" : "name");
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
-  // A ?division= link (e.g. the medical CTAs) can be someone's first-ever
-  // page load, before middleware.ts has ever set the cookie — repaint to
-  // match on mount so the theme doesn't default to chemical underneath it.
+  // Live preview: repaint the whole page to match the picked division while
+  // browsing the shared /products (mirrors picking a division's own colors
+  // there, same as today) — purely client-side for this page view, nothing
+  // is written to a cookie or localStorage, so it never leaks into any
+  // other page. Skipped when locked, since /[division]/products already
+  // gets its theme server-side from that route's own layout.
   useEffect(() => {
-    if (division !== "all") persistDivision(division === "chemicals" ? "chemical" : "medical");
-  }, []);
+    if (lockedDivision) return;
+
+    const config = division !== "all" ? getDivisionBySanityValue(division) : undefined;
+    const entries = Object.entries(divisionCssVars(config?.theme));
+
+    for (const [key, value] of entries) {
+      document.body.style.setProperty(key, value as string);
+    }
+
+    return () => {
+      for (const [key] of entries) document.body.style.removeProperty(key);
+    };
+  }, [division, lockedDivision]);
 
   // Keep the URL in sync so results stay shareable/bookmarkable — default
-  // values are omitted entirely so a filter-free view stays at bare /products.
+  // values are omitted entirely so a filter-free view stays at bare basePath.
   useEffect(() => {
     const params = new URLSearchParams();
 
     if (query.trim()) params.set("q", query.trim());
     if (category !== "all") params.set("category", category);
-    if (division !== "all") params.set("division", division);
+    if (!lockedDivision && division !== "all") params.set("division", division);
     if (onPromotion) params.set("promotion", "true");
     if (sort !== "name") params.set("sort", sort);
 
     const qs = params.toString();
 
-    router.replace(qs ? `/products?${qs}` : "/products", { scroll: false });
-  }, [query, category, division, onPromotion, sort, router]);
+    router.replace(qs ? `${basePath}?${qs}` : basePath, { scroll: false });
+  }, [query, category, division, onPromotion, sort, router, basePath, lockedDivision]);
 
   // Categories available for the chosen division — narrows the pill row so a
   // division + category combo can never land on a dead zero-result page.
@@ -160,25 +185,19 @@ export const ProductCatalogue = ({
   const hasPromotion = products.some((product) => product.isOnPromotion);
 
   const activeFilterCount =
-    (division !== "all" ? 1 : 0) + (onPromotion ? 1 : 0) + (sort !== "name" ? 1 : 0);
+    (!lockedDivision && division !== "all" ? 1 : 0) + (onPromotion ? 1 : 0) + (sort !== "name" ? 1 : 0);
   const hasActiveFilters = activeFilterCount > 0 || category !== "all" || query.trim() !== "";
 
   function clearFilters() {
     setQuery("");
     setCategory("all");
-    setDivision("all");
+    if (!lockedDivision) setDivision("all");
     setOnPromotion(false);
     setSort("name");
   }
 
   function handleDivisionChange(keys: Selection) {
-    const next = firstKey<DivisionFilter>(keys, "all");
-
-    setDivision(next);
-
-    // "All" has no single division to theme the page as, so leave the
-    // current accent/cookie alone — only a specific pick repaints it.
-    if (next !== "all") persistDivision(next === "chemicals" ? "chemical" : "medical");
+    setDivision(firstKey<DivisionFilter>(keys, "all"));
   }
 
   function handleCategoryChange(keys: Selection) {
@@ -296,12 +315,14 @@ export const ProductCatalogue = ({
                 <Drawer.Heading>Filters</Drawer.Heading>
               </Drawer.Header>
               <Drawer.Body className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                  <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
-                    Division
-                  </span>
-                  {renderDivisionToggle(true)}
-                </div>
+                {!lockedDivision && (
+                  <div className="flex flex-col gap-2">
+                    <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
+                      Division
+                    </span>
+                    {renderDivisionToggle(true)}
+                  </div>
+                )}
 
                 <div className="flex flex-col gap-2">
                   <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
@@ -315,7 +336,7 @@ export const ProductCatalogue = ({
                   slot="close"
                   variant="ghost"
                   onPress={() => {
-                    setDivision("all");
+                    if (!lockedDivision) setDivision("all");
                     setOnPromotion(false);
                     setSort("name");
                   }}
@@ -338,7 +359,7 @@ export const ProductCatalogue = ({
           <div className="mb-6 hidden flex-col gap-4 lg:flex">
             <div className="flex items-center gap-4">
               <ProductSearch className="min-w-0 flex-1" value={query} onChange={setQuery} />
-              {renderDivisionToggle()}
+              {!lockedDivision && renderDivisionToggle()}
               <div className="w-48 shrink-0">{sortSelect}</div>
             </div>
             {hasPromotion && promotionSwitch}

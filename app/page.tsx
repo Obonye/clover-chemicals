@@ -3,6 +3,7 @@ import NextLink from "next/link";
 
 import { CtaBanner } from "@/components/cta-banner";
 import { siteConfig } from "@/config/site";
+import { divisions } from "@/config/divisions";
 import { articles } from "@/lib/news";
 
 const latestArticles = articles.slice(0, 3);
@@ -46,11 +47,11 @@ export default function Home() {
             One group, built to circle the customer.
           </h2>
           <div className="grid grid-cols-1 gap-px bg-separator sm:grid-cols-2">
-            {siteConfig.divisions.map((division) => (
+            {divisions.map((division) => (
               <NextLink
-                key={division.id}
+                key={division.slug}
                 className="group relative flex min-h-[320px] flex-col justify-end overflow-hidden bg-background p-8 lg:p-10"
-                href={division.href}
+                href={`/${division.slug}`}
               >
                 <Image
                   alt={division.name}

@@ -8,7 +8,7 @@ import { MedicalProductBento } from "@/components/medical-product-bento";
 import { MedicalProductCarousel } from "@/components/medical-product-carousel";
 import { MedicalServices } from "@/components/medical-services";
 
-export default function MedicalPage() {
+export function MedicalHome() {
   return (
     <>
       <HeroMedical />
@@ -39,7 +39,7 @@ export default function MedicalPage() {
           </div>
           <NextLink
             className="inline-flex w-fit items-center gap-1.5 rounded bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
-            href="/contact?division=medical"
+            href="/contact"
           >
             Contact Us
             <span aria-hidden="true">→</span>
