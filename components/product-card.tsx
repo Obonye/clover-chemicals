@@ -5,7 +5,7 @@ import NextLink from "next/link";
 
 import { DocumentIcon } from "@/components/icons";
 import { imageUrl } from "@/sanity/lib/image";
-import { categoryHref, packLabel } from "@/sanity/lib/format";
+import { categoryHref, packLabel, productHref } from "@/sanity/lib/format";
 import type { Product, ProductCategory } from "@/sanity/lib/types";
 
 const ArrowRightIcon = () => (
@@ -33,7 +33,7 @@ type ProductCardProps = {
 };
 
 export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) => {
-  const href = categoryHref(category.slug);
+  const detailHref = productHref(category.slug, product.slug);
   const src =
     imageUrl(product.image, { width: 600, height: 360 }) ??
     imageUrl(category.image, { width: 600, height: 360 });
@@ -41,10 +41,10 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-separator bg-surface transition-shadow duration-200 hover:shadow-md">
-      {/* Image — links to the product's category */}
+      {/* Image — links to the product's own detail page */}
       <NextLink
         className="relative block h-44 shrink-0 overflow-hidden bg-surface-secondary"
-        href={href}
+        href={detailHref}
       >
         {product.isOnPromotion && (
           <span className="absolute left-3 top-3 z-10 rounded-sm bg-specials px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-specials-foreground">
@@ -64,12 +64,17 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-5">
-        <span className="mb-2 inline-block w-fit font-mono text-[10px] font-semibold uppercase tracking-wider text-accent">
+        <NextLink
+          className="mb-2 inline-block w-fit font-mono text-[10px] font-semibold uppercase tracking-wider text-accent transition-colors hover:text-accent/80"
+          href={categoryHref(category.slug)}
+        >
           {eyebrow ?? category.label}
-        </span>
+        </NextLink>
 
         <h3 className="mb-1 text-base font-bold leading-snug tracking-tight text-foreground">
-          {product.name}
+          <NextLink className="hover:text-accent" href={detailHref}>
+            {product.name}
+          </NextLink>
         </h3>
 
         <p className="mb-4 line-clamp-2 flex-1 text-sm leading-relaxed text-muted">
@@ -107,10 +112,10 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
 
           <NextLink
             className="inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-muted transition-colors hover:text-foreground"
-            href="#"
+            href={detailHref}
           >
             <DocumentIcon />
-            Spec Sheet
+            View Details
           </NextLink>
         </div>
       </div>
