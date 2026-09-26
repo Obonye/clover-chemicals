@@ -88,7 +88,9 @@ export const UtilityBar = () => {
                 aria-expanded={isOpen}
                 className={clsx(
                   "group flex h-full items-center gap-1.5 text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
-                  currentDivision ? "text-accent" : "text-white/45 hover:text-white/75",
+                  currentDivision
+                    ? "bg-accent px-3 text-accent-foreground"
+                    : "text-white/45 hover:text-white/75",
                 )}
                 data-open={isOpen}
                 type="button"
@@ -127,21 +129,25 @@ export const UtilityBar = () => {
 
                 return (
                   <li key={division.slug} className="h-full shrink-0">
+                    {/* bg-accent/text-accent-foreground resolve to *this*
+                        division's own colors only when it's the active one
+                        — DivisionThemeScope (the ancestor wrapping this bar)
+                        scopes --accent to whichever division the current
+                        route is under, which is exactly the one that gets
+                        isActive: true here. */}
                     <NextLink
                       aria-current={isActive ? "page" : undefined}
                       className={clsx(
-                        "flex h-full items-center gap-2 text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
-                        isActive ? "text-accent" : "text-white/45 hover:text-white/75",
+                        "flex h-full items-center gap-2 px-3 text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
+                        isActive
+                          ? "bg-accent text-accent-foreground"
+                          : "text-white/45 hover:text-white/75",
                       )}
                       href={`/${division.slug}`}
                     >
-                      <span
-                        aria-hidden="true"
-                        className={clsx(
-                          "h-2 w-2 rounded-full transition-colors duration-150",
-                          isActive ? "bg-accent" : "bg-white/25",
-                        )}
-                      />
+                      {!isActive && (
+                        <span aria-hidden="true" className="h-2 w-2 rounded-full bg-white/25" />
+                      )}
                       {division.name}
                     </NextLink>
                   </li>
