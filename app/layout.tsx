@@ -45,9 +45,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const { isEnabled: isDraftMode } = await draftMode();
-  // Nav's Products dropdown reads live Sanity categories — cached like a
-  // static page and only refetched when <SanityLive /> below sees a publish,
-  // so this doesn't add fetch latency to every page load.
+  // Nav's Products dropdown and the footer's Products column both read this
+  // same live Sanity fetch — cached like a static page and only refetched
+  // when <SanityLive /> below sees a publish, so this doesn't add fetch
+  // latency to every page load.
   const categories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
 
   return (
@@ -68,7 +69,7 @@ export default async function RootLayout({
             <main className="flex-grow pt-28">
               {children}
             </main>
-            <Footer />
+            <Footer categories={categories} />
             <QuickLinksBar />
           </DivisionThemeScope>
         </Providers>
