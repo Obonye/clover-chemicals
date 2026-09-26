@@ -7,7 +7,7 @@ export const HeroChemicals = () => {
   const years = new Date().getFullYear() - siteConfig.foundedYear;
 
   return (
-    <section className="relative -mt-16 flex min-h-screen items-center">
+    <section className="relative -mt-[var(--navbar-h)] flex min-h-screen items-center">
       {/* Background image */}
       <Image
         alt="Clover Chemical Industries facility"

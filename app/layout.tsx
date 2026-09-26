@@ -66,7 +66,7 @@ export default async function RootLayout({
           <DivisionThemeScope>
             <UtilityBar />
             <Navbar categories={categories} />
-            <main className="flex-grow pt-28">
+            <main className="flex-grow pt-[var(--header-h)]">
               {children}
             </main>
             <Footer categories={categories} />

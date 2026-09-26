@@ -18,6 +18,21 @@ body {
 }
 
 /*
+ * Fixed-chrome heights (CI-14). The utility bar and navbar are both
+ * `fixed`, stacked on top of each other, so everything below has to know
+ * their combined height: <main>'s top padding, the sticky category tab bar,
+ * and every full-bleed hero's negative top margin (which pulls it back up
+ * to sit under the transparent navbar, right below the opaque utility bar).
+ * Changing --utility-bar-h or --navbar-h here keeps all of those in sync
+ * instead of drifting the way separate hardcoded top-*/pt-*/-mt-* values did.
+ */
+:root {
+  --utility-bar-h: 3rem; /* h-12 on utility-bar.tsx */
+  --navbar-h: 4rem; /* h-16 on navbar.tsx's <header> */
+  --header-h: calc(var(--utility-bar-h) + var(--navbar-h));
+}
+
+/*
  * HeroUI Theme Customization
  * Add this to your global.css after importing @heroui/styles
  * Only includes variables users need to customize

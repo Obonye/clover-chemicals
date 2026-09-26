@@ -65,7 +65,7 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <>
       {/* Category hero */}
-      <section className="relative -mt-16 flex min-h-[40vh] items-end overflow-hidden">
+      <section className="relative -mt-[var(--navbar-h)] flex min-h-[40vh] items-end overflow-hidden">
         {heroSrc && (
           <Image
             alt={cat.image?.alt ?? cat.label ?? ""}
@@ -77,7 +77,7 @@ export default async function CategoryPage({ params }: Props) {
           />
         )}
         <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-12 pt-28 lg:px-12">
+        <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-12 pt-[var(--header-h)] lg:px-12">
           <NextLink
             className="mb-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-white/50 transition-colors hover:text-white/80"
             href="/products"
@@ -97,7 +97,7 @@ export default async function CategoryPage({ params }: Props) {
       </section>
 
       {/* Category filter tabs */}
-      <div className="sticky top-28 z-30 border-b border-separator bg-background/95 backdrop-blur-sm">
+      <div className="sticky top-[var(--header-h)] z-30 border-b border-separator bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <nav className="flex overflow-x-auto">
             {categories.map((tab) => {

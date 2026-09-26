@@ -5,7 +5,7 @@ import { MedicalHighlights } from "@/components/medical-highlights";
 
 export const HeroMedical = () => {
   return (
-    <section className="relative -mt-16 overflow-hidden bg-background">
+    <section className="relative -mt-[var(--navbar-h)] overflow-hidden bg-background">
       {/* Light-theme spotlight — same sweeping-beam mechanic as the
           Aceternity original, re-tuned (higher alpha, no near-white base)
           so the purple actually reads against a light background instead
