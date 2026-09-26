@@ -6,7 +6,6 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import clsx from "clsx";
 
 import { divisions } from "@/config/divisions";
-import { siteConfig } from "@/config/site";
 
 // Above this many divisions, an inline list stops being scannable at this
 // bar's height — switch to a "Divisions ▾" dropdown instead. Named so a
@@ -69,7 +68,7 @@ export const UtilityBar = () => {
 
   return (
     <div className="fixed top-0 z-50 h-[var(--utility-bar-h)] w-full bg-[#111111] text-white">
-      <div className="mx-auto flex h-full max-w-[1280px] items-center justify-between gap-6 px-6 lg:px-12">
+      <div className="mx-auto flex h-full max-w-[1280px] items-center gap-6 px-6 lg:px-12">
         {/* Brand + division switcher — scrolls sideways rather than
             wrapping or overflowing on narrow screens. */}
         <div className="flex h-full min-w-0 items-center gap-6 overflow-x-auto">
@@ -151,21 +150,6 @@ export const UtilityBar = () => {
             </ul>
           )}
         </div>
-
-        {/* About/News/Contact — room for them only opens up once the
-            division list itself no longer needs the full width. */}
-        <ul className="hidden h-full shrink-0 items-center gap-6 lg:flex">
-          {siteConfig.navItems.map((item) => (
-            <li key={item.href} className="h-full">
-              <NextLink
-                className="flex h-full items-center text-xs font-medium uppercase tracking-[0.1em] text-white/45 transition-colors duration-150 hover:text-white/75"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
