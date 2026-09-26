@@ -82,7 +82,7 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative -mt-16 flex min-h-[55vh] items-end overflow-hidden">
+      <section className="relative -mt-[var(--navbar-h)] flex min-h-[55vh] items-end overflow-hidden">
         <Image
           alt={siteConfig.name}
           className="object-cover object-center"
@@ -92,7 +92,7 @@ export default function AboutPage() {
           src="/clover_about_us_2.jpg"
         />
         <div className="absolute inset-0 bg-black/65" />
-        <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-28 lg:px-12">
+        <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-[var(--header-h)] lg:px-12">
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Est. {siteConfig.foundedYear}
           </p>

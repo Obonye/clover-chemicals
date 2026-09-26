@@ -5,8 +5,8 @@ import { ProductCardSkeleton } from "@/components/product-card-skeleton";
 export default function CategoryLoading() {
   return (
     <>
-      <section className="relative -mt-16 flex min-h-[40vh] items-end overflow-hidden bg-surface-secondary">
-        <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-12 pt-28 lg:px-12">
+      <section className="relative -mt-[var(--navbar-h)] flex min-h-[40vh] items-end overflow-hidden bg-surface-secondary">
+        <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-12 pt-[var(--header-h)] lg:px-12">
           <Skeleton className="mb-6 h-3 w-28 rounded" />
           <Skeleton className="mb-2 h-3 w-32 rounded" />
           <Skeleton className="h-10 w-64 rounded" />

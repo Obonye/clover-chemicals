@@ -153,13 +153,13 @@ export const Navbar = ({ categories }: NavbarProps) => {
   return (
     <nav
       className={clsx(
-        "fixed top-12 z-40 w-full transition-colors duration-300",
+        "fixed top-[var(--utility-bar-h)] z-40 w-full transition-colors duration-300",
         isTransparent
           ? "bg-transparent"
           : "border-b border-separator bg-background",
       )}
     >
-      <header className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-6 px-6">
+      <header className="mx-auto flex h-[var(--navbar-h)] max-w-[1280px] items-center justify-between gap-6 px-6">
         {/* Logo */}
         <NextLink className="flex flex-shrink-0 items-center gap-2.5" href={homeHref}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
