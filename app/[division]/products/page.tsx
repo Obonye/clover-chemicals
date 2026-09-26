@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { notFound } from "next/navigation";
 
 import { ProductCatalogue } from "@/components/product-catalogue";
@@ -15,6 +17,23 @@ type Props = {
     sort?: string;
   }>;
 };
+
+// Overrides the division layout's own canonical (its home page's), since
+// every ?q=/?category=/?promotion=/?sort= combination here is still the
+// same logical listing page — not the division home.
+export async function generateMetadata({ params }: Pick<Props, "params">): Promise<Metadata> {
+  const { division: slug } = await params;
+  const division = getDivision(slug);
+
+  if (!division) return {};
+
+  return {
+    title: "Products",
+    alternates: {
+      canonical: `/${division.slug}/products`,
+    },
+  };
+}
 
 export default async function DivisionProductsPage({ params, searchParams }: Props) {
   const [{ division: slug }, sp] = await Promise.all([params, searchParams]);

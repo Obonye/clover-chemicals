@@ -43,6 +43,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: data.label ?? "Products",
     description: data.description ?? undefined,
+    // The canonical, unfiltered landing page for this category — distinct
+    // from /products?category=<slug>, the same listing pre-filtered from
+    // the unified catalogue, which points its own canonical back here.
+    alternates: {
+      canonical: `/products/${category}`,
+    },
   };
 }
 

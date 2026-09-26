@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import NextLink from "next/link";
 
 import { ProductCatalogue } from "@/components/product-catalogue";
@@ -13,6 +15,18 @@ type Props = {
     promotion?: string;
     sort?: string;
   }>;
+};
+
+// Every ?q=/?category=/?promotion=/?sort= combination is the same logical
+// listing page for search engines — point them all at the clean URL rather
+// than indexing one canonical per filter combination.
+export const metadata: Metadata = {
+  title: "All Products",
+  description:
+    "Browse the full Clover Industries catalogue — chemicals, equipment, PPE, and medical and laboratory supplies across every division.",
+  alternates: {
+    canonical: "/products",
+  },
 };
 
 export default async function ProductsPage({ searchParams }: Props) {

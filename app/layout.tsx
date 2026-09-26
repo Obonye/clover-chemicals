@@ -6,7 +6,7 @@ import { VisualEditing } from "next-sanity/visual-editing";
 
 import { Providers } from "./providers";
 
-import { siteConfig } from "@/config/site";
+import { siteConfig, SITE_URL } from "@/config/site";
 import { fontDisplay, fontMedicalDisplay, fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import { UtilityBar } from "@/components/utility-bar";
@@ -20,11 +20,15 @@ import { CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory } from "@/sanity/lib/types";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/favicon.ico",
   },
