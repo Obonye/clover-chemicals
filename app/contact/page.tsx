@@ -3,6 +3,8 @@
 import { useState } from "react";
 import NextLink from "next/link";
 
+import { branches } from "@/config/branches";
+import { siteConfig } from "@/config/site";
 import { categories } from "@/lib/products";
 
 type FormState = "idle" | "submitting" | "success";
@@ -173,52 +175,49 @@ export default function ContactPage() {
                   Our Offices
                 </p>
                 <address className="flex flex-col gap-5 not-italic">
-                  <div>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Gaborone Branch</p>
-                    <p className="text-sm leading-relaxed text-muted">
-                      Plot 1277, Old Lobatse Road<br />
-                      Gaborone, Botswana
-                    </p>
-                  </div>
-                  <div>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Francistown Branch</p>
-                    <p className="text-sm leading-relaxed text-muted">
-                      Plot 31251, Somerset Industrial<br />
-                      Francistown, Botswana
-                    </p>
-                  </div>
+                  {branches.map((branch) => (
+                    <div key={branch.slug}>
+                      <p className="mb-1 text-sm font-semibold text-foreground">{branch.name}</p>
+                      <NextLink
+                        className="text-sm leading-relaxed text-muted transition-colors hover:text-accent"
+                        href={`/locations#${branch.slug}`}
+                      >
+                        {branch.address}
+                      </NextLink>
+                    </div>
+                  ))}
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">Email</p>
                     <a
                       className="text-sm text-muted transition-colors hover:text-accent"
-                      href="mailto:sales@cloverindustries.co.bw"
+                      href={`mailto:${siteConfig.contact.email}`}
                     >
-                      sales@cloverindustries.co.bw
+                      {siteConfig.contact.email}
                     </a>
                   </div>
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">Phone</p>
                     <a
                       className="text-sm text-muted transition-colors hover:text-accent"
-                      href="tel:+2673953035"
+                      href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
                     >
-                      +267 395 3035
+                      {siteConfig.contact.phone}
                     </a>
                   </div>
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">WhatsApp</p>
                     <a
                       className="text-sm text-muted transition-colors hover:text-accent"
-                      href="https://wa.me/26777816000"
+                      href={`https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, "")}`}
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      +267 77 816 000
+                      {siteConfig.contact.whatsapp}
                     </a>
                   </div>
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">Business Hours</p>
-                    <p className="text-sm text-muted">Monday – Friday, 8:00 – 17:00 CAT</p>
+                    <p className="text-sm text-muted">{siteConfig.contact.hours}</p>
                   </div>
                 </address>
               </div>

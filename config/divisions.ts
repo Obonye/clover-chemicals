@@ -41,6 +41,7 @@ export type DivisionConfig = {
   /** Omit for the site's default (chemical) palette. */
   theme?: DivisionTheme;
   contacts: DivisionContact[];
+  /** config/branches.ts slugs this division is served from. */
   branches: string[];
 };
 
@@ -53,7 +54,7 @@ export const divisions: DivisionConfig[] = [
     tagline: "Chemicals, equipment & PPE for industry, agriculture, and the lab.",
     image: "/clover large.jpg",
     contacts: [{ label: "Sales", email: "sales@cloverindustries.co.bw" }],
-    branches: ["Gaborone", "Francistown"],
+    branches: ["gaborone", "francistown"],
   },
   {
     slug: "medical",
@@ -71,7 +72,7 @@ export const divisions: DivisionConfig[] = [
       navTextStyle: "dark",
     },
     contacts: [{ label: "Medical Division", email: "madan.kumar@cloverindustries.co.bw" }],
-    branches: ["Gaborone", "Francistown"],
+    branches: ["gaborone", "francistown"],
   },
 ];
 
