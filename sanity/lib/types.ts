@@ -52,6 +52,14 @@ export type ProductWithCategory = Product & {
   category: ProductCategory | null;
 };
 
+/** PRODUCT_QUERY's shape — a single product for the detail page, with its
+ *  spec sheet / SDS resolved to a plain URL (null when no file is
+ *  uploaded yet; see CI-26/CI-27). */
+export type ProductDetail = ProductWithCategory & {
+  specSheetUrl: string | null;
+  safetyDataSheetUrl: string | null;
+};
+
 export type CategoryWithProducts = ProductCategory & {
   products: Product[];
 };

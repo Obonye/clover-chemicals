@@ -37,20 +37,16 @@ export const MedicalProductCard = ({ product, tag }: MedicalProductCardProps) =>
         </p>
       </div>
 
-      <div className="flex items-center justify-between">
-        <NextLink
-          className="inline-flex shrink-0 items-center rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-white/90"
-          href="/contact"
-        >
-          Request Quote
-        </NextLink>
-        <NextLink
-          className="text-xs font-medium text-white/60 transition-colors hover:text-white"
-          href="#"
-        >
-          Spec Sheet
-        </NextLink>
-      </div>
+      {/* Single CTA — these are hand-authored product-line highlights for
+          the Medical homepage (see medical-product-carousel.tsx), not real
+          Sanity products, so there's no spec sheet to link to and no
+          detail page they could point at (see CI-26). */}
+      <NextLink
+        className="inline-flex w-fit shrink-0 items-center rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-white/90"
+        href="/contact"
+      >
+        Request Quote
+      </NextLink>
     </div>
   </article>
 );
