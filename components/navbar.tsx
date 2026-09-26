@@ -75,11 +75,15 @@ export const Navbar = ({ categories }: NavbarProps) => {
 
   // Which page layout is under the navbar right now — strictly path-based,
   // since it describes a division home's own hero, not a fallback guess.
+  // The /products/<category> landing page has a full-bleed dark hero
+  // banner; /products/<category>/<product> (CI-26) does not — it's a
+  // plain light breadcrumb bar — so this has to stop at exactly one
+  // segment past /products/, not match every path that starts with it.
   const isHeroRoute =
     pathname === "/" ||
     pathname === "/about" ||
     isDivisionHome ||
-    (pathname.startsWith("/products/") && pathname !== "/products/");
+    /^\/products\/[^/]+\/?$/.test(pathname);
   const isTransparent = isHeroRoute && !isScrolled;
 
   // A light hero (e.g. Medical's) needs dark nav text instead of the white
