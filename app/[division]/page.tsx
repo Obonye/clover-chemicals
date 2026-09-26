@@ -1,5 +1,4 @@
 import type { ComponentType } from "react";
-import type { Metadata } from "next";
 
 import { notFound } from "next/navigation";
 
@@ -25,17 +24,9 @@ export function generateStaticParams() {
   return divisions.map((d) => ({ division: d.slug }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { division: slug } = await params;
-  const division = getDivision(slug);
-
-  if (!division) return {};
-
-  return {
-    title: division.name,
-    description: division.tagline,
-  };
-}
+// Title, description and canonical for this route come from the layout's
+// generateMetadata (app/[division]/layout.tsx) — this page sets no title of
+// its own, so the template's `default` renders here unmodified.
 
 export default async function DivisionPage({ params }: Props) {
   const { division: slug } = await params;

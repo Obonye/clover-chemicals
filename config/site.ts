@@ -1,5 +1,11 @@
 export type SiteConfig = typeof siteConfig;
 
+// Falls back to the production domain implied by the contact emails
+// (sales@cloverindustries.co.bw etc.) — override with the real value once
+// the client confirms it. Backs metadataBase (app/layout.tsx), the
+// sitemap, and robots.txt.
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cloverindustries.co.bw";
+
 export const siteConfig = {
   name: "Clover Industries",
   foundedYear: 1980,

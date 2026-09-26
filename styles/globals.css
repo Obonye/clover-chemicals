@@ -24,7 +24,7 @@ body {
  * and every full-bleed hero's negative top margin (which pulls it back up
  * to sit under the transparent navbar, right below the opaque utility bar).
  * Changing --utility-bar-h or --navbar-h here keeps all of those in sync
- * instead of drifting the way separate hardcoded top-*/pt-*/-mt-* values did.
+ * instead of drifting the way separate hardcoded top-, pt- and -mt- values did.
  */
 :root {
   --utility-bar-h: 3rem; /* h-12 on utility-bar.tsx */
