@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     stega: false,
   });
 
-  const staticPaths = ["/", "/about", "/contact", "/news", "/products"];
+  const staticPaths = ["/", "/about", "/contact", "/news", "/products", "/locations"];
 
   const divisionPaths = divisions.flatMap((d) => [`/${d.slug}`, `/${d.slug}/products`]);
 

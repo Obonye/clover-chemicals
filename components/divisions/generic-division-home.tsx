@@ -2,6 +2,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 
 import { ProductCard } from "@/components/product-card";
+import { getBranch } from "@/config/branches";
 import { loadQuery } from "@/sanity/lib/fetch";
 import { ALL_PRODUCTS_QUERY } from "@/sanity/lib/queries";
 import type { ProductWithCategory } from "@/sanity/lib/types";
@@ -113,11 +114,22 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
                 Branches
               </p>
               <ul className="flex flex-col gap-2">
-                {division.branches.map((branch) => (
-                  <li key={branch} className="text-sm text-muted">
-                    {branch}
-                  </li>
-                ))}
+                {division.branches.map((slug) => {
+                  const branch = getBranch(slug);
+
+                  if (!branch) return null;
+
+                  return (
+                    <li key={slug}>
+                      <NextLink
+                        className="text-sm text-muted transition-colors hover:text-accent"
+                        href={`/locations#${branch.slug}`}
+                      >
+                        {branch.name}
+                      </NextLink>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>

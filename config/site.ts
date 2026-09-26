@@ -11,6 +11,14 @@ export const siteConfig = {
   foundedYear: 1980,
   description:
     "Botswana's one-stop chemical and equipment partner — manufacturing and distribution for industry, agriculture, healthcare, and the laboratory, since 1980.",
+  // Company-wide — not specific to either branch. (Neither branch has its
+  // own published number/hours yet; see config/branches.ts and CI-11.)
+  contact: {
+    phone: "+267 395 3035",
+    email: "sales@cloverindustries.co.bw",
+    whatsapp: "+267 77 816 000",
+    hours: "Monday – Friday, 8:00 – 17:00 CAT",
+  },
   navItems: [
     { label: "About Us", href: "/about" },
     { label: "News", href: "/news" },

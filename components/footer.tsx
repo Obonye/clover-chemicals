@@ -3,24 +3,17 @@
 import NextLink from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import { siteConfig } from "@/config/site";
+import { branches } from "@/config/branches";
 import { divisions, getDivision } from "@/config/divisions";
+import { siteConfig } from "@/config/site";
 import { categoryHref } from "@/sanity/lib/format";
 import type { ProductCategory } from "@/sanity/lib/types";
 
 const companyLinks = [
-  { label: "About Us",   href: "/about"   },
-  { label: "News",       href: "/news"    },
-  { label: "Contact Us", href: "/contact" },
-  // Locations isn't a route yet — CI-11 adds it. Add it here once it ships.
-];
-
-// Branch addresses, duplicated from app/contact/page.tsx's sidebar. CI-11
-// introduces a shared branch data source (Sanity or config/branches.ts);
-// once it lands, both places should read from it instead of this literal.
-const branchAddresses = [
-  { name: "Gaborone",    address: "Plot 1277, Old Lobatse Road, Gaborone, Botswana" },
-  { name: "Francistown", address: "Plot 31251, Somerset Industrial, Francistown, Botswana" },
+  { label: "About Us",   href: "/about"     },
+  { label: "News",       href: "/news"      },
+  { label: "Contact Us", href: "/contact"   },
+  { label: "Locations",  href: "/locations" },
 ];
 
 type FooterProps = {
@@ -154,9 +147,14 @@ export const Footer = ({ categories }: FooterProps) => {
               Branches
             </p>
             <ul className="flex flex-col gap-4">
-              {branchAddresses.map((branch) => (
-                <li key={branch.name}>
-                  <p className="mb-1 text-sm font-semibold text-foreground">{branch.name}</p>
+              {branches.map((branch) => (
+                <li key={branch.slug}>
+                  <NextLink
+                    className="mb-1 block text-sm font-semibold text-foreground transition-colors duration-150 hover:text-accent"
+                    href={`/locations#${branch.slug}`}
+                  >
+                    {branch.name}
+                  </NextLink>
                   <p className="text-sm leading-relaxed text-muted">{branch.address}</p>
                 </li>
               ))}
@@ -174,9 +172,9 @@ export const Footer = ({ categories }: FooterProps) => {
           </p>
           <a
             className="text-xs text-muted transition-colors duration-150 hover:text-foreground"
-            href="mailto:sales@cloverindustries.co.bw"
+            href={`mailto:${siteConfig.contact.email}`}
           >
-            sales@cloverindustries.co.bw
+            {siteConfig.contact.email}
           </a>
           {/* Privacy Policy / Terms of Use dropped: neither route exists yet
               (see CI-6). Add them back here once those pages ship. */}
