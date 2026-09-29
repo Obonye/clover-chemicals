@@ -1,0 +1,218 @@
+"use client";
+
+import type { Division, Product } from "@/sanity/lib/types";
+
+import * as React from "react";
+import NextLink from "next/link";
+import { stegaClean } from "next-sanity";
+
+import { RFQ_MAX_ITEMS, RFQ_MAX_QUANTITY, RfqLineItemSchema } from "@/lib/rfq/schema";
+import { useRfq } from "@/lib/rfq/store";
+import { packLabel } from "@/sanity/lib/format";
+
+type AddToRfqProps = {
+  product: Product;
+  /** Sanity division of the product's category. Without one the control
+   *  can't build a valid line, so it stays a plain enquiry link. */
+  division: Division | null | undefined;
+  /** "card" for product grids, "lg" for the product detail page. */
+  size?: "card" | "lg";
+};
+
+type Status = "idle" | "added" | "full";
+
+const clampQuantity = (n: number) =>
+  Number.isFinite(n) ? Math.min(RFQ_MAX_QUANTITY, Math.max(1, Math.round(n))) : 1;
+
+export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) => {
+  const { addItem, hydrated } = useRfq();
+  const idPrefix = React.useId();
+
+  const packSizes = React.useMemo(
+    () => (product.packSizes ?? []).filter((pack) => packLabel(pack)),
+    [product.packSizes],
+  );
+  const [packKey, setPackKey] = React.useState<string | null>(packSizes[0]?._key ?? null);
+  const [quantity, setQuantity] = React.useState(1);
+  const [quantityText, setQuantityText] = React.useState("1");
+  const [status, setStatus] = React.useState<Status>("idle");
+  const resetTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(
+    () => () => {
+      if (resetTimer.current) clearTimeout(resetTimer.current);
+    },
+    [],
+  );
+
+  const slug = product.slug ? stegaClean(product.slug) : null;
+  const name = product.name ? stegaClean(product.name) : null;
+  const fallbackHref = slug ? `/contact?product=${encodeURIComponent(slug)}` : "/contact";
+  const unavailable = product.available === false;
+  const selectedPack = packSizes.find((pack) => pack._key === packKey) ?? null;
+
+  const line =
+    division && slug && name
+      ? RfqLineItemSchema.safeParse({
+          productId: product._id,
+          slug,
+          name,
+          grade: product.grade ? stegaClean(product.grade) : null,
+          division: stegaClean(division),
+          packSizeKey: selectedPack?._key ?? null,
+          packLabel: selectedPack ? packLabel(selectedPack) : null,
+          quantity,
+        })
+      : null;
+  const canAdd = hydrated && !unavailable && line?.success === true;
+
+  const setQty = (next: number) => {
+    const clamped = clampQuantity(next);
+
+    setQuantity(clamped);
+    setQuantityText(String(clamped));
+  };
+
+  const handleAdd = (event: React.SyntheticEvent) => {
+    // Before hydration (or with JS off) the anchor's href takes over.
+    if (!canAdd || !line?.success) return;
+    event.preventDefault();
+
+    const result = addItem(line.data);
+
+    if (resetTimer.current) clearTimeout(resetTimer.current);
+    setStatus(result === "full" ? "full" : "added");
+    resetTimer.current = setTimeout(() => setStatus("idle"), result === "full" ? 6000 : 3500);
+  };
+
+  const lg = size === "lg";
+  const controlHeight = lg ? "h-12" : "h-11";
+  const statusMessage =
+    status === "added"
+      ? `Added ${quantity} × ${name ?? "product"}${selectedPack ? ` (${packLabel(selectedPack)})` : ""} to your RFQ`
+      : status === "full"
+        ? `Your RFQ already has ${RFQ_MAX_ITEMS} items. Send it or remove some before adding more.`
+        : "";
+
+  if (unavailable) {
+    return (
+      <div className="flex flex-col gap-1.5">
+        <button
+          aria-describedby={`${idPrefix}-unavailable`}
+          className={`inline-flex ${controlHeight} w-full cursor-not-allowed items-center justify-center rounded border border-separator px-4 font-mono text-xs font-semibold uppercase tracking-wider text-muted`}
+          disabled
+          type="button"
+        >
+          Add to RFQ
+        </button>
+        <p className="text-xs text-muted" id={`${idPrefix}-unavailable`}>
+          Currently unavailable,{" "}
+          <NextLink className="font-semibold text-accent underline-offset-2 hover:underline" href={fallbackHref}>
+            ask us
+          </NextLink>
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-stretch gap-2">
+        {packSizes.length > 1 && (
+          <div className="min-w-0 flex-1">
+            <label className="sr-only" htmlFor={`${idPrefix}-pack`}>
+              Pack size
+            </label>
+            <select
+              className={`${controlHeight} w-full min-w-0 rounded border border-separator bg-surface px-2 font-mono text-xs text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
+              id={`${idPrefix}-pack`}
+              value={packKey ?? ""}
+              onChange={(event) => setPackKey(event.target.value)}
+            >
+              {packSizes.map((pack) => (
+                <option key={pack._key} value={pack._key}>
+                  {packLabel(pack)}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <div
+          aria-label="Quantity"
+          className={`flex ${controlHeight} shrink-0 items-stretch overflow-hidden rounded border border-separator ${packSizes.length > 1 ? "" : "flex-1"}`}
+          role="group"
+        >
+          <button
+            aria-label="Decrease quantity"
+            className="w-10 shrink-0 text-base text-muted transition-colors hover:bg-surface-secondary hover:text-foreground disabled:opacity-40"
+            disabled={quantity <= 1}
+            type="button"
+            onClick={() => setQty(quantity - 1)}
+          >
+            −
+          </button>
+          <label className="sr-only" htmlFor={`${idPrefix}-qty`}>
+            Quantity
+          </label>
+          <input
+            className="w-full min-w-10 border-x border-separator bg-transparent text-center font-mono text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
+            id={`${idPrefix}-qty`}
+            inputMode="numeric"
+            max={RFQ_MAX_QUANTITY}
+            min={1}
+            type="number"
+            value={quantityText}
+            onBlur={() => setQty(Number(quantityText))}
+            onChange={(event) => {
+              setQuantityText(event.target.value);
+              const parsed = Number(event.target.value);
+
+              if (event.target.value !== "" && Number.isFinite(parsed)) {
+                setQuantity(clampQuantity(parsed));
+              }
+            }}
+          />
+          <button
+            aria-label="Increase quantity"
+            className="w-10 shrink-0 text-base text-muted transition-colors hover:bg-surface-secondary hover:text-foreground disabled:opacity-40"
+            disabled={quantity >= RFQ_MAX_QUANTITY}
+            type="button"
+            onClick={() => setQty(quantity + 1)}
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        {/* A real link so the CTA still works before hydration or with JS
+            off; once hydrated, the click adds to the RFQ instead. */}
+        <NextLink
+          className={`inline-flex ${controlHeight} flex-1 items-center justify-center gap-1.5 rounded bg-accent px-4 font-mono font-semibold uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
+          href={fallbackHref}
+          role={canAdd ? "button" : undefined}
+          onClick={handleAdd}
+          onKeyDown={(event) => {
+            // role="button" promises Space activation; anchors only do Enter.
+            if (event.key === " ") handleAdd(event);
+          }}
+        >
+          {status === "added" ? "Added ✓" : "Add to RFQ"}
+        </NextLink>
+        {status === "added" && (
+          <NextLink
+            className="shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-accent underline-offset-2 hover:underline"
+            href="/rfq"
+          >
+            View RFQ
+          </NextLink>
+        )}
+      </div>
+
+      <p aria-live="polite" className={status === "full" ? "text-xs text-danger" : "sr-only"} role="status">
+        {statusMessage}
+      </p>
+    </div>
+  );
+};
