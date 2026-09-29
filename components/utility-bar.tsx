@@ -5,6 +5,7 @@ import NextLink from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import clsx from "clsx";
 
+import { RfqCartLink } from "@/components/rfq/rfq-nav-button";
 import { divisions } from "@/config/divisions";
 
 // Above this many divisions, an inline list stops being scannable at this
@@ -155,6 +156,11 @@ export const UtilityBar = () => {
               })}
             </ul>
           )}
+        </div>
+
+        {/* Outside the scrolling list, so it stays pinned right on mobile. */}
+        <div className="ml-auto h-full shrink-0">
+          <RfqCartLink />
         </div>
       </div>
     </div>

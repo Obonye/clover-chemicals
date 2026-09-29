@@ -45,9 +45,9 @@ type RfqNavButtonProps = {
 };
 
 /**
- * The navbar's quote entry point. With an empty list it's the familiar
- * "Get a Quote"; once items are added it becomes "RFQ" with a count badge.
- * Both go to /rfq, which also explains the flow and links to /contact.
+ * The navbar's quote entry point, linking to /rfq (which also explains the
+ * flow and links to /contact). In the mobile drawer it shows the item count
+ * once there is one.
  */
 export const RfqNavButton = ({ variant, className, onNavigate }: RfqNavButtonProps) => {
   const count = useRfqNavCount();
@@ -73,34 +73,43 @@ export const RfqNavButton = ({ variant, className, onNavigate }: RfqNavButtonPro
     );
   }
 
+  // The item count lives on the utility bar's cart icon; this stays a
+  // plain call to action.
   return (
     <NextLink
-      aria-label={hasItems ? rfqAccessibleName(count) : undefined}
       className={clsx(
-        "inline-flex items-center gap-2 whitespace-nowrap rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
+        "inline-flex items-center whitespace-nowrap rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
         className,
       )}
       href="/rfq"
       onClick={onNavigate}
     >
-      {hasItems ? (
-        <>
-          RFQ
-          <Badge count={count} />
-        </>
-      ) : (
-        "Get a Quote"
-      )}
+      Get a Quote
     </NextLink>
   );
 };
 
-/** Compact count dot for the mobile hamburger. Decorative: the hamburger's
- *  own aria-label carries the count. */
-export const RfqHamburgerBadge = () => {
+const CartIcon = () => (
+  <svg aria-hidden="true" fill="none" height={20} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" width={20}>
+    <circle cx="9" cy="20" r="1.25" />
+    <circle cx="18" cy="20" r="1.25" />
+    <path d="M2.5 3.5h2.6l2.3 11.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.1l1.9-7.3H6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+/** Cart icon for the utility bar, shared by every division: one RFQ list
+ *  holds products from all of them. */
+export const RfqCartLink = () => {
   const count = useRfqNavCount();
 
-  if (count === 0) return null;
-
-  return <Badge className="absolute -right-0.5 -top-0.5 h-4 min-w-4 px-1 text-[10px]" count={count} />;
+  return (
+    <NextLink
+      aria-label={count > 0 ? rfqAccessibleName(count) : "Request for quote list"}
+      className="relative flex h-full min-w-11 shrink-0 items-center justify-center text-white/70 transition-colors duration-150 hover:text-white"
+      href="/rfq"
+    >
+      <CartIcon />
+      {count > 0 && <Badge className="absolute right-0 top-1.5 h-4 min-w-4 px-1 text-[10px]" count={count} />}
+    </NextLink>
+  );
 };
