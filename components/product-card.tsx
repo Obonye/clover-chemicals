@@ -4,30 +4,17 @@ import Image from "next/image";
 import NextLink from "next/link";
 
 import { DocumentIcon } from "@/components/icons";
+import { AddToRfq } from "@/components/rfq/add-to-rfq";
 import { imageUrl } from "@/sanity/lib/image";
 import { categoryHref, packLabel, productHref } from "@/sanity/lib/format";
-import type { Product, ProductCategory } from "@/sanity/lib/types";
-
-const ArrowRightIcon = () => (
-  <svg
-    fill="none"
-    height={14}
-    stroke="currentColor"
-    strokeWidth={2.5}
-    viewBox="0 0 24 24"
-    width={14}
-  >
-    <path
-      d="M5 12h14M13 6l6 6-6 6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+import type { Division, Product, ProductCategory } from "@/sanity/lib/types";
 
 type ProductCardProps = {
   product: Product;
-  category: Pick<ProductCategory, "label" | "slug" | "image">;
+  category: Pick<ProductCategory, "label" | "slug" | "image"> & {
+    /** Needed for "Add to RFQ"; without it the card falls back to an enquiry link. */
+    division?: Division | null;
+  };
   /** Small label above the product name. Defaults to the category name. */
   eyebrow?: ReactNode;
 };
@@ -100,24 +87,15 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
           )}
         </div>
 
-        {/* CTAs — side by side */}
-        <div className="flex items-center justify-between">
-          <NextLink
-            className="inline-flex shrink-0 items-center gap-1.5 rounded border border-accent px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
-            href="/contact"
-          >
-            Quote
-            <ArrowRightIcon />
-          </NextLink>
+        <AddToRfq division={category.division} product={product} />
 
-          <NextLink
-            className="inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-muted transition-colors hover:text-foreground"
-            href={detailHref}
-          >
-            <DocumentIcon />
-            View Details
-          </NextLink>
-        </div>
+        <NextLink
+          className="mt-3 inline-flex min-h-11 items-center justify-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-muted transition-colors hover:text-foreground"
+          href={detailHref}
+        >
+          <DocumentIcon />
+          View Details
+        </NextLink>
       </div>
     </article>
   );

@@ -6,6 +6,7 @@ import NextLink from "next/link";
 
 import { DocumentIcon } from "@/components/icons";
 import { ProductCard } from "@/components/product-card";
+import { AddToRfq } from "@/components/rfq/add-to-rfq";
 import { divisionCssVars, getDivisionBySanityValue } from "@/config/divisions";
 import { loadQuery } from "@/sanity/lib/fetch";
 import { imageUrl } from "@/sanity/lib/image";
@@ -232,13 +233,15 @@ export default async function ProductPage({ params }: Props) {
                 </div>
               )}
 
-              {/* "Add to RFQ" once CI-19 ships — a plain quote link for now. */}
-              <NextLink
-                className="inline-flex w-fit items-center justify-center rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-                href={quoteHref}
-              >
-                Request a Quote
-              </NextLink>
+              <div className="flex max-w-md flex-col gap-3">
+                <AddToRfq division={product.category?.division} product={product} size="lg" />
+                <NextLink
+                  className="w-fit text-sm text-muted underline-offset-2 hover:text-foreground hover:underline"
+                  href={quoteHref}
+                >
+                  Or send a one-off enquiry about this product
+                </NextLink>
+              </div>
             </div>
           </div>
         </div>
