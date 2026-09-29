@@ -7,8 +7,14 @@ import clsx from "clsx";
 import { useTheme } from "next-themes";
 import { Drawer } from "@heroui/react";
 
+import {
+  RfqHamburgerBadge,
+  RfqNavButton,
+  rfqAccessibleName,
+  useRfqNavCount,
+} from "@/components/rfq/rfq-nav-button";
 import { siteConfig } from "@/config/site";
-import { divisions, getDivision } from "@/config/divisions";
+import { divisionCssVars, divisions, getDivision } from "@/config/divisions";
 import type { ProductCategory } from "@/sanity/lib/types";
 
 // Nav category links jump straight into the filterable products grid with
@@ -59,6 +65,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const productsTriggerRef = useRef<HTMLButtonElement>(null);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  const rfqCount = useRfqNavCount();
 
   // The URL's first segment is the only source of division now — "chemical"
   // or "medical" under app/[division]/, undefined on every shared route
@@ -290,15 +297,10 @@ export const Navbar = ({ categories }: NavbarProps) => {
               {theme === "dark" ? <SunIcon /> : <MoonIcon />}
             </button>
           )}
-          <NextLink
-            className={clsx(
-              "whitespace-nowrap rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
-              isTransparent ? heroControl : "text-muted hover:text-foreground",
-            )}
-            href="/contact"
-          >
-            Get a Quote
-          </NextLink>
+          <RfqNavButton
+            className={isTransparent ? heroControl : "text-muted hover:text-foreground"}
+            variant="desktop"
+          />
           <NextLink
             className="whitespace-nowrap rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
             href={browseHref}
@@ -310,9 +312,9 @@ export const Navbar = ({ categories }: NavbarProps) => {
         {/* Mobile hamburger */}
         <button
           aria-expanded={isMenuOpen}
-          aria-label="Toggle menu"
+          aria-label={rfqCount > 0 ? `Toggle menu (${rfqAccessibleName(rfqCount)})` : "Toggle menu"}
           className={clsx(
-            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded transition-colors lg:hidden",
+            "relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded transition-colors lg:hidden",
             isTransparent ? heroControl : "text-muted hover:text-foreground",
           )}
           style={{ touchAction: "manipulation" }}
@@ -341,6 +343,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
               />
             )}
           </svg>
+          <RfqHamburgerBadge />
         </button>
       </header>
 
@@ -349,7 +352,13 @@ export const Navbar = ({ categories }: NavbarProps) => {
           body-scroll-lock for free; see product-catalogue.tsx's filter
           sheet for the same pattern already in use elsewhere. */}
       <Drawer>
-        <Drawer.Backdrop isOpen={isMenuOpen} onOpenChange={setIsMenuOpen}>
+        {/* The drawer portals out of DivisionThemeScope, so it re-applies
+            the division's colour tokens itself. */}
+        <Drawer.Backdrop
+          isOpen={isMenuOpen}
+          style={divisionCssVars(division?.theme)}
+          onOpenChange={setIsMenuOpen}
+        >
           <Drawer.Content placement="right">
             <Drawer.Dialog>
               <Drawer.CloseTrigger />
@@ -357,6 +366,9 @@ export const Navbar = ({ categories }: NavbarProps) => {
                 <Drawer.Heading className="sr-only">Menu</Drawer.Heading>
               </Drawer.Header>
               <Drawer.Body className="flex flex-col gap-1">
+                <div className="mb-3">
+                  <RfqNavButton variant="drawer" onNavigate={() => setIsMenuOpen(false)} />
+                </div>
                 {division ? (
                   <>
                     <button
@@ -457,13 +469,6 @@ export const Navbar = ({ categories }: NavbarProps) => {
                 )}
               </Drawer.Body>
               <Drawer.Footer className="flex flex-col gap-3">
-                <NextLink
-                  className="block w-full rounded bg-accent px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-                  href="/contact"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Get a Quote
-                </NextLink>
                 <NextLink
                   className="block w-full rounded border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
                   href={browseHref}
