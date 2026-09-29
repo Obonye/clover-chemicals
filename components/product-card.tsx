@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import NextLink from "next/link";
 
-import { DocumentIcon } from "@/components/icons";
 import { AddToRfq } from "@/components/rfq/add-to-rfq";
 import { imageUrl } from "@/sanity/lib/image";
 import { categoryHref, packLabel, productHref } from "@/sanity/lib/format";
@@ -59,7 +58,7 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
         </NextLink>
 
         <h3 className="mb-1 text-base font-bold leading-snug tracking-tight text-foreground">
-          <NextLink className="hover:text-accent" href={detailHref}>
+          <NextLink className="underline-offset-4 hover:underline" href={detailHref}>
             {product.name}
           </NextLink>
         </h3>
@@ -88,14 +87,6 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
         </div>
 
         <AddToRfq division={category.division} product={product} />
-
-        <NextLink
-          className="mt-3 inline-flex min-h-11 items-center justify-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-muted transition-colors hover:text-foreground"
-          href={detailHref}
-        >
-          <DocumentIcon />
-          View Details
-        </NextLink>
       </div>
     </article>
   );

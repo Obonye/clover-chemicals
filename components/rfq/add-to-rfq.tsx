@@ -3,10 +3,11 @@
 import type { Division, Product } from "@/sanity/lib/types";
 
 import * as React from "react";
+import { Button } from "@heroui/react";
 import NextLink from "next/link";
-import clsx from "clsx";
 import { stegaClean } from "next-sanity";
 
+import { PackSizeSelect } from "@/components/rfq/pack-size-select";
 import { QuantityStepper } from "@/components/rfq/quantity-stepper";
 import { RFQ_MAX_ITEMS, RfqLineItemSchema } from "@/lib/rfq/schema";
 import { useRfq } from "@/lib/rfq/store";
@@ -88,14 +89,15 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
   if (unavailable) {
     return (
       <div className="flex flex-col gap-1.5">
-        <button
+        <Button
+          fullWidth
+          isDisabled
           aria-describedby={`${idPrefix}-unavailable`}
-          className={`inline-flex ${controlHeight} w-full cursor-not-allowed items-center justify-center rounded border border-separator px-4 font-mono text-xs font-semibold uppercase tracking-wider text-muted`}
-          disabled
-          type="button"
+          className={`${controlHeight} font-mono text-xs uppercase tracking-wider`}
+          variant="outline"
         >
           Add to RFQ
-        </button>
+        </Button>
         <p className="text-xs text-muted" id={`${idPrefix}-unavailable`}>
           Currently unavailable,{" "}
           <NextLink className="font-semibold text-accent underline-offset-2 hover:underline" href={fallbackHref}>
@@ -110,27 +112,17 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
     <div className="flex flex-col gap-2">
       <div className="flex items-stretch gap-2">
         {packSizes.length > 1 && (
-          <div className="min-w-0 flex-1">
-            <label className="sr-only" htmlFor={`${idPrefix}-pack`}>
-              Pack size
-            </label>
-            <select
-              className={`${controlHeight} w-full min-w-0 rounded border border-separator bg-surface px-2 font-mono text-xs text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
-              id={`${idPrefix}-pack`}
-              value={packKey ?? ""}
-              onChange={(event) => setPackKey(event.target.value)}
-            >
-              {packSizes.map((pack) => (
-                <option key={pack._key} value={pack._key}>
-                  {packLabel(pack)}
-                </option>
-              ))}
-            </select>
-          </div>
+          <PackSizeSelect
+            className="flex-1"
+            label={`Pack size for ${name ?? "this product"}`}
+            packSizes={packSizes}
+            value={packKey}
+            onChange={(pack) => setPackKey(pack._key)}
+          />
         )}
 
         <QuantityStepper
-          className={clsx(controlHeight, packSizes.length > 1 ? "" : "flex-1")}
+          className={packSizes.length > 1 ? "w-32" : "flex-1"}
           id={`${idPrefix}-qty`}
           value={quantity}
           onChange={setQuantity}

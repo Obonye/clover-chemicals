@@ -1,11 +1,10 @@
 "use client";
 
-import type { RfqLineItem as RfqLine } from "@/lib/rfq/types";
-
 import * as React from "react";
+import { Button } from "@heroui/react";
 import NextLink from "next/link";
 
-import { RfqLineItem } from "@/components/rfq/rfq-line-item";
+import { RfqTableRow } from "@/components/rfq/rfq-table-row";
 import { divisions } from "@/config/divisions";
 import { rfqLineKey } from "@/lib/rfq/schema";
 import { useRfq } from "@/lib/rfq/store";
@@ -82,14 +81,14 @@ const ClearList = ({ count }: { count: number }) => {
 
   if (!confirming) {
     return (
-      <button
+      <Button
         ref={triggerRef}
-        className="min-h-11 font-mono text-xs font-semibold uppercase tracking-wider text-muted transition-colors hover:text-danger"
-        type="button"
-        onClick={() => setConfirming(true)}
+        className="h-11 font-mono text-xs uppercase tracking-wider text-muted hover:text-danger"
+        variant="ghost"
+        onPress={() => setConfirming(true)}
       >
         Clear list
-      </button>
+      </Button>
     );
   }
 
@@ -111,33 +110,23 @@ const ClearList = ({ count }: { count: number }) => {
       <span className="text-sm text-danger-soft-foreground">
         Remove all {count} item{count === 1 ? "" : "s"}?
       </span>
-      <button
+      <Button
         ref={confirmRef}
-        className="min-h-11 rounded bg-danger px-4 text-sm font-semibold text-danger-foreground"
-        type="button"
-        onClick={() => {
+        className="h-11"
+        variant="danger"
+        onPress={() => {
           clear();
           setConfirming(false);
         }}
       >
         Yes, clear
-      </button>
-      <button className="min-h-11 px-2 text-sm font-semibold text-foreground" type="button" onClick={cancel}>
+      </Button>
+      <Button className="h-11" variant="tertiary" onPress={cancel}>
         Cancel
-      </button>
+      </Button>
     </div>
   );
 };
-
-/** Orders lines by division (in config order), keeping add order inside each. */
-function groupByDivision(items: RfqLine[]) {
-  return divisions
-    .map((division) => ({
-      division,
-      lines: items.filter((line) => line.division === division.sanityDivision),
-    }))
-    .filter((group) => group.lines.length > 0);
-}
 
 export const RfqList = () => {
   const { items, hydrated } = useRfq();
@@ -149,36 +138,45 @@ export const RfqList = () => {
   const flagged = freshness.status === "ready" ? items.length - freshness.sendable.length : 0;
 
   return (
-    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_340px] lg:gap-16">
+    <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_240px]">
       <div className="flex min-w-0 flex-col gap-8">
         {freshness.status === "error" && (
           <p className="rounded-lg bg-warning-soft px-4 py-3 text-sm text-warning-soft-foreground" role="alert">
             We couldn&apos;t check your list against our latest catalogue.{" "}
-            <button className="font-semibold underline underline-offset-2" type="button" onClick={freshness.retry}>
+            <Button className="h-auto p-0 font-semibold underline underline-offset-2" variant="ghost" onPress={freshness.retry}>
               Try again
-            </button>
+            </Button>
           </p>
         )}
 
-        {groupByDivision(items).map(({ division, lines }) => (
-          <section key={division.slug} aria-labelledby={`rfq-group-${division.slug}`}>
-            <h2
-              className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-muted"
-              id={`rfq-group-${division.slug}`}
-            >
-              {division.name} · {lines.length} item{lines.length === 1 ? "" : "s"}
-            </h2>
-            <ul className="flex flex-col gap-3">
-              {lines.map((line) => (
-                <RfqLineItem
-                  key={rfqLineKey(line)}
-                  check={freshness.checks.get(rfqLineKey(line))}
-                  line={line}
-                />
+        <div className="table-root table-root--primary max-md:bg-transparent max-md:p-0">
+          <table className="table__content table-fixed max-md:block">
+            <caption className="sr-only">Products in your request for quote</caption>
+            <colgroup className="max-md:hidden">
+              <col />
+              <col className="w-36" />
+              <col className="w-40" />
+              <col className="w-[28%]" />
+              <col className="w-12" />
+            </colgroup>
+            <thead className="table__header max-md:hidden">
+              <tr>
+                <th className="table__column" scope="col">Product</th>
+                <th className="table__column" scope="col">Pack size</th>
+                <th className="table__column" scope="col">Quantity</th>
+                <th className="table__column" scope="col">Note</th>
+                <th className="table__column" scope="col">
+                  <span className="sr-only">Remove</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="table__body max-md:flex max-md:flex-col max-md:gap-2 max-md:shadow-none">
+              {items.map((line) => (
+                <RfqTableRow key={rfqLineKey(line)} check={freshness.checks.get(rfqLineKey(line))} line={line} />
               ))}
-            </ul>
-          </section>
-        ))}
+            </tbody>
+          </table>
+        </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-separator pt-4">
           <NextLink
@@ -191,9 +189,9 @@ export const RfqList = () => {
         </div>
       </div>
 
-      <aside aria-label="RFQ summary" className="lg:sticky lg:top-28 lg:self-start">
-        <div className="rounded-2xl border border-separator bg-surface p-6">
-          <h2 className="mb-4 font-display text-lg font-extrabold tracking-tight text-foreground">Summary</h2>
+      <aside aria-label="RFQ summary" className="w-full sm:ml-auto sm:max-w-sm xl:sticky xl:top-36 xl:max-w-none xl:self-start">
+        <div className="rounded-2xl border border-separator bg-surface p-5">
+          <h2 className="mb-3 font-display text-base font-extrabold tracking-tight text-foreground">Summary</h2>
           <dl className="mb-4 flex flex-col gap-2 text-sm">
             <div className="flex justify-between gap-4">
               <dt className="text-muted">Items</dt>
@@ -208,12 +206,12 @@ export const RfqList = () => {
               </div>
             )}
           </dl>
-          <p className="text-sm leading-relaxed text-muted">
+          <p className="text-xs leading-relaxed text-muted">
             There are no prices online: we quote every request individually,
             based on your quantities and delivery location.
           </p>
           {flagged > 0 && (
-            <p className="mt-3 text-sm leading-relaxed text-muted">
+            <p className="mt-2 text-xs leading-relaxed text-muted">
               Items marked as needing attention won&apos;t be sent until they&apos;re fixed.
             </p>
           )}
