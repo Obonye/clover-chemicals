@@ -71,3 +71,11 @@ export type Promotion = {
   image: SanityImage | null;
   endDate: string | null;
 };
+
+/** PRODUCTS_BY_IDS_QUERY's shape — just what an RFQ line needs re-checking. */
+export type RfqProductSnapshot = Pick<
+  Product,
+  "_id" | "name" | "slug" | "grade" | "packSizes" | "image" | "available"
+> & {
+  category: Pick<ProductCategory, "slug" | "division" | "image"> | null;
+};

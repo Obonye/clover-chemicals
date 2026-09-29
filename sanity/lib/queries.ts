@@ -127,3 +127,21 @@ export const ACTIVE_PROMOTION_QUERY = defineQuery(`
     endDate
   }
 `);
+
+/**
+ * The current state of specific products, by `_id` — the /rfq page re-checks
+ * a browser-held list against this (deleted, unavailable, renamed, pack size
+ * gone), and the RFQ submit action re-builds lines from it (CI-22).
+ */
+export const PRODUCTS_BY_IDS_QUERY = defineQuery(`
+  *[_type == "product" && _id in $ids] {
+    _id,
+    name,
+    "slug": slug.current,
+    grade,
+    packSizes[]{ _key, value, unit, label },
+    image,
+    available,
+    category->{ "slug": slug.current, division, image }
+  }
+`);

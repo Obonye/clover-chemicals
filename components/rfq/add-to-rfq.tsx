@@ -4,9 +4,11 @@ import type { Division, Product } from "@/sanity/lib/types";
 
 import * as React from "react";
 import NextLink from "next/link";
+import clsx from "clsx";
 import { stegaClean } from "next-sanity";
 
-import { RFQ_MAX_ITEMS, RFQ_MAX_QUANTITY, RfqLineItemSchema } from "@/lib/rfq/schema";
+import { QuantityStepper } from "@/components/rfq/quantity-stepper";
+import { RFQ_MAX_ITEMS, RfqLineItemSchema } from "@/lib/rfq/schema";
 import { useRfq } from "@/lib/rfq/store";
 import { packLabel } from "@/sanity/lib/format";
 
@@ -21,9 +23,6 @@ type AddToRfqProps = {
 
 type Status = "idle" | "added" | "full";
 
-const clampQuantity = (n: number) =>
-  Number.isFinite(n) ? Math.min(RFQ_MAX_QUANTITY, Math.max(1, Math.round(n))) : 1;
-
 export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) => {
   const { addItem, hydrated } = useRfq();
   const idPrefix = React.useId();
@@ -34,7 +33,6 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
   );
   const [packKey, setPackKey] = React.useState<string | null>(packSizes[0]?._key ?? null);
   const [quantity, setQuantity] = React.useState(1);
-  const [quantityText, setQuantityText] = React.useState("1");
   const [status, setStatus] = React.useState<Status>("idle");
   const resetTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -65,13 +63,6 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
         })
       : null;
   const canAdd = hydrated && !unavailable && line?.success === true;
-
-  const setQty = (next: number) => {
-    const clamped = clampQuantity(next);
-
-    setQuantity(clamped);
-    setQuantityText(String(clamped));
-  };
 
   const handleAdd = (event: React.SyntheticEvent) => {
     // Before hydration (or with JS off) the anchor's href takes over.
@@ -138,51 +129,12 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
           </div>
         )}
 
-        <div
-          aria-label="Quantity"
-          className={`flex ${controlHeight} shrink-0 items-stretch overflow-hidden rounded border border-separator ${packSizes.length > 1 ? "" : "flex-1"}`}
-          role="group"
-        >
-          <button
-            aria-label="Decrease quantity"
-            className="w-10 shrink-0 text-base text-muted transition-colors hover:bg-surface-secondary hover:text-foreground disabled:opacity-40"
-            disabled={quantity <= 1}
-            type="button"
-            onClick={() => setQty(quantity - 1)}
-          >
-            −
-          </button>
-          <label className="sr-only" htmlFor={`${idPrefix}-qty`}>
-            Quantity
-          </label>
-          <input
-            className="w-full min-w-10 border-x border-separator bg-transparent text-center font-mono text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
-            id={`${idPrefix}-qty`}
-            inputMode="numeric"
-            max={RFQ_MAX_QUANTITY}
-            min={1}
-            type="number"
-            value={quantityText}
-            onBlur={() => setQty(Number(quantityText))}
-            onChange={(event) => {
-              setQuantityText(event.target.value);
-              const parsed = Number(event.target.value);
-
-              if (event.target.value !== "" && Number.isFinite(parsed)) {
-                setQuantity(clampQuantity(parsed));
-              }
-            }}
-          />
-          <button
-            aria-label="Increase quantity"
-            className="w-10 shrink-0 text-base text-muted transition-colors hover:bg-surface-secondary hover:text-foreground disabled:opacity-40"
-            disabled={quantity >= RFQ_MAX_QUANTITY}
-            type="button"
-            onClick={() => setQty(quantity + 1)}
-          >
-            +
-          </button>
-        </div>
+        <QuantityStepper
+          className={clsx(controlHeight, packSizes.length > 1 ? "" : "flex-1")}
+          id={`${idPrefix}-qty`}
+          value={quantity}
+          onChange={setQuantity}
+        />
       </div>
 
       <div className="flex items-center gap-3">
