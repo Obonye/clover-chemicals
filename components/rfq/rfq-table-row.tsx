@@ -4,8 +4,9 @@ import type { RfqLineCheck } from "@/lib/rfq/reconcile";
 import type { RfqLineItem as RfqLine } from "@/lib/rfq/types";
 
 import * as React from "react";
-import { Button, Input } from "@heroui/react";
+import { Button, Input, Tooltip } from "@heroui/react";
 import Image from "next/image";
+import { Focusable } from "react-aria-components";
 import NextLink from "next/link";
 import clsx from "clsx";
 
@@ -21,6 +22,9 @@ const PROBLEM_TEXT = {
   unavailable: "Currently unavailable, so it won't be included. Remove it, or ask us about alternatives in your message.",
   "pack-missing": "The pack size you chose is no longer offered. Pick another to include this item.",
 } as const;
+
+const NOTE_HINT =
+  "Anything we should know when quoting this item: grade or certification needs, preferred brand, packaging, delivery timing or a regular order schedule.";
 
 const TrashIcon = () => (
   <svg aria-hidden="true" fill="none" height={18} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" width={18}>
@@ -134,28 +138,44 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
 
       <td className={clsx(cell, "max-md:col-span-2 max-md:row-start-3", !editable && "max-md:hidden")}>
         {editable && (
-          <Input
-            fullWidth
-            aria-label={`Note for ${line.name}`}
-            className="h-11 text-sm md:h-9"
-            id={`${idPrefix}-note`}
-            maxLength={300}
-            placeholder="Optional note"
-            type="text"
-            value={noteText}
-            variant="secondary"
-            onBlur={() => {
-              noteFocused.current = false;
-              setNoteText(line.note ?? "");
-            }}
-            onChange={(event) => {
-              setNoteText(event.target.value);
-              updateItem(key, { note: event.target.value });
-            }}
-            onFocus={() => {
-              noteFocused.current = true;
-            }}
-          />
+          <>
+            <Tooltip closeDelay={100} delay={300}>
+              {/* Focusable lets the input itself trigger the tooltip, on hover
+                  and on keyboard focus, without adding a wrapper tab stop. */}
+              <Focusable>
+                <Input
+                  fullWidth
+                  aria-describedby={`${idPrefix}-note-hint`}
+                  aria-label={`Note for ${line.name}`}
+                  className="h-11 text-sm md:h-9"
+                  id={`${idPrefix}-note`}
+                  maxLength={300}
+                  placeholder="Optional note"
+                  type="text"
+                  value={noteText}
+                  variant="secondary"
+                  onBlur={() => {
+                    noteFocused.current = false;
+                    setNoteText(line.note ?? "");
+                  }}
+                  onChange={(event) => {
+                    setNoteText(event.target.value);
+                    updateItem(key, { note: event.target.value });
+                  }}
+                  onFocus={() => {
+                    noteFocused.current = true;
+                  }}
+                />
+              </Focusable>
+              <Tooltip.Content showArrow className="max-w-64" placement="top">
+                <Tooltip.Arrow />
+                <p className="text-xs leading-relaxed [overflow-wrap:normal] [word-break:normal]">{NOTE_HINT}</p>
+              </Tooltip.Content>
+            </Tooltip>
+            <span className="sr-only" id={`${idPrefix}-note-hint`}>
+              {NOTE_HINT}
+            </span>
+          </>
         )}
       </td>
 
