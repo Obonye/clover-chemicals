@@ -7,12 +7,7 @@ import clsx from "clsx";
 import { useTheme } from "next-themes";
 import { Drawer } from "@heroui/react";
 
-import {
-  RfqHamburgerBadge,
-  RfqNavButton,
-  rfqAccessibleName,
-  useRfqNavCount,
-} from "@/components/rfq/rfq-nav-button";
+import { RfqNavButton } from "@/components/rfq/rfq-nav-button";
 import { siteConfig } from "@/config/site";
 import { divisionCssVars, divisions, getDivision } from "@/config/divisions";
 import type { ProductCategory } from "@/sanity/lib/types";
@@ -65,7 +60,6 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const productsTriggerRef = useRef<HTMLButtonElement>(null);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
-  const rfqCount = useRfqNavCount();
 
   // The URL's first segment is the only source of division now — "chemical"
   // or "medical" under app/[division]/, undefined on every shared route
@@ -312,9 +306,9 @@ export const Navbar = ({ categories }: NavbarProps) => {
         {/* Mobile hamburger */}
         <button
           aria-expanded={isMenuOpen}
-          aria-label={rfqCount > 0 ? `Toggle menu (${rfqAccessibleName(rfqCount)})` : "Toggle menu"}
+          aria-label="Toggle menu"
           className={clsx(
-            "relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded transition-colors lg:hidden",
+            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded transition-colors lg:hidden",
             isTransparent ? heroControl : "text-muted hover:text-foreground",
           )}
           style={{ touchAction: "manipulation" }}
@@ -343,7 +337,6 @@ export const Navbar = ({ categories }: NavbarProps) => {
               />
             )}
           </svg>
-          <RfqHamburgerBadge />
         </button>
       </header>
 
