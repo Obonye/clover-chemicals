@@ -4,6 +4,7 @@ import * as React from "react";
 import { Button } from "@heroui/react";
 import NextLink from "next/link";
 
+import { RfqDetailsForm, type RfqSubmitSuccess } from "@/components/rfq/rfq-details-form";
 import { RfqTableRow } from "@/components/rfq/rfq-table-row";
 import { divisions } from "@/config/divisions";
 import { rfqLineKey } from "@/lib/rfq/schema";
@@ -128,10 +129,50 @@ const ClearList = ({ count }: { count: number }) => {
   );
 };
 
-export const RfqList = () => {
-  const { items, hydrated } = useRfq();
-  const freshness = useRfqFreshness();
+const SentState = ({ result, onDone }: { result: RfqSubmitSuccess; onDone: () => void }) => {
+  const headingRef = React.useRef<HTMLHeadingElement>(null);
 
+  React.useEffect(() => headingRef.current?.focus(), []);
+
+  return (
+    <div className="flex max-w-[60ch] flex-col items-start gap-4" role="status">
+      <p className="font-mono text-xs font-semibold uppercase tracking-widest text-accent">Request sent</p>
+      <h2 ref={headingRef} className="font-display text-2xl font-extrabold tracking-tight text-foreground outline-none" tabIndex={-1}>
+        Thank you. We&apos;ll be in touch with your quotation.
+      </h2>
+      <p className="text-base leading-relaxed text-muted">
+        Your reference is{" "}
+        <span className="font-mono font-semibold text-foreground">{result.reference}</span>. Please quote it if you
+        contact us about this request.
+      </p>
+      {result.dropped.length > 0 && (
+        <p className="rounded-lg bg-warning-soft px-4 py-3 text-sm text-warning-soft-foreground">
+          {result.dropped.length === 1 ? "One item was" : `${result.dropped.length} items were`} left out because{" "}
+          {result.dropped.length === 1 ? "it's" : "they're"} no longer available as listed: {result.dropped.join(", ")}.
+        </p>
+      )}
+      <Button className="h-11" variant="tertiary" onPress={onDone}>
+        Start a new request
+      </Button>
+    </div>
+  );
+};
+
+export const RfqList = () => {
+  const { items, hydrated, clear } = useRfq();
+  const freshness = useRfqFreshness();
+  const [sent, setSent] = React.useState<RfqSubmitSuccess | null>(null);
+
+  const handleSent = React.useCallback(
+    (result: RfqSubmitSuccess) => {
+      setSent(result);
+      clear();
+      window.scrollTo({ top: 0 });
+    },
+    [clear],
+  );
+
+  if (sent) return <SentState result={sent} onDone={() => setSent(null)} />;
   if (!hydrated) return <LoadingState />;
   if (items.length === 0) return <EmptyState />;
 
@@ -186,6 +227,14 @@ export const RfqList = () => {
             ← Add more products
           </NextLink>
           <ClearList count={items.length} />
+        </div>
+
+        <div className="rounded-2xl border border-separator bg-surface p-5 lg:p-8">
+          <RfqDetailsForm
+            items={freshness.sendable}
+            ready={freshness.status === "ready" || freshness.status === "error"}
+            onSuccess={handleSent}
+          />
         </div>
       </div>
 
