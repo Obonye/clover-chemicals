@@ -45,11 +45,13 @@ export const QuickLinksBar = () => {
 
   // A compact floating side strip at every screen size: a full-width bottom
   // bar ate into the viewport on desktop. Slides away while scrolling down.
+  // From md up it widens on hover/keyboard focus to show the labels, which
+  // open to the left so the icons stay put against the edge.
   return (
     <div
       aria-hidden={!isVisible}
-      className={`fixed right-0 top-1/2 z-50 flex -translate-y-1/2 flex-col overflow-hidden rounded-l-lg bg-accent shadow-lg transition-transform duration-300 ease-out ${
-          isVisible ? "translate-x-0" : "translate-x-[120%]"
+      className={`group fixed right-0 top-1/2 z-50 flex -translate-y-1/2 flex-col overflow-hidden rounded-l-lg bg-accent shadow-lg transition-transform duration-300 ease-out ${
+        isVisible ? "translate-x-0" : "translate-x-[120%]"
       }`}
       // Off-screen links shouldn't stay reachable by Tab.
       inert={!isVisible}
@@ -57,13 +59,17 @@ export const QuickLinksBar = () => {
       {links.map(({ label, href, icon: Icon }) => (
         <NextLink
           key={label}
-          aria-label={label}
-          className="flex h-9 w-9 items-center justify-center text-accent-foreground transition-colors hover:bg-black/10 md:h-10 md:w-10"
+          className="flex items-center justify-end text-accent-foreground transition-colors hover:bg-black/10"
           href={href}
           target={href.startsWith("http") ? "_blank" : undefined}
-          title={label}
         >
-          <Icon className="text-base md:text-lg" />
+          {/* Collapsed (but still read by screen readers) until expanded. */}
+          <span className="max-w-0 overflow-hidden whitespace-nowrap text-[11px] font-semibold uppercase tracking-widest opacity-0 transition-[max-width,opacity,padding] duration-200 ease-out motion-reduce:transition-none md:group-hover:max-w-32 md:group-hover:pl-4 md:group-hover:opacity-100 md:group-focus-within:max-w-32 md:group-focus-within:pl-4 md:group-focus-within:opacity-100">
+            {label}
+          </span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center md:h-10 md:w-10">
+            <Icon className="text-base md:text-lg" />
+          </span>
         </NextLink>
       ))}
     </div>
