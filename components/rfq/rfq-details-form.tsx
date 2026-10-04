@@ -4,8 +4,12 @@ import type { RfqSubmitState } from "@/app/rfq/actions";
 import type { RfqLineItem } from "@/lib/rfq/types";
 
 import * as React from "react";
+import { getLocalTimeZone, today } from "@internationalized/date";
 import {
   Button,
+  Calendar,
+  DateField,
+  DatePicker,
   Description,
   FieldError,
   Form,
@@ -30,8 +34,6 @@ type RfqDetailsFormProps = {
   onSuccess: (result: RfqSubmitSuccess) => void;
 };
 
-const todayIso = () => new Date().toISOString().slice(0, 10);
-
 const Field = ({
   name,
   label,
@@ -40,7 +42,6 @@ const Field = ({
   autoComplete,
   placeholder,
   description,
-  min,
 }: {
   name: string;
   label: string;
@@ -49,11 +50,10 @@ const Field = ({
   autoComplete?: string;
   placeholder?: string;
   description?: string;
-  min?: string;
 }) => (
   <TextField fullWidth isRequired={isRequired} name={name} type={type} variant="secondary">
     <Label>{label}</Label>
-    <Input autoComplete={autoComplete} className="h-11" min={min} placeholder={placeholder} />
+    <Input autoComplete={autoComplete} className="h-11" placeholder={placeholder} />
     {description && <Description>{description}</Description>}
     <FieldError />
   </TextField>
@@ -135,7 +135,40 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
           </Select.Popover>
         </Select>
 
-        <Field label="Required by" min={todayIso()} name="requiredBy" type="date" />
+        {/* Submits as YYYY-MM-DD, which the server schema re-checks. */}
+        <DatePicker className="w-full" minValue={today(getLocalTimeZone())} name="requiredBy">
+          <Label>Required by</Label>
+          <DateField.Group fullWidth className="h-11" variant="secondary">
+            <DateField.Input>{(segment) => <DateField.Segment segment={segment} />}</DateField.Input>
+            <DateField.Suffix>
+              <DatePicker.Trigger aria-label="Choose a required-by date">
+                <DatePicker.TriggerIndicator />
+              </DatePicker.Trigger>
+            </DateField.Suffix>
+          </DateField.Group>
+          <FieldError />
+          <DatePicker.Popover>
+            <Calendar aria-label="Required-by date">
+              <Calendar.Header>
+                <Calendar.YearPickerTrigger>
+                  <Calendar.YearPickerTriggerHeading />
+                  <Calendar.YearPickerTriggerIndicator />
+                </Calendar.YearPickerTrigger>
+                <Calendar.NavButton slot="previous" />
+                <Calendar.NavButton slot="next" />
+              </Calendar.Header>
+              <Calendar.Grid>
+                <Calendar.GridHeader>{(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}</Calendar.GridHeader>
+                <Calendar.GridBody>{(date) => <Calendar.Cell date={date} />}</Calendar.GridBody>
+              </Calendar.Grid>
+              <Calendar.YearPickerGrid>
+                <Calendar.YearPickerGridBody>
+                  {({ year }) => <Calendar.YearPickerCell year={year} />}
+                </Calendar.YearPickerGridBody>
+              </Calendar.YearPickerGrid>
+            </Calendar>
+          </DatePicker.Popover>
+        </DatePicker>
       </div>
 
       <Field
