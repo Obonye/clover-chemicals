@@ -89,17 +89,17 @@ export default function Home() {
       {/* About teaser */}
       <section className="border-b border-separator bg-background py-20">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-          <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
+          <div className="flex flex-col items-start gap-8">
             <div>
               <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
                 Who We Are
               </p>
               <p className="text-xl font-medium leading-relaxed text-foreground lg:text-2xl" style={{ maxWidth: "42ch" }}>
-                {siteConfig.name} was established in Botswana in{" "}
-                {siteConfig.foundedYear} to manufacture and supply chemicals
-                for domestic and industrial use. Today we&apos;re 100%
-                citizen-owned, EDD certified, and operating across chemicals,
-                equipment, PPE, and medical divisions.
+                {/* One string: JSX drops whitespace that spans a line break
+                    next to an {expression}, which ran words together here. */}
+                {`${siteConfig.name} was established in Botswana in ${siteConfig.foundedYear} to manufacture and ` +
+                  "supply chemicals for domestic and industrial use. Today we're 100% citizen-owned, EDD " +
+                  "certified, and operating across chemicals, equipment, PPE, and medical divisions."}
               </p>
             </div>
             <NextLink
