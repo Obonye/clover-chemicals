@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+import { groupTheme } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
 
 export const alt = siteConfig.name;
@@ -28,7 +29,7 @@ export default function Image() {
             fontSize: 28,
             letterSpacing: 4,
             textTransform: "uppercase",
-            color: "#8bc53f",
+            color: groupTheme.ogAccent,
           }}
         >
           {`Est. ${siteConfig.foundedYear}`}

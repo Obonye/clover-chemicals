@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import { CtaBanner } from "@/components/cta-banner";
 import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/config/site";
-import { divisions } from "@/config/divisions";
+import { divisionCssVars, divisions } from "@/config/divisions";
 import { articles } from "@/lib/news";
 import { organizationJsonLd } from "@/lib/structured-data";
 
@@ -29,7 +29,9 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-[var(--header-h)] lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          {/* Always over a dark photo: the group accent is graphite in light
+              mode, so this uses a light tint instead. */}
+          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/70">
             Est. {siteConfig.foundedYear} · {years}+ Years · 100% Citizen-Owned · EDD Certified
           </p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "18ch" }}>
@@ -56,6 +58,8 @@ export default function Home() {
                 key={division.slug}
                 className="group relative flex min-h-[320px] flex-col justify-end overflow-hidden bg-background p-8 lg:p-10"
                 href={`/${division.slug}`}
+                // Each card previews its own division's colours.
+                style={divisionCssVars(division.theme)}
               >
                 <Image
                   alt={division.name}
@@ -159,7 +163,8 @@ export default function Home() {
         </div>
       </section>
 
-      <CtaBanner />
+      {/* Stone duotone to match the group theme (CI-15). */}
+      <CtaBanner tint={[0.79, 0.73, 0.61]} />
     </>
   );
 }

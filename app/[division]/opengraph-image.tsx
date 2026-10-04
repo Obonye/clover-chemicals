@@ -25,7 +25,7 @@ export default async function Image({ params }: Props) {
   const division = getDivision(slug);
   const name = division?.name ?? "Clover Industries";
   const tagline = division?.tagline ?? "";
-  const accent = division?.theme?.accent ?? "#8bc53f";
+  const accent = division?.theme?.ogAccent ?? division?.theme?.accent ?? "#8bc53f";
 
   return new ImageResponse(
     (

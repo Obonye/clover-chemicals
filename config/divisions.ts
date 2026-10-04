@@ -3,9 +3,13 @@ import type { CSSProperties } from "react";
 import type { Division } from "@/sanity/lib/types";
 
 export type DivisionTheme = {
-  /** Maps straight onto the shared --accent token (styles/globals.css). */
+  /** Maps straight onto the shared --accent token (styles/globals.css).
+   *  May be a light-dark() pair when the two modes need different values. */
   accent: string;
   accentForeground: string;
+  /** Hex version of the accent for generated social images — next/og
+   *  can't parse oklch()/light-dark(). Defaults to `accent`. */
+  ogAccent?: string;
   /** Overrides the light-mode --heading token; dark mode always falls back
    *  to --foreground regardless (see divisionCssVars). Omit to inherit the
    *  site default. */
@@ -38,7 +42,7 @@ export type DivisionConfig = {
   image: string;
   /** Copy for the navbar's primary CTA button. Defaults to "Browse Products". */
   browseLabel?: string;
-  /** Omit for the site's default (chemical) palette. */
+  /** Omit to fall back to the group (umbrella) theme. */
   theme?: DivisionTheme;
   contacts: DivisionContact[];
   /** config/branches.ts slugs this division is served from. */
@@ -53,6 +57,14 @@ export const divisions: DivisionConfig[] = [
     shortName: "Chemical",
     tagline: "Chemicals, equipment & PPE for industry, agriculture, and the lab.",
     image: "/clover large.jpg",
+    // The same Clover Green as the :root defaults in styles/globals.css,
+    // set explicitly so Chemical keeps it on shared routes too (product
+    // pages, the catalogue preview), where the group theme now applies.
+    theme: {
+      accent: "oklch(0.62 0.19 127.1031)",
+      accentForeground: "oklch(15% 0.0300 144.21)",
+      ogAccent: "#8bc53f",
+    },
     contacts: [{ label: "Sales", email: "sales@cloverindustries.co.bw" }],
     branches: ["gaborone", "francistown"],
   },
@@ -75,6 +87,24 @@ export const divisions: DivisionConfig[] = [
     branches: ["gaborone", "francistown"],
   },
 ];
+
+/**
+ * Clover Industries' own (umbrella) theme, used on the group home page and
+ * every shared route that isn't under a division (/about, /contact,
+ * /locations, /rfq, /products…). A neutral warm graphite that sits above
+ * both divisions' colours rather than borrowing one of them (CI-15): dark
+ * graphite on light backgrounds, warm stone on dark ones.
+ */
+export const groupTheme: DivisionTheme = {
+  accent: "light-dark(oklch(0.36 0.02 60), oklch(0.84 0.03 75))",
+  accentForeground: "light-dark(oklch(0.985 0 0), oklch(0.2 0.01 60))",
+  ogAccent: "#c9b99b",
+};
+
+/** The theme for a route: its division's, else the group theme. */
+export function themeFor(division: DivisionConfig | undefined): DivisionTheme {
+  return division?.theme ?? groupTheme;
+}
 
 export function getDivision(slug: string): DivisionConfig | undefined {
   return divisions.find((d) => d.slug === slug);

@@ -74,7 +74,12 @@ export const UtilityBar = () => {
             wrapping or overflowing on narrow screens. */}
         <div className="flex h-full min-w-0 items-center gap-6 overflow-x-auto">
           <NextLink
-            className="flex h-full shrink-0 items-center text-sm font-semibold uppercase tracking-[0.1em] text-white/60 transition-colors duration-150 hover:text-white/80"
+            aria-current={segment === null ? "page" : undefined}
+            className={clsx(
+              "flex h-full shrink-0 items-center text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
+              // Active on the group home and every shared (non-division) page.
+              currentDivision ? "text-white/60 hover:text-white/80" : "text-white",
+            )}
             href="/"
           >
             Clover Industries

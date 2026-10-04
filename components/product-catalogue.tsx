@@ -105,15 +105,23 @@ export const ProductCatalogue = ({
   useEffect(() => {
     if (lockedDivision) return;
 
-    const config = division !== "all" ? getDivisionBySanityValue(division) : undefined;
-    const entries = Object.entries(divisionCssVars(config?.theme));
+    // Painted onto DivisionThemeScope's element, which carries the group
+    // theme inline: anything set higher up (e.g. <body>) would be shadowed.
+    const scope = document.querySelector<HTMLElement>("[data-theme-scope]");
 
-    for (const [key, value] of entries) {
-      document.body.style.setProperty(key, value as string);
-    }
+    if (!scope) return;
+
+    const config = division !== "all" ? getDivisionBySanityValue(division) : undefined;
+    const entries = Object.entries(config?.theme ? divisionCssVars(config.theme) : {});
+    const previous = entries.map(([key]) => [key, scope.style.getPropertyValue(key)] as const);
+
+    for (const [key, value] of entries) scope.style.setProperty(key, value as string);
 
     return () => {
-      for (const [key] of entries) document.body.style.removeProperty(key);
+      for (const [key, value] of previous) {
+        if (value) scope.style.setProperty(key, value);
+        else scope.style.removeProperty(key);
+      }
     };
   }, [division, lockedDivision]);
 
