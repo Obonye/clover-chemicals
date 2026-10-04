@@ -26,6 +26,109 @@ const ChevronDown = () => (
   </svg>
 );
 
+const CheckIcon = () => (
+  <svg aria-hidden="true" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+    <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+/**
+ * Phones only (below md): the inline switcher doesn't fit beside the cart,
+ * so the bar shows where you are ("Clover Medical ▾") and opens a full-width
+ * list of the group and each division, with taglines.
+ */
+const MobileDivisionMenu = ({ segment }: { segment: string | null }) => {
+  const currentDivision = divisions.find((d) => d.slug === segment);
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // Close whenever the route changes (a link was followed).
+  useEffect(() => setIsOpen(false), [segment]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setIsOpen(false);
+    }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
+  const options = [
+    { href: "/", name: "Clover Industries", tagline: "Group home: all our divisions", active: !currentDivision },
+    ...divisions.map((d) => ({
+      href: `/${d.slug}`,
+      name: d.name,
+      tagline: d.tagline,
+      active: d.slug === segment,
+    })),
+  ];
+
+  return (
+    <div ref={menuRef} className="h-full min-w-0 md:hidden">
+      <button
+        ref={triggerRef}
+        aria-controls="mobile-division-menu"
+        aria-expanded={isOpen}
+        className="group flex h-full min-w-0 items-center gap-2 text-sm font-semibold uppercase tracking-[0.1em] text-white"
+        data-open={isOpen}
+        type="button"
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        {currentDivision && <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-accent" />}
+        <span className="truncate">{currentDivision?.name ?? "Clover Industries"}</span>
+        <span className="sr-only">: switch division</span>
+        <ChevronDown />
+      </button>
+
+      {isOpen && (
+        <nav
+          aria-label="Divisions"
+          className="fixed inset-x-0 top-[var(--utility-bar-h)] border-t border-white/10 bg-[#111111] shadow-lg"
+          id="mobile-division-menu"
+        >
+          <ul className="py-1">
+            {options.map((option) => (
+              <li key={option.href}>
+                <NextLink
+                  aria-current={option.active ? "page" : undefined}
+                  className="flex min-h-14 items-start gap-3 px-6 py-3 transition-colors duration-150 hover:bg-white/10"
+                  href={option.href}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold text-white">{option.name}</span>
+                    <span className="mt-0.5 block text-xs leading-snug text-white/55">{option.tagline}</span>
+                  </span>
+                  {option.active && (
+                    <span className="mt-0.5 text-white">
+                      <CheckIcon />
+                    </span>
+                  )}
+                </NextLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  );
+};
+
 export const UtilityBar = () => {
   // The first path segment is a pure function of the URL — "chemical" or
   // "medical" under app/[division]/, null everywhere else (shared routes
@@ -70,9 +173,10 @@ export const UtilityBar = () => {
   return (
     <div className="fixed top-0 z-50 h-[var(--utility-bar-h)] w-full bg-[#111111] text-white">
       <div className="mx-auto flex h-full max-w-[1280px] items-center gap-6 px-6 lg:px-12">
-        {/* Brand + division switcher — scrolls sideways rather than
-            wrapping or overflowing on narrow screens. */}
-        <div className="flex h-full min-w-0 items-center gap-6 overflow-x-auto">
+        <MobileDivisionMenu segment={segment} />
+
+        {/* Brand + division switcher (md and up). */}
+        <div className="hidden h-full min-w-0 items-center gap-6 overflow-x-auto md:flex">
           <NextLink
             aria-current={segment === null ? "page" : undefined}
             className={clsx(
