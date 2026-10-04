@@ -22,6 +22,7 @@ import {
 import { ProductCard } from "@/components/product-card";
 import { ProductSearch } from "@/components/product-search";
 import { divisionCssVars, getDivisionBySanityValue } from "@/config/divisions";
+import { paintThemeVars } from "@/lib/theme-vars";
 import type { Division, ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
 
 type SortKey = "name" | "featured";
@@ -105,24 +106,15 @@ export const ProductCatalogue = ({
   useEffect(() => {
     if (lockedDivision) return;
 
-    // Painted onto DivisionThemeScope's element, which carries the group
-    // theme inline: anything set higher up (e.g. <body>) would be shadowed.
+    // Painted onto DivisionThemeScope's element (which carries the group
+    // theme inline, shadowing anything set higher up) and onto <body>, where
+    // the filter popovers portal.
     const scope = document.querySelector<HTMLElement>("[data-theme-scope]");
-
-    if (!scope) return;
-
     const config = division !== "all" ? getDivisionBySanityValue(division) : undefined;
-    const entries = Object.entries(config?.theme ? divisionCssVars(config.theme) : {});
-    const previous = entries.map(([key]) => [key, scope.style.getPropertyValue(key)] as const);
 
-    for (const [key, value] of entries) scope.style.setProperty(key, value as string);
+    if (!scope || !config?.theme) return;
 
-    return () => {
-      for (const [key, value] of previous) {
-        if (value) scope.style.setProperty(key, value);
-        else scope.style.removeProperty(key);
-      }
-    };
+    return paintThemeVars([scope, document.body], divisionCssVars(config.theme));
   }, [division, lockedDivision]);
 
   // Keep the URL in sync so results stay shareable/bookmarkable — default

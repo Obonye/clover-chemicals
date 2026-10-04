@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 import NextLink from "next/link";
 
+import { BodyTheme } from "@/components/body-theme";
 import { DocumentIcon } from "@/components/icons";
 import { ProductCard } from "@/components/product-card";
 import { AddToRfq } from "@/components/rfq/add-to-rfq";
@@ -154,8 +155,11 @@ export default async function ProductPage({ params }: Props) {
     // No `offers` — Clover doesn't publish fixed prices; see CI-26.
   };
 
+  const themeVars = divisionCssVars(division?.theme);
+
   return (
-    <div style={divisionCssVars(division?.theme)}>
+    <div style={themeVars}>
+      {division?.theme && <BodyTheme vars={themeVars} />}
       {/* eslint-disable-next-line react/no-danger */}
       <script
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
