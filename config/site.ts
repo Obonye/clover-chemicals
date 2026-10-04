@@ -19,6 +19,10 @@ export const siteConfig = {
     whatsapp: "+267 77 816 000",
     hours: "Monday – Friday, 8:00 – 17:00 CAT",
   },
+  // Official social profiles (Facebook, LinkedIn…) for the Organization
+  // JSON-LD's `sameAs` (lib/structured-data.ts). Empty until the client
+  // confirms which accounts are theirs.
+  sameAs: [] as string[],
   navItems: [
     { label: "About Us", href: "/about" },
     { label: "News", href: "/news" },
