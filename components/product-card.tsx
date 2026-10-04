@@ -5,7 +5,13 @@ import NextLink from "next/link";
 
 import { AddToRfq } from "@/components/rfq/add-to-rfq";
 import { imageUrl } from "@/sanity/lib/image";
-import { categoryHref, packLabel, productHref } from "@/sanity/lib/format";
+import {
+  categoryHref,
+  documentDownloadHref,
+  documentType,
+  packLabel,
+  productHref,
+} from "@/sanity/lib/format";
 import type { Division, Product, ProductCategory } from "@/sanity/lib/types";
 
 type ProductCardProps = {
@@ -24,6 +30,12 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
     imageUrl(product.image, { width: 600, height: 360 }) ??
     imageUrl(category.image, { width: 600, height: 360 });
   const packSizes = (product.packSizes ?? []).filter((size) => packLabel(size));
+  // The one document buyers most often need before quoting: the SDS, else
+  // the spec sheet. Nothing is shown when neither has been uploaded.
+  const documents = product.documents ?? [];
+  const quickDoc =
+    documents.find((doc) => documentType(doc) === "sds") ??
+    documents.find((doc) => documentType(doc) === "spec-sheet");
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-separator bg-surface transition-shadow duration-200 hover:shadow-md">
@@ -85,6 +97,17 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
             </div>
           )}
         </div>
+
+        {quickDoc && (
+          <a
+            aria-label={`Download the ${documentType(quickDoc) === "sds" ? "Safety Data Sheet" : "spec sheet"} for ${product.name} (PDF)`}
+            className="mb-3 inline-flex w-fit items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-muted transition-colors hover:text-accent"
+            download
+            href={documentDownloadHref(quickDoc)}
+          >
+            {documentType(quickDoc) === "sds" ? "SDS" : "Spec sheet"} (PDF) ↓
+          </a>
+        )}
 
         <AddToRfq division={category.division} product={product} />
       </div>

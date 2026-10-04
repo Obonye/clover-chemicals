@@ -34,6 +34,22 @@ export type ProductCategory = {
   productCount?: number;
 };
 
+export type ProductDocumentType = "spec-sheet" | "sds" | "label" | "certificate" | "registration";
+
+/** A PDF attached to a product (CI-27). Only entries with an uploaded file
+ *  are returned, so `url` is always set. */
+export type ProductDocument = {
+  _key: string;
+  type: ProductDocumentType | null;
+  title: string | null;
+  language: string | null;
+  /** ISO date, e.g. "2026-03-01". */
+  revisionDate: string | null;
+  url: string;
+  size: number | null;
+  filename: string | null;
+};
+
 export type Product = {
   _id: string;
   name: string | null;
@@ -44,6 +60,7 @@ export type Product = {
   image: SanityImage | null;
   tag: string | null;
   available: boolean | null;
+  documents: ProductDocument[] | null;
   isFeatured: boolean;
   isOnPromotion: boolean;
 };
@@ -52,13 +69,8 @@ export type ProductWithCategory = Product & {
   category: ProductCategory | null;
 };
 
-/** PRODUCT_QUERY's shape — a single product for the detail page, with its
- *  spec sheet / SDS resolved to a plain URL (null when no file is
- *  uploaded yet; see CI-26/CI-27). */
-export type ProductDetail = ProductWithCategory & {
-  specSheetUrl: string | null;
-  safetyDataSheetUrl: string | null;
-};
+/** PRODUCT_QUERY's shape — a single product for the detail page. */
+export type ProductDetail = ProductWithCategory;
 
 export type CategoryWithProducts = ProductCategory & {
   products: Product[];

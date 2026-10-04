@@ -12,6 +12,16 @@ const PRODUCT_FIELDS = /* groq */ `
   image,
   tag,
   available,
+  "documents": documents[defined(file.asset)]{
+    _key,
+    type,
+    title,
+    language,
+    revisionDate,
+    "url": file.asset->url,
+    "size": file.asset->size,
+    "filename": file.asset->originalFilename
+  },
   "isFeatured": count(*[_type == "homepage" && references(^._id)]) > 0,
   "isOnPromotion": count(*[
     _type == "promotion" &&
@@ -60,17 +70,10 @@ export const CATEGORY_QUERY = defineQuery(`
  * alone (not scoped to a category) so the page can tell a stale/incorrect
  * category segment in the URL apart from an unknown product, and redirect
  * to the product's real category instead of 404ing.
- *
- * specSheet/safetyDataSheet are dereferenced to a plain URL only here —
- * every other product projection reuses PRODUCT_FIELDS, and most of them
- * (card grids, the homepage) never render these, so keeping the two file
- * dereferences out of PRODUCT_FIELDS saves them there.
  */
 export const PRODUCT_QUERY = defineQuery(`
   *[_type == "product" && slug.current == $slug][0] {
     ${PRODUCT_FIELDS},
-    "specSheetUrl": specSheet.asset->url,
-    "safetyDataSheetUrl": safetyDataSheet.asset->url,
     category->{ ${CATEGORY_FIELDS} }
   }
 `);
