@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { branches } from "@/config/branches";
+
 export const RFQ_MAX_ITEMS = 50;
 export const RFQ_MAX_QUANTITY = 10_000;
 
@@ -29,12 +31,21 @@ const PHONE_PATTERN = /^\+?[0-9][0-9 ()-]{5,18}[0-9]$/;
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
+export const RFQ_FULFILMENT = ["delivery", "collection"] as const;
+const BRANCH_SLUGS = branches.map((branch) => branch.slug);
+
 export const RfqContactSchema = z.object({
   fullName: z.string().trim().min(2).max(120),
   company: z.string().trim().min(2).max(160),
   email: z.email().max(200),
   phone: z.string().trim().regex(PHONE_PATTERN, "Enter a valid phone number"),
-  branch: optionalText(80),
+  fulfilment: z.enum(RFQ_FULFILMENT, "Choose delivery or collection"),
+  /** Collection: the branch to collect from. Delivery: optional nearest branch. */
+  branch: optionalText(80).refine(
+    (slug) => slug === undefined || BRANCH_SLUGS.includes(slug),
+    "Choose one of our branches",
+  ),
+  /** Required for delivery. */
   deliveryLocation: optionalText(200),
   requiredBy: z.preprocess(
     (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
@@ -44,6 +55,13 @@ export const RfqContactSchema = z.object({
       .optional(),
   ),
   message: optionalText(2000),
+}).superRefine((contact, ctx) => {
+  if (contact.fulfilment === "delivery" && !contact.deliveryLocation) {
+    ctx.addIssue({ code: "custom", path: ["deliveryLocation"], message: "Enter where we should deliver to" });
+  }
+  if (contact.fulfilment === "collection" && !contact.branch) {
+    ctx.addIssue({ code: "custom", path: ["branch"], message: "Choose the branch you'll collect from" });
+  }
 });
 
 export const RfqSubmissionSchema = z.object({

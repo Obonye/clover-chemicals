@@ -19,9 +19,12 @@ export type RfqEmailPayload = {
  */
 export async function sendRfqEmails(payload: RfqEmailPayload): Promise<void> {
   if (process.env.NODE_ENV !== "production") {
+    const { fulfilment, branch, deliveryLocation } = payload.contact;
+
     // eslint-disable-next-line no-console
     console.info(
       `[rfq] ${payload.reference} from ${payload.contact.email} (email stubbed)\n` +
+        `  ${fulfilment === "collection" ? `Collection from ${branch}` : `Delivery to ${deliveryLocation}`}\n` +
         payload.items
           .map((l) => `  - ${l.quantity} × ${l.name}${l.packLabel ? ` (${l.packLabel})` : ""} [${l.division}]`)
           .join("\n"),
