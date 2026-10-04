@@ -16,6 +16,8 @@ import {
   Input,
   Label,
   ListBox,
+  Radio,
+  RadioGroup,
   Select,
   TextArea,
   TextField,
@@ -23,6 +25,7 @@ import {
 
 import { submitRfq } from "@/app/rfq/actions";
 import { branches } from "@/config/branches";
+import { RFQ_FULFILMENT } from "@/lib/rfq/schema";
 
 export type RfqSubmitSuccess = Extract<RfqSubmitState, { status: "success" }>;
 
@@ -59,9 +62,38 @@ const Field = ({
   </TextField>
 );
 
+type Fulfilment = (typeof RFQ_FULFILMENT)[number];
+
+const FULFILMENT_OPTIONS: { value: Fulfilment; label: string; description: string }[] = [
+  { value: "delivery", label: "Delivery", description: "We deliver to your site and include it in the quote." },
+  { value: "collection", label: "Collection", description: "You collect the order from one of our branches." },
+];
+
+const BranchSelect = ({ label, isRequired, placeholder }: { label: string; isRequired?: boolean; placeholder: string }) => (
+  <Select fullWidth isRequired={isRequired} name="branch" placeholder={placeholder} variant="secondary">
+    <Label>{label}</Label>
+    <Select.Trigger className="h-11 min-h-11">
+      <Select.Value />
+      <Select.Indicator />
+    </Select.Trigger>
+    <FieldError />
+    <Select.Popover>
+      <ListBox>
+        {branches.map((branch) => (
+          <ListBox.Item key={branch.slug} id={branch.slug} textValue={branch.name}>
+            {branch.name}
+            <ListBox.ItemIndicator />
+          </ListBox.Item>
+        ))}
+      </ListBox>
+    </Select.Popover>
+  </Select>
+);
+
 export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps) => {
   const [state, formAction, pending] = React.useActionState(submitRfq, { status: "idle" });
   const errorRef = React.useRef<HTMLParagraphElement>(null);
+  const [fulfilment, setFulfilment] = React.useState<Fulfilment | null>(null);
 
   React.useEffect(() => {
     if (state.status === "success") onSuccess(state);
@@ -116,24 +148,54 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
         <Field isRequired autoComplete="organization" label="Company" name="company" />
         <Field isRequired autoComplete="email" label="Email" name="email" type="email" />
         <Field isRequired autoComplete="tel" label="Phone" name="phone" placeholder="+267 71 234 567" type="tel" />
+      </div>
 
-        <Select fullWidth name="branch" placeholder="No preference" variant="secondary">
-          <Label>Nearest branch</Label>
-          <Select.Trigger className="h-11 min-h-11">
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
-              {branches.map((branch) => (
-                <ListBox.Item key={branch.slug} id={branch.slug} textValue={branch.name}>
-                  {branch.name}
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-              ))}
-            </ListBox>
-          </Select.Popover>
-        </Select>
+      <RadioGroup
+        isRequired
+        name="fulfilment"
+        orientation="horizontal"
+        value={fulfilment}
+        variant="secondary"
+        onChange={(value) => setFulfilment(value as Fulfilment)}
+      >
+        <Label>Delivery or collection</Label>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {FULFILMENT_OPTIONS.map((option) => (
+            <Radio
+              key={option.value}
+              className="rounded-xl border border-separator p-4 data-[selected=true]:border-accent"
+              value={option.value}
+            >
+              <Radio.Content>
+                <Radio.Control>
+                  <Radio.Indicator />
+                </Radio.Control>
+                {option.label}
+              </Radio.Content>
+              <Description>{option.description}</Description>
+            </Radio>
+          ))}
+        </div>
+        <FieldError />
+      </RadioGroup>
+
+      {/* Only the fields that matter for the chosen option. */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        {fulfilment === "delivery" && (
+          <>
+            <Field
+              isRequired
+              autoComplete="street-address"
+              description="Town or site address."
+              label="Delivery location"
+              name="deliveryLocation"
+            />
+            <BranchSelect label="Nearest branch" placeholder="No preference" />
+          </>
+        )}
+        {fulfilment === "collection" && (
+          <BranchSelect isRequired label="Collect from" placeholder="Choose a branch" />
+        )}
 
         {/* Submits as YYYY-MM-DD, which the server schema re-checks. */}
         <DatePicker className="w-full" minValue={today(getLocalTimeZone())} name="requiredBy">
@@ -170,13 +232,6 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
           </DatePicker.Popover>
         </DatePicker>
       </div>
-
-      <Field
-        autoComplete="street-address"
-        description="Town or site, so we can include delivery in the quote."
-        label="Delivery location"
-        name="deliveryLocation"
-      />
 
       <TextField fullWidth name="message" variant="secondary">
         <Label>Message</Label>
