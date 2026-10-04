@@ -2,9 +2,11 @@ import Image from "next/image";
 import NextLink from "next/link";
 
 import { CtaBanner } from "@/components/cta-banner";
+import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/config/site";
 import { divisions } from "@/config/divisions";
 import { articles } from "@/lib/news";
+import { organizationJsonLd } from "@/lib/structured-data";
 
 const latestArticles = articles.slice(0, 3);
 
@@ -13,6 +15,8 @@ export default function Home() {
 
   return (
     <>
+      <JsonLd data={organizationJsonLd()} />
+
       {/* Hero */}
       <section className="relative -mt-[var(--navbar-h)] flex min-h-[55vh] items-end overflow-hidden">
         <Image
