@@ -18,6 +18,15 @@ export const siteConfig = {
     email: "sales@cloverindustries.co.bw",
     whatsapp: "+267 77 816 000",
     hours: "Monday – Friday, 8:00 – 17:00 CAT",
+    // Machine-readable form of `hours`, for the branches' LocalBusiness
+    // JSON-LD (lib/structured-data.ts). Keep the two in sync.
+    openingHours: [
+      {
+        days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "08:00",
+        closes: "17:00",
+      },
+    ],
   },
   // Official social profiles (Facebook, LinkedIn…) for the Organization
   // JSON-LD's `sameAs` (lib/structured-data.ts). Empty until the client

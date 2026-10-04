@@ -1,12 +1,16 @@
 import NextLink from "next/link";
 
+import { JsonLd } from "@/components/json-ld";
 import { branches, mapUrl } from "@/config/branches";
 import { divisions } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
+import { branchesJsonLd } from "@/lib/structured-data";
 
 export default function LocationsPage() {
   return (
     <>
+      <JsonLd data={branchesJsonLd()} />
+
       {/* Page header */}
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-16 lg:px-12">

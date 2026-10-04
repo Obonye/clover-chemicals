@@ -6,7 +6,7 @@
 import type { BranchConfig } from "@/config/branches";
 import type { DivisionConfig } from "@/config/divisions";
 
-import { branches } from "@/config/branches";
+import { branches, mapUrl } from "@/config/branches";
 import { divisions } from "@/config/divisions";
 import { siteConfig, SITE_URL } from "@/config/site";
 
@@ -83,6 +83,38 @@ export function organizationJsonLd(
       availableLanguage: "English",
     },
     subOrganization: divisionList.map(divisionOrganization),
+  };
+}
+
+/**
+ * One WholesaleStore (a LocalBusiness subtype) per branch, for /locations.
+ * Phone, email and hours are company-wide until the branches publish their
+ * own (see config/branches.ts). `geo` is left out until the client confirms
+ * coordinates; `hasMap` links to the same map search the page uses.
+ */
+export function branchesJsonLd(branchList: BranchConfig[] = branches): JsonLd {
+  const { contact } = siteConfig;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": branchList.map((branch) => ({
+      "@type": "WholesaleStore",
+      "@id": absolute(`/locations#${branch.slug}`),
+      name: `${siteConfig.name} – ${branch.name}`,
+      url: absolute(`/locations#${branch.slug}`),
+      image: LOGO,
+      address: postalAddress(branch.address),
+      hasMap: mapUrl(branch.address),
+      telephone: contact.phone,
+      email: contact.email,
+      openingHoursSpecification: contact.openingHours.map((hours) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: hours.days,
+        opens: hours.opens,
+        closes: hours.closes,
+      })),
+      parentOrganization: { "@id": ORGANIZATION_ID },
+    })),
   };
 }
 
