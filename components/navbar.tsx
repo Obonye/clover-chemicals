@@ -9,7 +9,7 @@ import { Drawer } from "@heroui/react";
 
 import { RfqNavButton } from "@/components/rfq/rfq-nav-button";
 import { siteConfig } from "@/config/site";
-import { divisionCssVars, divisions, getDivision } from "@/config/divisions";
+import { divisionCssVars, divisions, getDivision, themeFor } from "@/config/divisions";
 import type { ProductCategory } from "@/sanity/lib/types";
 
 // Nav category links jump straight into the filterable products grid with
@@ -349,7 +349,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
             the division's colour tokens itself. */}
         <Drawer.Backdrop
           isOpen={isMenuOpen}
-          style={divisionCssVars(division?.theme)}
+          style={divisionCssVars(themeFor(division))}
           onOpenChange={setIsMenuOpen}
         >
           <Drawer.Content placement="right">

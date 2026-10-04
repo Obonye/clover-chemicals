@@ -2,7 +2,7 @@
 
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import { divisionCssVars, getDivision } from "@/config/divisions";
+import { divisionCssVars, getDivision, themeFor } from "@/config/divisions";
 
 // Wraps the entire chrome — utility bar, navbar, page content, footer,
 // quick-links bar — so a division's theme tokens reach all of them, not
@@ -17,8 +17,9 @@ export function DivisionThemeScope({ children }: { children: React.ReactNode }) 
   return (
     <div
       className="relative flex min-h-screen flex-col overflow-x-hidden md:pb-8"
-      data-division={division?.slug}
-      style={divisionCssVars(division?.theme)}
+      data-division={division?.slug ?? "group"}
+      data-theme-scope=""
+      style={divisionCssVars(themeFor(division))}
     >
       {children}
     </div>

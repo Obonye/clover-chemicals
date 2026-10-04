@@ -93,7 +93,7 @@ export default function AboutPage() {
         />
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-[var(--header-h)] lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/70">
             Est. {siteConfig.foundedYear}
           </p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "16ch" }}>
@@ -148,12 +148,12 @@ export default function AboutPage() {
       <section className="border-y border-separator bg-accent py-24">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <p
-            className="font-display font-extrabold leading-tight tracking-tight text-white"
+            className="font-display font-extrabold leading-tight tracking-tight text-accent-foreground"
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)", maxWidth: "22ch" }}
           >
             We don&apos;t just supply. We supply certainty.
           </p>
-          <p className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-white/60">
+          <p className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-accent-foreground/70">
             — {siteConfig.name}, Est. {siteConfig.foundedYear}
           </p>
         </div>

@@ -1,10 +1,20 @@
 import Image from "next/image";
 import NextLink from "next/link";
 
-export const CtaBanner = () => {
+type CtaBannerProps = {
+  /** Duotone highlight colour as 0–1 sRGB channels. Defaults to Clover
+   *  Green; the group home passes its neutral stone (CI-15). */
+  tint?: [number, number, number];
+};
+
+const CLOVER_GREEN: [number, number, number] = [0.57, 0.79, 0.03];
+
+export const CtaBanner = ({ tint = CLOVER_GREEN }: CtaBannerProps) => {
+  const [r, g, b] = tint;
+
   return (
-    <section className="relative overflow-hidden bg-accent">
-      {/* Duotone filter def — shadows to near-black, highlights to the site's accent green */}
+    <section className="relative overflow-hidden bg-[#111111]">
+      {/* Duotone filter def — shadows to near-black, highlights to `tint` */}
       <svg aria-hidden="true" className="absolute h-0 w-0 overflow-hidden">
         <filter colorInterpolationFilters="sRGB" id="cta-duotone">
           <feColorMatrix
@@ -15,9 +25,9 @@ export const CtaBanner = () => {
                     0   0   0   1 0"
           />
           <feComponentTransfer>
-            <feFuncR tableValues="0.02 0.57" type="table" />
-            <feFuncG tableValues="0.02 0.79" type="table" />
-            <feFuncB tableValues="0.02 0.03" type="table" />
+            <feFuncR tableValues={`0.02 ${r}`} type="table" />
+            <feFuncG tableValues={`0.02 ${g}`} type="table" />
+            <feFuncB tableValues={`0.02 ${b}`} type="table" />
           </feComponentTransfer>
         </filter>
       </svg>
