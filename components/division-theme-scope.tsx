@@ -16,7 +16,7 @@ export function DivisionThemeScope({ children }: { children: React.ReactNode }) 
 
   return (
     <div
-      className="relative flex min-h-screen flex-col overflow-x-hidden md:pb-8"
+      className="relative flex min-h-screen flex-col overflow-x-hidden"
       data-division={division?.slug ?? "group"}
       data-theme-scope=""
       style={divisionCssVars(themeFor(division))}
