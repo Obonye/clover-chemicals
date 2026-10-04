@@ -10,9 +10,60 @@ import { AddToRfq } from "@/components/rfq/add-to-rfq";
 import { divisionCssVars, getDivisionBySanityValue } from "@/config/divisions";
 import { loadQuery } from "@/sanity/lib/fetch";
 import { imageUrl } from "@/sanity/lib/image";
-import { packLabel } from "@/sanity/lib/format";
+import { documentDownloadHref, documentLabel, formatFileSize, packLabel } from "@/sanity/lib/format";
 import { CATEGORY_QUERY, PRODUCT_QUERY, PRODUCT_SLUGS_QUERY } from "@/sanity/lib/queries";
-import type { CategoryWithProducts, ProductDetail } from "@/sanity/lib/types";
+import type { CategoryWithProducts, ProductDetail, ProductDocument } from "@/sanity/lib/types";
+
+const formatRevisionDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+
+const DocumentsSection = ({ documents }: { documents: ProductDocument[] }) => (
+  <section aria-labelledby="documents-heading" className="scroll-mt-[var(--header-h)] border-t border-separator bg-background py-12" id="documents">
+    <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
+      <h2 className="mb-6 font-display text-2xl font-extrabold tracking-tight text-heading" id="documents-heading">
+        Documents
+      </h2>
+      <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {documents.map((doc) => {
+          const meta = [
+            doc.revisionDate && `Revised ${formatRevisionDate(doc.revisionDate)}`,
+            doc.language,
+            formatFileSize(doc.size),
+            "PDF",
+          ].filter(Boolean);
+
+          return (
+            <li key={doc._key}>
+              <a
+                className="group flex min-h-16 items-center gap-4 rounded-xl border border-separator bg-surface px-4 py-3 transition-colors hover:border-accent"
+                download
+                href={documentDownloadHref(doc)}
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-xl text-accent-soft-foreground">
+                  <DocumentIcon />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold text-foreground group-hover:text-accent">
+                    {documentLabel(doc)}
+                  </span>
+                  <span className="block font-mono text-xs text-muted">{meta.join(" · ")}</span>
+                </span>
+                <span className="font-mono text-xs font-semibold uppercase tracking-wider text-accent">
+                  Download
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+);
 
 type Props = {
   params: Promise<{ category: string; product: string }>;
@@ -89,6 +140,7 @@ export default async function ProductPage({ params }: Props) {
     imageUrl(product.image, { width: 900, height: 900 }) ??
     imageUrl(product.category?.image ?? null, { width: 900, height: 900 });
   const packSizes = (product.packSizes ?? []).filter((size) => packLabel(size));
+  const documents = product.documents ?? [];
   const quoteHref = `/contact?product=${encodeURIComponent(productSlug)}`;
 
   const jsonLd = {
@@ -204,35 +256,6 @@ export default async function ProductPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Spec sheet / SDS — only when a file's actually been
-                  uploaded in Sanity; see CI-27 for getting them uploaded. */}
-              {(product.specSheetUrl || product.safetyDataSheetUrl) && (
-                <div className="mb-8 flex flex-wrap gap-4">
-                  {product.specSheetUrl && (
-                    <a
-                      className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:text-accent/80"
-                      href={product.specSheetUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <DocumentIcon />
-                      Spec Sheet (PDF)
-                    </a>
-                  )}
-                  {product.safetyDataSheetUrl && (
-                    <a
-                      className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:text-accent/80"
-                      href={product.safetyDataSheetUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <DocumentIcon />
-                      Safety Data Sheet (PDF)
-                    </a>
-                  )}
-                </div>
-              )}
-
               <div className="flex max-w-md flex-col gap-3">
                 <AddToRfq division={product.category?.division} product={product} size="lg" />
                 <NextLink
@@ -246,6 +269,8 @@ export default async function ProductPage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {documents.length > 0 && <DocumentsSection documents={documents} />}
 
       {/* Related products */}
       {relatedProducts.length > 0 && relatedCategory && (
