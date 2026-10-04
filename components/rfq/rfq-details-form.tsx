@@ -69,6 +69,16 @@ const FULFILMENT_OPTIONS: { value: Fulfilment; label: string; description: strin
   { value: "collection", label: "Collection", description: "You collect the order from one of our branches." },
 ];
 
+// Radio cards, per HeroUI's RadioGroup customization pattern: the whole
+// card is the clickable Radio.Content, with the label and description
+// stacked beside the control.
+const radioCardClass =
+  "group flex h-full w-full items-start gap-3 rounded-xl border border-separator bg-surface px-4 py-3.5 transition-colors data-[hovered=true]:border-accent/40 data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-focus data-[selected=true]:border-accent data-[selected=true]:bg-accent-soft";
+const radioControlClass =
+  "mt-0.5 size-5 shrink-0 rounded-full border border-border bg-default shadow-none group-data-[selected=true]:border-transparent group-data-[selected=true]:bg-accent";
+const radioIndicatorClass =
+  "before:rounded-full before:bg-default group-data-[selected=true]:before:scale-50 group-data-[selected=true]:before:bg-accent-foreground";
+
 const BranchSelect = ({ label, isRequired, placeholder }: { label: string; isRequired?: boolean; placeholder: string }) => (
   <Select fullWidth isRequired={isRequired} name="branch" placeholder={placeholder} variant="secondary">
     <Label>{label}</Label>
@@ -152,8 +162,8 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
 
       <RadioGroup
         isRequired
+        className="gap-3 **:data-[slot=radio]:mt-0"
         name="fulfilment"
-        orientation="horizontal"
         value={fulfilment}
         variant="secondary"
         onChange={(value) => setFulfilment(value as Fulfilment)}
@@ -161,18 +171,18 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
         <Label>Delivery or collection</Label>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {FULFILMENT_OPTIONS.map((option) => (
-            <Radio
-              key={option.value}
-              className="rounded-xl border border-separator p-4 data-[selected=true]:border-accent"
-              value={option.value}
-            >
-              <Radio.Content>
-                <Radio.Control>
-                  <Radio.Indicator />
+            <Radio key={option.value} value={option.value}>
+              <Radio.Content className={radioCardClass}>
+                <Radio.Control className={radioControlClass}>
+                  <Radio.Indicator className={radioIndicatorClass} />
                 </Radio.Control>
-                {option.label}
+                <span className="flex flex-col gap-0.5">
+                  <span className="font-semibold text-foreground">{option.label}</span>
+                  <Description className="group-data-[selected=true]:text-accent-soft-foreground">
+                    {option.description}
+                  </Description>
+                </span>
               </Radio.Content>
-              <Description>{option.description}</Description>
             </Radio>
           ))}
         </div>
