@@ -71,9 +71,11 @@ const FULFILMENT_OPTIONS: { value: Fulfilment; label: string; description: strin
 
 // Radio cards, per HeroUI's RadioGroup customization pattern: the whole
 // card is the clickable Radio.Content, with the label and description
-// stacked beside the control.
+// stacked beside the control. The selected/hovered/focus-visible data
+// attributes live on the Radio root (React Aria's element), not on
+// Radio.Content, so the root is the `group` everything here keys off.
 const radioCardClass =
-  "group flex h-full w-full items-start gap-3 rounded-xl border border-separator bg-surface px-4 py-3.5 transition-colors data-[hovered=true]:border-accent/40 data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-focus data-[selected=true]:border-accent data-[selected=true]:bg-accent-soft";
+  "flex h-full w-full items-start gap-3 rounded-xl border border-separator bg-surface px-4 py-3.5 transition-colors group-data-[hovered=true]:border-accent/40 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[selected=true]:border-accent group-data-[selected=true]:bg-accent-soft";
 const radioControlClass =
   "mt-0.5 size-5 shrink-0 rounded-full border border-border bg-default shadow-none group-data-[selected=true]:border-transparent group-data-[selected=true]:bg-accent";
 const radioIndicatorClass =
@@ -171,7 +173,7 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
         <Label>Delivery or collection</Label>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {FULFILMENT_OPTIONS.map((option) => (
-            <Radio key={option.value} value={option.value}>
+            <Radio key={option.value} className="group" value={option.value}>
               <Radio.Content className={radioCardClass}>
                 <Radio.Control className={radioControlClass}>
                   <Radio.Indicator className={radioIndicatorClass} />
