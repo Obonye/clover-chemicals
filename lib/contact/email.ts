@@ -29,7 +29,7 @@ export async function sendContactEmails({ reference, message, submittedAt }: Con
   const inbox = isProductEnquiry(message.product) ? productInbox : WEBSITE_INBOX;
   const { html, text, attachments } = await renderEnquiryEmail({
     preview: `We've received your message ${reference}. We'll respond within one business day.`,
-    heading: "Message received",
+    heading: "We've received your message",
     kind: "Message",
     reference,
     receivedAt: formatBotswanaTime(submittedAt),

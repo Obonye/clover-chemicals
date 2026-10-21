@@ -59,7 +59,7 @@ export async function sendRfqEmails({ reference, contact, items, submittedAt }: 
   const groups = groupByDivision(items);
   const { html, text, attachments } = await renderEnquiryEmail({
     preview: `We've received your quote request ${reference}. We'll respond within one business day.`,
-    heading: "Request received",
+    heading: "We've received your quote request",
     kind: "Quote request",
     reference,
     receivedAt: formatBotswanaTime(submittedAt),
