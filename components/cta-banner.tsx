@@ -3,7 +3,7 @@ import NextLink from "next/link";
 
 type CtaBannerProps = {
   /** Duotone highlight colour as 0–1 sRGB channels. Defaults to Clover
-   *  Green; the group home passes its neutral stone (CI-15). */
+   *  Green; the group home passes a neutral grey (CI-15). */
   tint?: [number, number, number];
 };
 

@@ -91,14 +91,14 @@ export const divisions: DivisionConfig[] = [
 /**
  * Clover Industries' own (umbrella) theme, used on the group home page and
  * every shared route that isn't under a division (/about, /contact,
- * /locations, /rfq, /products…). A neutral warm graphite that sits above
- * both divisions' colours rather than borrowing one of them (CI-15): dark
- * graphite on light backgrounds, warm stone on dark ones.
+ * /locations, /rfq, /products…). Plain black and white, so it sits above
+ * both divisions' colours rather than borrowing one of them (CI-15): black
+ * on light backgrounds, white on dark ones.
  */
 export const groupTheme: DivisionTheme = {
-  accent: "light-dark(oklch(0.36 0.02 60), oklch(0.84 0.03 75))",
-  accentForeground: "light-dark(oklch(0.985 0 0), oklch(0.2 0.01 60))",
-  ogAccent: "#c9b99b",
+  accent: "light-dark(oklch(0 0 0), oklch(1 0 0))",
+  accentForeground: "light-dark(oklch(1 0 0), oklch(0 0 0))",
+  ogAccent: "#ffffff",
 };
 
 /** The theme for a route: its division's, else the group theme. */
