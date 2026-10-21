@@ -8,11 +8,13 @@ const FROM = process.env.EMAIL_FROM ?? "Clover Industries <noreply@cloverindustr
 
 export type OutgoingEmail = {
   to: string | string[];
+  /** Staff inboxes riding along on the buyer's email, so one send reaches everyone. */
+  cc?: string[];
   subject: string;
   html: string;
   text: string;
-  /** Where a human reply should land: the buyer on staff mail, sales on confirmations. */
-  replyTo?: string;
+  /** Where a human reply should land — the staff inbox(es), not the no-reply sender. */
+  replyTo?: string | string[];
   /** Resend dedupes sends with the same key for 24h, so a retried action can't double-send. */
   idempotencyKey?: string;
 };
@@ -29,15 +31,24 @@ function getClient(): Resend | undefined {
 }
 
 /**
- * Routes staff-facing mail. When EMAIL_INBOX_OVERRIDE is set (preview/staging,
- * or while testing against the live Resend domain), every internal email goes
- * there instead of the real division inboxes. Buyer confirmations are never
- * redirected.
+ * The staff inboxes to CC. When EMAIL_INBOX_OVERRIDE is set (preview/staging,
+ * or while testing against the live Resend domain) they're replaced by that one
+ * address, so no real inbox is mailed. The sender is dropped from the list, so
+ * nobody appears twice (as when the buyer is also the override address).
  */
-export function internalRecipients(addresses: string[]): string[] {
+export function staffCc(addresses: string[], sender: string): string[] {
   const override = process.env.EMAIL_INBOX_OVERRIDE?.trim();
+  const wanted = override ? [override] : addresses;
+  const seen = new Set([sender.toLowerCase()]);
 
-  return override ? [override] : Array.from(new Set(addresses));
+  return wanted.filter((address) => {
+    const key = address.toLowerCase();
+
+    if (seen.has(key)) return false;
+    seen.add(key);
+
+    return true;
+  });
 }
 
 /**
@@ -48,7 +59,7 @@ export function internalRecipients(addresses: string[]): string[] {
  * forms work end to end on a fresh clone. In production a missing key is a
  * misconfiguration and throws rather than reporting a send that never happened.
  */
-export async function sendEmail({ idempotencyKey, replyTo, ...email }: OutgoingEmail): Promise<void> {
+export async function sendEmail({ idempotencyKey, replyTo, cc, ...email }: OutgoingEmail): Promise<void> {
   const resend = getClient();
 
   if (!resend) {
@@ -58,14 +69,14 @@ export async function sendEmail({ idempotencyKey, replyTo, ...email }: OutgoingE
 
     // eslint-disable-next-line no-console
     console.info(
-      `[email] RESEND_API_KEY not set — not sending.\n  to: ${[email.to].flat().join(", ")}\n  subject: ${email.subject}\n\n${email.text}`,
+      `[email] RESEND_API_KEY not set — not sending.\n  to: ${[email.to].flat().join(", ")}${cc?.length ? `\n  cc: ${cc.join(", ")}` : ""}\n  subject: ${email.subject}\n\n${email.text}`,
     );
 
     return;
   }
 
   const { error } = await resend.emails.send(
-    { from: FROM, replyTo, ...email },
+    { from: FROM, replyTo, cc: cc?.length ? cc : undefined, ...email },
     idempotencyKey ? { idempotencyKey } : undefined,
   );
 

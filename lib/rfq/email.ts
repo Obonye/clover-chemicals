@@ -4,7 +4,7 @@ import { getBranch } from "@/config/branches";
 import { getDivisionBySanityValue } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
 import { detailRows, emailLayout, emailStyles, escapeHtml, formatBotswanaTime } from "@/lib/email/html";
-import { internalRecipients, sendEmail } from "@/lib/email/send";
+import { sendEmail, staffCc } from "@/lib/email/send";
 
 export type RfqEmailPayload = {
   reference: string;
@@ -86,7 +86,7 @@ function linesText(groups: DivisionGroup[], { showDivisions }: { showDivisions: 
     .join("\n\n");
 }
 
-function staffEmail({ reference, contact, submittedAt }: RfqEmailPayload, groups: DivisionGroup[]) {
+function rfqEmail({ reference, contact, submittedAt }: RfqEmailPayload, groups: DivisionGroup[]) {
   const details: Array<[string, string | undefined]> = [
     ["Reference", reference],
     ["Received", formatBotswanaTime(submittedAt)],
@@ -100,66 +100,46 @@ function staffEmail({ reference, contact, submittedAt }: RfqEmailPayload, groups
     ["Message", contact.message],
   ];
   const showDivisions = groups.length > 1;
+  const intro =
+    "Thank you for your request. Our team will come back to you with availability and pricing within one business day. Reply to this email if anything needs changing.";
+  const footer = `Urgent? Call ${siteConfig.contact.phone} (${siteConfig.contact.hours}).`;
 
   return {
-    subject: `New RFQ ${reference} — ${contact.company}`,
-    html: emailLayout({
-      heading: `New quote request ${reference}`,
-      body: `<table role="presentation" cellpadding="0" cellspacing="0">${detailRows(details)}</table>${linesTable(groups, { showDivisions })}
-        <p style="margin:24px 0 0;font-size:13px;color:#6b7280;">Reply to this email to answer ${escapeHtml(contact.fullName)} directly.</p>`,
-    }),
-    text: `New quote request ${reference}\n\n${details
-      .filter((row): row is [string, string] => Boolean(row[1]))
-      .map(([label, value]) => `${label}: ${value}`)
-      .join("\n")}\n\n${linesText(groups, { showDivisions })}\n\nReply to this email to answer ${contact.fullName} directly.`,
-  };
-}
-
-function buyerEmail({ reference, contact }: RfqEmailPayload, groups: DivisionGroup[]) {
-  const summary = fulfilmentSummary(contact);
-
-  return {
-    subject: `We've received your quote request ${reference}`,
+    subject: `Quote request ${reference} received — ${contact.company}`,
     html: emailLayout({
       heading: "We've received your quote request",
       body: `<p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#111827;">Hi ${escapeHtml(contact.fullName)},</p>
-        <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#111827;">Thank you for your request. Our team will come back to you with availability and pricing within one business day. Your reference is <strong>${escapeHtml(reference)}</strong>.</p>
-        <p style="margin:0;font-size:14px;color:#6b7280;">${escapeHtml(summary)}${contact.requiredBy ? ` · needed by ${escapeHtml(contact.requiredBy)}` : ""}</p>
-        ${linesTable(groups, { showDivisions: false })}
-        <p style="margin:24px 0 0;font-size:13px;color:#6b7280;">Need to change something? Reply to this email or call ${escapeHtml(siteConfig.contact.phone)} (${escapeHtml(siteConfig.contact.hours)}).</p>`,
+        <p style="margin:0 0 20px;font-size:14px;line-height:1.6;color:#111827;">${escapeHtml(intro)}</p>
+        <table role="presentation" cellpadding="0" cellspacing="0">${detailRows(details)}</table>
+        ${linesTable(groups, { showDivisions })}
+        <p style="margin:24px 0 0;font-size:13px;color:#6b7280;">${escapeHtml(footer)}</p>`,
     }),
-    text: `Hi ${contact.fullName},\n\nThank you for your request. Our team will come back to you with availability and pricing within one business day. Your reference is ${reference}.\n\n${summary}${contact.requiredBy ? ` · needed by ${contact.requiredBy}` : ""}\n\n${linesText(groups, { showDivisions: false })}\n\nNeed to change something? Reply to this email or call ${siteConfig.contact.phone} (${siteConfig.contact.hours}).`,
+    text: `Hi ${contact.fullName},\n\n${intro}\n\n${details
+      .filter((row): row is [string, string] => Boolean(row[1]))
+      .map(([label, value]) => `${label}: ${value}`)
+      .join("\n")}\n\n${linesText(groups, { showDivisions })}\n\n${footer}`,
   };
 }
 
 /**
- * Sends the RFQ to the inbox of every division it touches (one email, all
- * lines, grouped by division) and a confirmation to the buyer.
+ * Sends the RFQ as a single email: to the buyer, with the inbox of every
+ * division it touches on CC. One Resend send per request keeps usage low on the
+ * free tier, and it can't half-succeed — either everyone got it or the form
+ * shows "couldn't send".
  *
- * Throwing surfaces as the form's "couldn't send" error. Only the staff email
- * can throw: if the buyer's confirmation fails the team still has the request,
- * so the buyer is shown success rather than invited to resubmit a duplicate.
+ * Replies go to the division inbox(es) so the buyer's answer reaches staff; the
+ * team can reply-all to answer the buyer directly. Throwing surfaces as the
+ * form's "couldn't send" error.
  */
 export async function sendRfqEmails(payload: RfqEmailPayload): Promise<void> {
   const groups = groupByDivision(payload.items);
-  const staff = staffEmail(payload, groups);
+  const inboxes = groups.map((group) => group.inbox);
 
   await sendEmail({
-    to: internalRecipients(groups.map((group) => group.inbox)),
-    replyTo: payload.contact.email,
-    idempotencyKey: `rfq-${payload.reference}-staff`,
-    ...staff,
+    to: payload.contact.email,
+    cc: staffCc(inboxes, payload.contact.email),
+    replyTo: staffCc(inboxes, ""),
+    idempotencyKey: `rfq-${payload.reference}`,
+    ...rfqEmail(payload, groups),
   });
-
-  try {
-    await sendEmail({
-      to: payload.contact.email,
-      replyTo: groups.length === 1 ? groups[0].inbox : siteConfig.contact.email,
-      idempotencyKey: `rfq-${payload.reference}-buyer`,
-      ...buyerEmail(payload, groups),
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`[rfq] ${payload.reference}: confirmation email failed`, error);
-  }
 }
