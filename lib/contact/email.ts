@@ -27,16 +27,16 @@ function productLabel(product: string | undefined): string | undefined {
  */
 export async function sendContactEmails({ reference, message, submittedAt }: ContactEmailPayload): Promise<void> {
   const inbox = isProductEnquiry(message.product) ? productInbox : WEBSITE_INBOX;
-  const { html, text } = await renderEnquiryEmail({
+  const { html, text, attachments } = await renderEnquiryEmail({
     preview: `We've received your message ${reference}. We'll respond within one business day.`,
-    heading: "We've received your message",
+    heading: "Message received",
     kind: "Message",
     reference,
+    receivedAt: formatBotswanaTime(submittedAt),
     name: message.name,
     intro:
       "Thank you for getting in touch. Our team will respond within one business day with specifications, pricing and availability.",
     details: [
-      ["Received", formatBotswanaTime(submittedAt)],
       ["Name", message.name],
       ["Company", message.company],
       ["Email", message.email],
@@ -54,5 +54,6 @@ export async function sendContactEmails({ reference, message, submittedAt }: Con
     subject: `We've received your message ${reference}`,
     html,
     text,
+    attachments,
   });
 }

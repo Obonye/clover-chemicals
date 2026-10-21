@@ -26,6 +26,8 @@ export type OutgoingEmail = {
   replyTo?: string | string[];
   /** Resend dedupes sends with the same key for 24h, so a retried action can't double-send. */
   idempotencyKey?: string;
+  /** Images the HTML references as `cid:<contentId>`, sent inline. */
+  attachments?: Array<{ filename: string; content: Buffer; contentType: string; contentId: string }>;
 };
 
 let client: Resend | undefined;
@@ -69,7 +71,7 @@ export function staffCc(addresses: string[], sender: string): string[] {
  * forms work end to end on a fresh clone. In production a missing key is a
  * misconfiguration and throws rather than reporting a send that never happened.
  */
-export async function sendEmail({ idempotencyKey, replyTo, cc, ...email }: OutgoingEmail): Promise<void> {
+export async function sendEmail({ idempotencyKey, replyTo, cc, attachments, ...email }: OutgoingEmail): Promise<void> {
   const resend = getClient();
 
   if (!resend) {
@@ -86,7 +88,7 @@ export async function sendEmail({ idempotencyKey, replyTo, cc, ...email }: Outgo
   }
 
   const { error } = await resend.emails.send(
-    { from: FROM, replyTo, cc: cc?.length ? cc : undefined, ...email },
+    { from: FROM, replyTo, cc: cc?.length ? cc : undefined, attachments, ...email },
     idempotencyKey ? { idempotencyKey } : undefined,
   );
 

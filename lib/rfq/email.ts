@@ -23,15 +23,11 @@ function groupByDivision(items: RfqLineItem[]): EnquiryGroup[] {
   for (const line of items) {
     const division = getDivisionBySanityValue(line.division);
     const key = division?.slug ?? line.division;
-    const group = groups.get(key) ?? {
-      name: division?.name ?? line.division,
-      // Hex only: email clients can't parse the oklch() accents some themes use.
-      accent: division?.theme?.ogAccent ?? division?.theme?.accent,
-      lines: [],
-    };
+    const group = groups.get(key) ?? { name: division?.name ?? line.division, lines: [] };
 
     group.lines.push({
-      label: `${line.name}${line.grade ? ` — ${line.grade}` : ""}${line.packLabel ? ` (${line.packLabel})` : ""}`,
+      name: line.name,
+      meta: [line.grade, line.packLabel].filter(Boolean).join(" · ") || undefined,
       quantity: line.quantity,
       note: line.note,
     });
@@ -61,16 +57,16 @@ function fulfilmentSummary({ fulfilment, branch, deliveryLocation }: RfqContact)
  */
 export async function sendRfqEmails({ reference, contact, items, submittedAt }: RfqEmailPayload): Promise<void> {
   const groups = groupByDivision(items);
-  const { html, text } = await renderEnquiryEmail({
+  const { html, text, attachments } = await renderEnquiryEmail({
     preview: `We've received your quote request ${reference}. We'll respond within one business day.`,
-    heading: "We've received your quote request",
+    heading: "Request received",
     kind: "Quote request",
     reference,
+    receivedAt: formatBotswanaTime(submittedAt),
     name: contact.fullName,
     intro:
       "Thank you for your request. Our team will come back to you with availability and pricing within one business day.",
     details: [
-      ["Received", formatBotswanaTime(submittedAt)],
       ["Name", contact.fullName],
       ["Company", contact.company],
       ["Email", contact.email],
@@ -95,5 +91,6 @@ export async function sendRfqEmails({ reference, contact, items, submittedAt }: 
     subject: `Quote request ${reference} received — ${contact.company}`,
     html,
     text,
+    attachments,
   });
 }
