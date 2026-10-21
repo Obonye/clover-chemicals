@@ -1,6 +1,6 @@
 import type { ContactMessage } from "./schema";
 
-import { contactCategoryInboxes } from "@/config/enquiry-routing";
+import { isProductEnquiry, productInbox } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
 import { detailRows, emailLayout, escapeHtml, formatBotswanaTime } from "@/lib/email/html";
 import { sendEmail, staffCc, WEBSITE_INBOX } from "@/lib/email/send";
@@ -21,9 +21,9 @@ function productLabel(product: string | undefined): string | undefined {
 
 /**
  * Sends a contact-form message as a single email: to the sender, with the
- * department that suits their enquiry on CC (one Resend send per enquiry) —
- * see config/enquiry-routing.ts, falling back to the website inbox. Replies go
- * to that department. Throwing surfaces as the form's "couldn't send" error.
+ * right inbox on CC (one Resend send per enquiry): Sales for product enquiries,
+ * the website inbox otherwise — see config/enquiry-routing.ts. Replies go to
+ * that inbox. Throwing surfaces as the form's "couldn't send" error.
  */
 export async function sendContactEmails({ reference, message, submittedAt }: ContactEmailPayload): Promise<void> {
   const details: Array<[string, string | undefined]> = [
@@ -40,7 +40,7 @@ export async function sendContactEmails({ reference, message, submittedAt }: Con
     "Thank you for getting in touch. Our technical team will respond within one business day with specifications, pricing and availability. Reply to this email if you want to add anything.";
   const footer = `Urgent? Call ${siteConfig.contact.phone} (${siteConfig.contact.hours}).`;
 
-  const inbox = (message.product && contactCategoryInboxes[message.product]) || WEBSITE_INBOX;
+  const inbox = isProductEnquiry(message.product) ? productInbox : WEBSITE_INBOX;
 
   await sendEmail({
     to: message.email,

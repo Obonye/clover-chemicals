@@ -2,6 +2,7 @@ import type { RfqContact, RfqLineItem } from "./types";
 
 import { getBranch } from "@/config/branches";
 import { getDivisionBySanityValue } from "@/config/divisions";
+import { productInbox } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
 import { detailRows, emailLayout, emailStyles, escapeHtml, formatBotswanaTime } from "@/lib/email/html";
 import { sendEmail, staffCc } from "@/lib/email/send";
@@ -14,9 +15,9 @@ export type RfqEmailPayload = {
   submittedAt: Date;
 };
 
-type DivisionGroup = { name: string; inbox: string; lines: RfqLineItem[] };
+type DivisionGroup = { name: string; lines: RfqLineItem[] };
 
-/** Each line goes to the inbox of the division that sells it (config/divisions.ts). */
+/** Lines grouped under the division that sells them, so the email reads clearly. */
 function groupByDivision(items: RfqLineItem[]): DivisionGroup[] {
   const groups = new Map<string, DivisionGroup>();
 
@@ -25,7 +26,6 @@ function groupByDivision(items: RfqLineItem[]): DivisionGroup[] {
     const key = division?.slug ?? line.division;
     const group = groups.get(key) ?? {
       name: division?.name ?? line.division,
-      inbox: division?.contacts[0]?.email ?? siteConfig.contact.email,
       lines: [],
     };
 
@@ -122,23 +122,22 @@ function rfqEmail({ reference, contact, submittedAt }: RfqEmailPayload, groups: 
 }
 
 /**
- * Sends the RFQ as a single email: to the buyer, with the inbox of every
- * division it touches on CC. One Resend send per request keeps usage low on the
- * free tier, and it can't half-succeed — either everyone got it or the form
- * shows "couldn't send".
+ * Sends the RFQ as a single email: to the buyer, with Sales on CC (every RFQ is
+ * about products — see config/enquiry-routing.ts). One Resend send per request
+ * keeps usage low on the free tier, and it can't half-succeed — either everyone
+ * got it or the form shows "couldn't send".
  *
- * Replies go to the division inbox(es) so the buyer's answer reaches staff; the
- * team can reply-all to answer the buyer directly. Throwing surfaces as the
- * form's "couldn't send" error.
+ * Replies go to Sales so the buyer's answer reaches staff; the team can
+ * reply-all to answer the buyer directly. Throwing surfaces as the form's
+ * "couldn't send" error.
  */
 export async function sendRfqEmails(payload: RfqEmailPayload): Promise<void> {
   const groups = groupByDivision(payload.items);
-  const inboxes = groups.map((group) => group.inbox);
 
   await sendEmail({
     to: payload.contact.email,
-    cc: staffCc(inboxes, payload.contact.email),
-    replyTo: staffCc(inboxes, ""),
+    cc: staffCc([productInbox], payload.contact.email),
+    replyTo: staffCc([productInbox], ""),
     idempotencyKey: `rfq-${payload.reference}`,
     ...rfqEmail(payload, groups),
   });
