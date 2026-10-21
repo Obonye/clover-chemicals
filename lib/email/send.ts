@@ -2,10 +2,11 @@ import { Resend } from "resend";
 
 /**
  * The Google Workspace mailbox Clover uses for everything website-related. It
- * is the sender, always on CC, and where replies land. Server-only: kept out of
- * config/site.ts so it isn't shipped in the client bundle.
+ * is the sender, and the inbox for enquiries that don't clearly belong to one
+ * department. Enquiries that do are routed to that department instead (see
+ * config/enquiry-routing.ts and each division's contacts).
  */
-const WEBSITE_INBOX = process.env.EMAIL_WEBSITE_INBOX ?? "info@cloverindustries.co.bw";
+export const WEBSITE_INBOX = process.env.EMAIL_WEBSITE_INBOX ?? "info@cloverindustries.co.bw";
 
 /**
  * Sender on the domain verified in Resend — any address on that domain works,
@@ -39,15 +40,15 @@ function getClient(): Resend | undefined {
 }
 
 /**
- * The staff inboxes to CC: the website inbox, then the given division inboxes.
- * When EMAIL_INBOX_OVERRIDE is set (preview/staging, or while testing against
- * the live Resend domain) they're replaced by that one address, so no real
- * inbox is mailed. `sender` is dropped from the list, so nobody appears twice
- * (as when the buyer is also the override address).
+ * The staff inboxes to CC — the ones the enquiry was routed to. When
+ * EMAIL_INBOX_OVERRIDE is set (preview/staging, or while testing against the
+ * live Resend domain) they're replaced by that one address, so no real inbox is
+ * mailed. `sender` is dropped from the list, so nobody appears twice (as when
+ * the buyer is also the override address).
  */
 export function staffCc(addresses: string[], sender: string): string[] {
   const override = process.env.EMAIL_INBOX_OVERRIDE?.trim();
-  const wanted = override ? [override] : [WEBSITE_INBOX, ...addresses];
+  const wanted = override ? [override] : addresses;
   const seen = new Set([sender.toLowerCase()]);
 
   return wanted.filter((address) => {

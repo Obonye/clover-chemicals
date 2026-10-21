@@ -1,8 +1,9 @@
 import type { ContactMessage } from "./schema";
 
+import { contactCategoryInboxes } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
 import { detailRows, emailLayout, escapeHtml, formatBotswanaTime } from "@/lib/email/html";
-import { sendEmail, staffCc } from "@/lib/email/send";
+import { sendEmail, staffCc, WEBSITE_INBOX } from "@/lib/email/send";
 import { categories } from "@/lib/products";
 
 export type ContactEmailPayload = {
@@ -20,8 +21,9 @@ function productLabel(product: string | undefined): string | undefined {
 
 /**
  * Sends a contact-form message as a single email: to the sender, with the
- * company sales inbox on CC (one Resend send per enquiry). Replies go to sales.
- * Throwing surfaces as the form's "couldn't send" error.
+ * department that suits their enquiry on CC (one Resend send per enquiry) —
+ * see config/enquiry-routing.ts, falling back to the website inbox. Replies go
+ * to that department. Throwing surfaces as the form's "couldn't send" error.
  */
 export async function sendContactEmails({ reference, message, submittedAt }: ContactEmailPayload): Promise<void> {
   const details: Array<[string, string | undefined]> = [
@@ -38,10 +40,12 @@ export async function sendContactEmails({ reference, message, submittedAt }: Con
     "Thank you for getting in touch. Our technical team will respond within one business day with specifications, pricing and availability. Reply to this email if you want to add anything.";
   const footer = `Urgent? Call ${siteConfig.contact.phone} (${siteConfig.contact.hours}).`;
 
+  const inbox = (message.product && contactCategoryInboxes[message.product]) || WEBSITE_INBOX;
+
   await sendEmail({
     to: message.email,
-    cc: staffCc([siteConfig.contact.email], message.email),
-    replyTo: staffCc([siteConfig.contact.email], ""),
+    cc: staffCc([inbox], message.email),
+    replyTo: staffCc([inbox], ""),
     idempotencyKey: `contact-${reference}`,
     subject: `We've received your message ${reference}`,
     html: emailLayout({
