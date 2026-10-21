@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
+
+import { submitContact, type ContactField } from "./actions";
 
 import { branches } from "@/config/branches";
 import { siteConfig } from "@/config/site";
 import { categories } from "@/lib/products";
-
-type FormState = "idle" | "submitting" | "success";
 
 const fieldClass =
   "w-full max-w-full min-w-0 rounded border border-separator bg-surface px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 outline-none transition-colors focus:border-accent";
@@ -15,15 +15,21 @@ const fieldClass =
 const labelClass =
   "mb-2 block font-mono text-xs font-medium uppercase tracking-widest text-muted";
 
-export default function ContactPage() {
-  const [formState, setFormState] = useState<FormState>("idle");
+const errorClass = "mt-1.5 text-xs text-danger";
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setFormState("submitting");
-    // TODO: wire up to an email service (Resend, SendGrid, etc.)
-    setTimeout(() => setFormState("success"), 800);
-  }
+export default function ContactPage() {
+  const [state, formAction, pending] = useActionState(submitContact, { status: "idle" });
+  // The success panel replaces the form; "Send another message" dismisses that
+  // result so the (freshly mounted, empty) form shows again.
+  const [dismissed, setDismissed] = useState<typeof state | null>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (state.status === "error") errorRef.current?.focus();
+  }, [state]);
+
+  const fieldErrors: Partial<Record<ContactField, string>> =
+    state.status === "error" ? (state.fieldErrors ?? {}) : {};
 
   return (
     <>
@@ -50,7 +56,7 @@ export default function ContactPage() {
 
             {/* Form */}
             <div>
-              {formState === "success" ? (
+              {state.status === "success" && dismissed !== state ? (
                 <div className="flex flex-col items-start gap-4 py-8">
                   <span className="font-mono text-xs uppercase tracking-widest text-accent">
                     Message Sent
@@ -61,17 +67,35 @@ export default function ContactPage() {
                   <p className="text-sm leading-relaxed text-muted" style={{ maxWidth: "44ch" }}>
                     Our technical team will respond within one business day with
                     specifications, pricing, and availability for your enquiry.
+                    Your reference is <strong className="text-foreground">{state.reference}</strong>.
                   </p>
                   <button
                     className="mt-4 font-mono text-xs uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
                     type="button"
-                    onClick={() => setFormState("idle")}
+                    onClick={() => setDismissed(state)}
                   >
                     Send another message →
                   </button>
                 </div>
               ) : (
-                <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+                <form action={formAction} className="flex flex-col gap-6">
+                  {state.status === "error" && (
+                    <p
+                      ref={errorRef}
+                      className="rounded bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
+                      role="alert"
+                      tabIndex={-1}
+                    >
+                      {state.message}
+                    </p>
+                  )}
+
+                  {/* Honeypot: hidden from people and assistive tech, but bots fill it. */}
+                  <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                    <label htmlFor="contact-website">Website</label>
+                    <input autoComplete="off" id="contact-website" name="website" tabIndex={-1} type="text" />
+                  </div>
+
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div className="min-w-0">
                       <label className={labelClass} htmlFor="name">
@@ -79,11 +103,15 @@ export default function ContactPage() {
                       </label>
                       <input
                         className={fieldClass}
+                        aria-invalid={fieldErrors.name ? true : undefined}
+                        autoComplete="name"
                         id="name"
+                        name="name"
                         placeholder="John Smith"
                         required
                         type="text"
                       />
+                      {fieldErrors.name && <p className={errorClass}>{fieldErrors.name}</p>}
                     </div>
                     <div className="min-w-0">
                       <label className={labelClass} htmlFor="company">
@@ -91,10 +119,13 @@ export default function ContactPage() {
                       </label>
                       <input
                         className={fieldClass}
+                        autoComplete="organization"
                         id="company"
+                        name="company"
                         placeholder="Acme Ltd."
                         type="text"
                       />
+                      {fieldErrors.company && <p className={errorClass}>{fieldErrors.company}</p>}
                     </div>
                   </div>
 
@@ -105,11 +136,15 @@ export default function ContactPage() {
                       </label>
                       <input
                         className={fieldClass}
+                        aria-invalid={fieldErrors.email ? true : undefined}
+                        autoComplete="email"
                         id="email"
+                        name="email"
                         placeholder="john@example.com"
                         required
                         type="email"
                       />
+                      {fieldErrors.email && <p className={errorClass}>{fieldErrors.email}</p>}
                     </div>
                     <div className="min-w-0">
                       <label className={labelClass} htmlFor="phone">
@@ -117,10 +152,14 @@ export default function ContactPage() {
                       </label>
                       <input
                         className={fieldClass}
+                        aria-invalid={fieldErrors.phone ? true : undefined}
+                        autoComplete="tel"
                         id="phone"
+                        name="phone"
                         placeholder="+267 71 234 567"
                         type="tel"
                       />
+                      {fieldErrors.phone && <p className={errorClass}>{fieldErrors.phone}</p>}
                     </div>
                   </div>
 
@@ -128,7 +167,7 @@ export default function ContactPage() {
                     <label className={labelClass} htmlFor="product">
                       Product Interest
                     </label>
-                    <select className={fieldClass} id="product">
+                    <select className={fieldClass} id="product" name="product">
                       <option value="">Select a category</option>
                       {categories.map((cat) => (
                         <option key={cat.id} value={cat.id}>
@@ -145,20 +184,23 @@ export default function ContactPage() {
                     </label>
                     <textarea
                       className={`${fieldClass} resize-none`}
+                      aria-invalid={fieldErrors.message ? true : undefined}
                       id="message"
+                      name="message"
                       placeholder="Describe what you need — product names, quantities, grades, pack sizes, or any other details."
                       required
                       rows={6}
                     />
+                    {fieldErrors.message && <p className={errorClass}>{fieldErrors.message}</p>}
                   </div>
 
                   <div>
                     <button
                       className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90 disabled:opacity-50"
-                      disabled={formState === "submitting"}
+                      disabled={pending}
                       type="submit"
                     >
-                      {formState === "submitting" ? "Sending…" : "Send Message"}
+                      {pending ? "Sending…" : "Send Message"}
                     </button>
                     <p className="mt-3 text-xs text-muted">
                       We respond within one business day.

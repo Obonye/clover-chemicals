@@ -2,8 +2,7 @@
 
 import type { RfqContact, RfqLineItem } from "@/lib/rfq/types";
 
-import { headers } from "next/headers";
-
+import { clientIp } from "@/lib/client-ip";
 import { sendRfqEmails } from "@/lib/rfq/email";
 import { lookupRfqProducts } from "@/lib/rfq/lookup";
 import { checkRateLimit } from "@/lib/rfq/rate-limit";
@@ -46,12 +45,6 @@ const FIELD_MESSAGES: Partial<Record<RfqContactField, string>> = {
   company: "Enter your company or organisation",
   email: "Enter a valid email address",
 };
-
-async function clientIp(): Promise<string> {
-  const h = await headers();
-
-  return h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "unknown";
-}
 
 function parseItems(raw: FormDataEntryValue | null): unknown {
   if (typeof raw !== "string") return [];
