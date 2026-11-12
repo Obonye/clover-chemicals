@@ -961,7 +961,7 @@ Component: `components/divisions/medical-home.tsx`
 
 # 11. Emails sent to customers
 
-When a visitor sends an RFQ or a contact message, they get one email, and the right Clover inbox is copied. Every RFQ goes to `sales@`, `khofi.gabosekwe@` and `sanka@cloverindustries.co.bw`. Contact-form messages about a product go to `sales@cloverindustries.co.bw`. General messages (category "Other / Not sure" or none) go to `info@cloverindustries.co.bw`. Where it goes is set in `config/enquiry-routing.ts`, not in this file.
+When a visitor sends an RFQ or a contact message, they get one email, and the Clover team is copied. Both RFQs and contact-form messages go to `sales@`, `khofi.gabosekwe@` and `sanka@cloverindustries.co.bw`. Where it goes is set in `config/enquiry-routing.ts`, not in this file.
 
 ## 11.1 Quote request email (RFQ)
 

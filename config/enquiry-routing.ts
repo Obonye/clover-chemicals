@@ -8,7 +8,7 @@ import { siteConfig } from "./site";
  */
 export const productInbox = siteConfig.contact.email;
 
-/** Everyone who receives a Request for Quote: Sales plus the two people who quote. */
+/** Everyone who receives a Request for Quote or a contact-form message. */
 export const rfqInboxes = [
   productInbox,
   "khofi.gabosekwe@cloverindustries.co.bw",
