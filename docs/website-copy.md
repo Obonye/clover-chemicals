@@ -168,8 +168,9 @@ Page: `app/page.tsx`. The page title is the company name.
 
 ## 2.1 Hero
 
-- **Small line above the headline** (`app/page.tsx:35`): Est. {foundedYear} · {years}+ Years · 100% Citizen-Owned · EDD Certified
-- **Headline** (`app/page.tsx:38`): Botswana's total solutions partner, division by division.
+- **Small line above the headline** (`app/page.tsx:38`): Est. {foundedYear} · {years}+ Years · 100% Citizen-Owned · EDD Certified
+- **Headline** (`app/page.tsx:41`): Botswana's total solutions partner, division by division.
+- **Tagline** (`app/page.tsx:44`): Lift as you rise.
 - **Description** (`app/page.tsx:41`): {siteDescription}
 
 The description is the site description in section 1.1.
@@ -178,26 +179,42 @@ The description is the site description in section 1.1.
 
 Two cards, one per division. Name and tagline come from section 1.3.
 
-- **Section label** (`app/page.tsx:50`): Our Divisions
-- **Heading** (`app/page.tsx:53`): One group, built to circle the customer.
-- **Card link** (`app/page.tsx:80`): Explore {divisionName} →
+- **Section label** (`app/page.tsx:56`): Our Divisions
+- **Heading** (`app/page.tsx:59`): One group, built to circle the customer.
+- **Card link** (`app/page.tsx:86`): Explore {divisionName} →
 
 ## 2.3 Who we are
 
-- **Section label** (`app/page.tsx:95`): Who We Are
+- **Section label** (`app/page.tsx:101`): Who We Are
 - **Paragraph** (`app/page.tsx:100`): {siteName} was established in Botswana in {foundedYear} to manufacture and supply chemicals for domestic and industrial use. Today we're 100% citizen-owned, EDD certified, and operating across chemicals, equipment, PPE, and medical divisions.
-- **Button** (`app/page.tsx:109`): Learn More →
+- **Button** (`app/page.tsx:115`): Learn More →
 
-## 2.4 Latest news
+## 2.4 At a glance
+
+New. Facts and the vision and mission in one place (CI-31). The wording repeats the About page, so change it in both. The head office and other branch addresses come from section 1.4.
+
+- **Section label** (`app/page.tsx:125`): At a Glance
+- **Heading** (`app/page.tsx:128`): Rooted in Botswana since {foundedYear}.
+- **Fact 1: label** (`app/page.tsx:132`): Established
+- **Fact 2: label** (`app/page.tsx:136`): Registered
+- **Fact 2: text** (`app/page.tsx:138`): 100% citizen-owned and registered under the Economic Diversification Drive (EDD)
+- **Fact 3: label** (`app/page.tsx:142`): Head Office
+- **Fact 4: label** (`app/page.tsx:147`): Also At
+- **Vision: label** (`app/page.tsx:158`): Vision
+- **Vision: text** (`app/page.tsx:160`): To become a one-stop total solutions provider.
+- **Mission: label** (`app/page.tsx:164`): Mission
+- **Mission: text** (`app/page.tsx:166`): To provide quality, state-of-the-art, affordable total solutions through excellent customer service.
+
+## 2.5 Latest news
 
 Shows the first three articles from section 6.
 
-- **Section label** (`app/page.tsx:121`): Latest Updates
-- **Heading** (`app/page.tsx:124`): News across the group.
-- **Link, top right** (`app/page.tsx:131`): View all →
-- **Link on each article** (`app/page.tsx:157`): Read →
+- **Section label** (`app/page.tsx:179`): Latest Updates
+- **Heading** (`app/page.tsx:182`): News across the group.
+- **Link, top right** (`app/page.tsx:189`): View all →
+- **Link on each article** (`app/page.tsx:215`): Read →
 
-## 2.5 Call to action banner
+## 2.6 Call to action banner
 
 Component: `components/cta-banner.tsx`. Also used at the bottom of the Chemical home page (section 9).
 
@@ -814,7 +831,7 @@ Row 1's value is the founding year.
 
 ## 9.7 Call to action
 
-The same banner as the group home page. See section 2.5.
+The same banner as the group home page. See section 2.6.
 
 ---
 
