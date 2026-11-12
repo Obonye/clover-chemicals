@@ -37,6 +37,23 @@ npm install
 npm run dev
 ```
 
+## Product catalogue flag
+
+Whether products are visible is controlled by one Vercel Flag, `product-catalog`
+(defined in `flags.ts`, default **off**). Production is off, Development and
+Preview are on. When it's off, product pages redirect to the RFQ and product
+links are hidden.
+
+- **Toggle it** in the Vercel dashboard (project, Flags), or with
+  `vercel flags enable product-catalog` / `vercel flags disable product-catalog`.
+  No redeploy is needed.
+- **See it yourself in production** without changing it for visitors: use the
+  Flags Explorer in the Vercel Toolbar. It needs `FLAGS_SECRET` (see `.env.example`).
+- **Locally**, run `vercel env pull` to get `FLAGS`. Without it the flag
+  evaluates to off.
+- **In code**, never import `flags.ts` directly. Use `isCatalogEnabled()` or
+  `isCategoryBrowsable()` from `lib/catalog/visibility.ts`.
+
 ## License
 
 Licensed under the [MIT license](https://github.com/heroui-inc/next-app-template/blob/main/LICENSE).
