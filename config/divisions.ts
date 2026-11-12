@@ -42,6 +42,9 @@ export type DivisionConfig = {
   image: string;
   /** Copy for the navbar's primary CTA button. Defaults to "Browse Products". */
   browseLabel?: string;
+  /** Where the navbar's "Get a Quote" goes. Defaults to the RFQ list (/rfq);
+   *  Medical uses a simple enquiry form instead (CI-41). */
+  quoteHref?: string;
   /** Omit to fall back to the group (umbrella) theme. */
   theme?: DivisionTheme;
   contacts: DivisionContact[];
@@ -76,6 +79,7 @@ export const divisions: DivisionConfig[] = [
     tagline: "Advanced medical, life sciences, and laboratory solutions for Botswana's healthcare sector.",
     image: "/clover medical (2).jpg",
     browseLabel: "Explore Product Lines",
+    quoteHref: "/contact?enquiry=medical",
     theme: {
       accent: "#0074a8",
       accentForeground: "#ffffff",

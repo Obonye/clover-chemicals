@@ -45,7 +45,7 @@ export const HeroMedical = () => {
           </NextLink>
           <NextLink
             className="rounded-full border-2 border-separator px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
-            href="/contact"
+            href="/contact?enquiry=medical"
           >
             Contact Us
           </NextLink>

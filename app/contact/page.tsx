@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { Suspense, useActionState, useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { submitContact, type ContactField } from "./actions";
 
 import { branchesInDisplayOrder } from "@/config/branches";
-import { enquiryTypes } from "@/config/enquiry-routing";
+import { enquiryTypeIds, enquiryTypes, type EnquiryTypeId } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
 import { categories } from "@/lib/products";
 
@@ -18,7 +19,27 @@ const labelClass =
 
 const errorClass = "mt-1.5 text-xs text-danger";
 
+// useSearchParams needs a Suspense boundary so the rest of the page can
+// still be prerendered.
 export default function ContactPage() {
+  return (
+    <Suspense>
+      <ContactContent />
+    </Suspense>
+  );
+}
+
+function ContactContent() {
+  // Links elsewhere pre-select the enquiry type (?enquiry=medical) and can
+  // name a product (?product=<slug>), so Medical's simple quote request
+  // arrives already routed and with context (CI-41).
+  const searchParams = useSearchParams();
+  const enquiryParam = searchParams.get("enquiry");
+  const defaultEnquiry = enquiryTypeIds.includes(enquiryParam as EnquiryTypeId) ? (enquiryParam as EnquiryTypeId) : "";
+  const productParam = searchParams.get("product")?.trim().slice(0, 120);
+  const defaultMessage = productParam ? `Enquiry about: ${productParam.replace(/-/g, " ")}
+
+` : "";
   const [state, formAction, pending] = useActionState(submitContact, { status: "idle" });
   // The success panel replaces the form; "Send another message" dismisses that
   // result so the (freshly mounted, empty) form shows again.
@@ -171,7 +192,7 @@ export default function ContactPage() {
                     <select
                       className={fieldClass}
                       aria-invalid={fieldErrors.enquiryType ? true : undefined}
-                      defaultValue=""
+                      defaultValue={defaultEnquiry}
                       id="enquiryType"
                       name="enquiryType"
                       required
@@ -195,6 +216,7 @@ export default function ContactPage() {
                     <textarea
                       className={`${fieldClass} resize-none`}
                       aria-invalid={fieldErrors.message ? true : undefined}
+                      defaultValue={defaultMessage}
                       id="message"
                       name="message"
                       placeholder="Describe what you need — product names, quantities, grades, pack sizes, or any other details."

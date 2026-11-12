@@ -105,6 +105,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
   // "Browse Products" belongs on the division sites only. The group home
   // keeps just the "Get a Quote" shortcut (CI-32).
   const showBrowse = pathname !== "/";
+  const quoteHref = division?.quoteHref ?? "/rfq";
 
   useEffect(() => setMounted(true), []);
 
@@ -296,6 +297,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
           )}
           <RfqNavButton
             className={isTransparent ? heroControl : "text-muted hover:text-foreground"}
+            href={quoteHref}
             variant="desktop"
           />
           {showBrowse && (
@@ -365,7 +367,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
               </Drawer.Header>
               <Drawer.Body className="flex flex-col gap-1">
                 <div className="mb-3">
-                  <RfqNavButton variant="drawer" onNavigate={() => setIsMenuOpen(false)} />
+                  <RfqNavButton href={quoteHref} variant="drawer" onNavigate={() => setIsMenuOpen(false)} />
                 </div>
                 {division ? (
                   <>

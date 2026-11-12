@@ -39,6 +39,8 @@ const Badge = ({ count, inverse = false, className }: BadgeProps) => (
 
 type RfqNavButtonProps = {
   variant: "desktop" | "drawer";
+  /** Where the button goes; defaults to the RFQ list. */
+  href?: string;
   /** Desktop only: text colour classes, which change over transparent heroes. */
   className?: string;
   onNavigate?: () => void;
@@ -49,7 +51,7 @@ type RfqNavButtonProps = {
  * flow and links to /contact). In the mobile drawer it shows the item count
  * once there is one.
  */
-export const RfqNavButton = ({ variant, className, onNavigate }: RfqNavButtonProps) => {
+export const RfqNavButton = ({ variant, href = "/rfq", className, onNavigate }: RfqNavButtonProps) => {
   const count = useRfqNavCount();
   const hasItems = count > 0;
 
@@ -58,10 +60,10 @@ export const RfqNavButton = ({ variant, className, onNavigate }: RfqNavButtonPro
       <NextLink
         aria-label={hasItems ? rfqAccessibleName(count) : undefined}
         className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded bg-accent px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-        href="/rfq"
+        href={href}
         onClick={onNavigate}
       >
-        {hasItems ? (
+        {hasItems && href === "/rfq" ? (
           <>
             View RFQ
             <Badge inverse count={count} />
@@ -81,7 +83,7 @@ export const RfqNavButton = ({ variant, className, onNavigate }: RfqNavButtonPro
         "inline-flex items-center whitespace-nowrap rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
         className,
       )}
-      href="/rfq"
+      href={href}
       onClick={onNavigate}
     >
       Get a Quote

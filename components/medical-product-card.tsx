@@ -43,7 +43,7 @@ export const MedicalProductCard = ({ product, tag }: MedicalProductCardProps) =>
           detail page they could point at (see CI-26). */}
       <NextLink
         className="inline-flex w-fit shrink-0 items-center rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-white/90"
-        href="/contact"
+        href="/contact?enquiry=medical"
       >
         Request Quote
       </NextLink>
