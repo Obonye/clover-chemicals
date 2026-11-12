@@ -21,6 +21,20 @@ export const isCatalogEnabled = cache(async (): Promise<boolean> => {
   }
 });
 
+/**
+ * Everything a page needs to apply the rules to many categories without
+ * awaiting once per category.
+ */
+export async function getCatalog() {
+  const enabled = await isCatalogEnabled();
+
+  return {
+    enabled,
+    isBrowsable: (category: CategoryReadiness | null | undefined) => browsable(enabled, category),
+    hrefFor: (category: CategoryReadiness, listingBase?: string) => categoryHref(enabled, category, listingBase),
+  };
+}
+
 /** True when the catalogue is on and this category has been marked ready. */
 export async function isCategoryBrowsable(category: CategoryReadiness | null | undefined): Promise<boolean> {
   return browsable(await isCatalogEnabled(), category);

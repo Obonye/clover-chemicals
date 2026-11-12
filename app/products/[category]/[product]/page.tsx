@@ -9,6 +9,7 @@ import { DocumentIcon } from "@/components/icons";
 import { ProductCard } from "@/components/product-card";
 import { AddToRfq } from "@/components/rfq/add-to-rfq";
 import { divisionCssVars, getDivisionBySanityValue } from "@/config/divisions";
+import { getCatalog } from "@/lib/catalog/visibility";
 import { loadQuery } from "@/sanity/lib/fetch";
 import { imageUrl } from "@/sanity/lib/image";
 import { documentDownloadHref, documentLabel, formatFileSize, packLabel } from "@/sanity/lib/format";
@@ -113,6 +114,13 @@ export default async function ProductPage({ params }: Props) {
   });
 
   if (!product) notFound();
+
+  // Hidden or not-yet-ready: send the visitor to the RFQ for that category,
+  // before anything about the product is rendered. Temporary (307) so it
+  // isn't cached for after launch (CI-71).
+  const catalog = await getCatalog();
+
+  if (!catalog.isBrowsable(product.category)) redirect(catalog.hrefFor(product.category ?? {}));
 
   const categorySlug = product.category?.slug;
 

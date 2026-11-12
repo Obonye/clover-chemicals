@@ -32,6 +32,9 @@ export type ProductCategory = {
   description: string | null;
   image: SanityImage | null;
   productCount?: number;
+  /** Editors switch this on once a category's products are ready to show
+   *  (CI-69). Missing or false keeps the category on the RFQ route. */
+  catalogReady?: boolean | null;
 };
 
 export type ProductDocumentType = "spec-sheet" | "sds" | "label" | "certificate" | "registration";

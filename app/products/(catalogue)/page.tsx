@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 
 import NextLink from "next/link";
 
+import { CategoryDirectory } from "@/components/category-directory";
 import { ProductCatalogue } from "@/components/product-catalogue";
+import { getCatalog } from "@/lib/catalog/visibility";
 import { loadQuery } from "@/sanity/lib/fetch";
 import { ALL_PRODUCTS_QUERY, CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
@@ -31,11 +33,27 @@ export const metadata: Metadata = {
 
 export default async function ProductsPage({ searchParams }: Props) {
   const params = await searchParams;
+  const catalog = await getCatalog();
+  const allCategories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
 
-  const [products, categories] = await Promise.all([
-    loadQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY),
-    loadQuery<ProductCategory[]>(CATEGORIES_QUERY),
-  ]);
+  // Products hidden: just the ranges, each leading to a quote request.
+  if (!catalog.enabled) {
+    return (
+      <>
+        <CategoryDirectory
+          heading="Our product ranges"
+          items={allCategories.map((category) => ({ category, href: catalog.hrefFor(category) }))}
+        />
+        <BottomCta />
+      </>
+    );
+  }
+
+  // Only categories marked ready show their products.
+  const categories = allCategories.filter((category) => catalog.isBrowsable(category));
+  const products = (await loadQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY)).filter((product) =>
+    catalog.isBrowsable(product.category),
+  );
 
   return (
     <>
