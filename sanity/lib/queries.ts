@@ -51,9 +51,9 @@ export const CATEGORIES_QUERY = defineQuery(`
   }
 `);
 
-/** Category slugs — for generateStaticParams. */
+/** Category slugs, with whether each is ready to show — for generateStaticParams and the sitemap. */
 export const CATEGORY_SLUGS_QUERY = defineQuery(`
-  *[_type == "productCategory" && defined(slug.current)]{ "slug": slug.current }
+  *[_type == "productCategory" && defined(slug.current)]{ "slug": slug.current, catalogReady }
 `);
 
 /** One category by slug, with its products inlined. */
@@ -83,7 +83,8 @@ export const PRODUCT_QUERY = defineQuery(`
 export const PRODUCT_SLUGS_QUERY = defineQuery(`
   *[_type == "product" && defined(slug.current) && defined(category->slug.current)] {
     "category": category->slug.current,
-    "product": slug.current
+    "product": slug.current,
+    "categoryReady": category->catalogReady
   }
 `);
 
