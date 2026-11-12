@@ -8,7 +8,7 @@ const pillars = [
     body: "Every item in our catalog meets strict international medical, scientific, and regulatory benchmarks.",
   },
   {
-    heading: "Local Technical Presence",
+    heading: "Local Presence",
     body: "Our Gaborone-based engineering support ensures rapid response times and reliable on-site technical assistance whenever your facility or institution needs it.",
   },
 ];

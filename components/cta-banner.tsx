@@ -54,7 +54,7 @@ export const CtaBanner = ({ tint = CLOVER_GREEN }: CtaBannerProps) => {
               Ready to source with confidence?
             </h2>
             <p className="mt-3 text-base leading-relaxed text-white/70" style={{ maxWidth: "48ch" }}>
-              Tell us what you need. Our technical team responds within one business
+              Tell us what you need. Our team responds within one business
               day with specifications, pricing, and availability.
             </p>
           </div>

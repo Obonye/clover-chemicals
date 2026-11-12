@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with Clover Industries. Our technical team responds within one business day with specifications, pricing, and availability.",
+    "Get in touch with Clover Industries. Our team responds within one business day with specifications, pricing, and availability.",
   alternates: {
     canonical: "/contact",
   },

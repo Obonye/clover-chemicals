@@ -3,7 +3,7 @@ import type { EnquiryGroup } from "@/lib/email/templates/enquiry-email";
 
 import { getBranch } from "@/config/branches";
 import { getDivisionBySanityValue } from "@/config/divisions";
-import { productInbox } from "@/config/enquiry-routing";
+import { rfqInboxes } from "@/config/enquiry-routing";
 import { formatBotswanaTime } from "@/lib/email/format";
 import { sendEmail, staffCc } from "@/lib/email/send";
 import { renderEnquiryEmail } from "@/lib/email/templates/enquiry-email";
@@ -46,7 +46,7 @@ function fulfilmentSummary({ fulfilment, branch, deliveryLocation }: RfqContact)
 }
 
 /**
- * Sends the RFQ as a single email: to the buyer, with Sales on CC (every RFQ is
+ * Sends the RFQ as a single email: to the buyer, with the RFQ inboxes on CC (every RFQ is
  * about products — see config/enquiry-routing.ts). One Resend send per request
  * keeps usage low on the free tier, and it can't half-succeed — either everyone
  * got it or the form shows "couldn't send".
@@ -85,8 +85,8 @@ export async function sendRfqEmails({ reference, contact, items, submittedAt }: 
 
   await sendEmail({
     to: contact.email,
-    cc: staffCc([productInbox], contact.email),
-    replyTo: staffCc([productInbox], ""),
+    cc: staffCc(rfqInboxes, contact.email),
+    replyTo: staffCc(rfqInboxes, ""),
     idempotencyKey: `rfq-${reference}`,
     subject: `Quote request ${reference} received — ${contact.company}`,
     html,

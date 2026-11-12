@@ -156,7 +156,7 @@ export default async function CategoryPage({ params }: Props) {
                 Need something specific?
               </h2>
               <p className="text-sm text-muted">
-                We source on request. Speak to our technical team about custom
+                We source on request. Speak to our team about custom
                 grades, pack sizes, and specialist procurement.
               </p>
             </div>

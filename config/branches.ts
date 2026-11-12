@@ -24,7 +24,7 @@ export type BranchConfig = {
 export const branches: BranchConfig[] = [
   {
     slug: "gaborone",
-    name: "Gaborone Branch",
+    name: "Gaborone Branch (Head Office)",
     address: "Plot 1277, Old Lobatse Road, Gaborone, Botswana",
     isHeadOffice: true,
     divisions: ["chemical", "medical"],

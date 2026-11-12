@@ -43,7 +43,7 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
-            Tell us what you need. Our technical team responds within one
+            Tell us what you need. Our team responds within one
             business day with specifications, pricing, and availability.
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function ContactPage() {
                     Thank you — we&apos;ll be in touch.
                   </h2>
                   <p className="text-sm leading-relaxed text-muted" style={{ maxWidth: "44ch" }}>
-                    Our technical team will respond within one business day with
+                    Our team will respond within one business day with
                     specifications, pricing, and availability for your enquiry.
                     Your reference is <strong className="text-foreground">{state.reference}</strong>.
                   </p>
@@ -270,40 +270,38 @@ export default function ContactPage() {
                 </p>
                 <ul className="flex flex-col gap-4">
                   <li>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Lab Division</p>
-                    <a
-                      className="text-sm text-muted transition-colors hover:text-accent"
-                      href="mailto:labdivision@cloverindustries.co.bw"
-                    >
-                      labdivision@cloverindustries.co.bw
-                    </a>
+                    <p className="mb-1 text-sm font-semibold text-foreground">Request for Quote</p>
+                    <div className="flex flex-col gap-1">
+                      <a
+                        className="text-sm text-muted transition-colors hover:text-accent"
+                        href="mailto:sales@cloverindustries.co.bw"
+                      >
+                        sales@cloverindustries.co.bw
+                      </a>
+                      <a
+                        className="text-sm text-muted transition-colors hover:text-accent"
+                        href="mailto:khofi.gabosekwe@cloverindustries.co.bw"
+                      >
+                        khofi.gabosekwe@cloverindustries.co.bw
+                      </a>
+                      <a
+                        className="text-sm text-muted transition-colors hover:text-accent"
+                        href="mailto:sanka@cloverindustries.co.bw"
+                      >
+                        sanka@cloverindustries.co.bw
+                      </a>
+                    </div>
                   </li>
                   <li>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Medical Division</p>
-                    <a
-                      className="text-sm text-muted transition-colors hover:text-accent"
-                      href="mailto:madan.kumar@cloverindustries.co.bw"
-                    >
-                      madan.kumar@cloverindustries.co.bw
-                    </a>
-                  </li>
-                  <li>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Technical Support — Dispensing &amp; Hygiene</p>
-                    <a
-                      className="text-sm text-muted transition-colors hover:text-accent"
-                      href="mailto:technical@cloverindustries.co.bw"
-                    >
-                      technical@cloverindustries.co.bw
-                    </a>
-                  </li>
-                  <li>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Technical Support — Medical &amp; Lab Service</p>
-                    <a
-                      className="text-sm text-muted transition-colors hover:text-accent"
-                      href="mailto:service@cloverindustries.co.bw"
-                    >
-                      service@cloverindustries.co.bw
-                    </a>
+                    <p className="mb-1 text-sm font-semibold text-foreground">Customer complaints</p>
+                    <div className="flex flex-col gap-1">
+                      <a
+                        className="text-sm text-muted transition-colors hover:text-accent"
+                        href="mailto:sanka@cloverindustries.co.bw"
+                      >
+                        sanka@cloverindustries.co.bw
+                      </a>
+                    </div>
                   </li>
                 </ul>
               </div>

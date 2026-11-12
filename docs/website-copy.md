@@ -75,7 +75,7 @@ Source: `config/divisions.ts`. Shown in the top bar, the home page cards, the fo
 
 Source: `config/branches.ts`. Shown on Locations, Contact, the footer and in emails.
 
-- **Gaborone: name** (`config/branches.ts:27`): Gaborone Branch
+- **Gaborone: name** (`config/branches.ts:27`): Gaborone Branch (Head Office)
 - **Gaborone: address** (`config/branches.ts:28`): Plot 1277, Old Lobatse Road, Gaborone, Botswana
 - **Francistown: name** (`config/branches.ts:34`): Francistown Branch
 - **Francistown: address** (`config/branches.ts:35`): Plot 31251, Somerset Industrial, Francistown, Botswana
@@ -94,8 +94,8 @@ Component: `components/utility-bar.tsx`
 
 Component: `components/navbar.tsx`
 
-- **Logo, small text under CLOVER (group pages)** (`components/navbar.tsx:191`): Industries
-- **Logo, name** (`components/navbar.tsx:183`): CLOVER
+- **Logo, small text under CLOVER (group pages)** (`components/navbar.tsx:191`): Lift as you rise
+- **Logo, name** (`components/navbar.tsx:183`): CLOVER INDUSTRIES
 - **Menu item: Products (division pages)** (`components/navbar.tsx:213`): Products
 - **Menu item: Divisions (group pages)** (`components/navbar.tsx:213`): Divisions
 - **Dropdown: view all link** (`components/navbar.tsx:244`): View all products →
@@ -203,7 +203,7 @@ Component: `components/cta-banner.tsx`. Also used at the bottom of the Chemical 
 
 - **Small label** (`components/cta-banner.tsx:51`): Work With Us
 - **Heading** (`components/cta-banner.tsx:54`): Ready to source with confidence?
-- **Text** (`components/cta-banner.tsx:57`): Tell us what you need. Our technical team responds within one business day with specifications, pricing, and availability.
+- **Text** (`components/cta-banner.tsx:57`): Tell us what you need. Our team responds within one business day with specifications, pricing, and availability.
 - **Main button** (`components/cta-banner.tsx:68`): Request a Quote
 - **Second link** (`components/cta-banner.tsx:74`): Browse Products →
 
@@ -221,7 +221,7 @@ Page: `app/about/page.tsx`
 ## 3.2 Hero
 
 - **Small line** (`app/about/page.tsx:97`): Est. {foundedYear}
-- **Headline** (`app/about/page.tsx:100`): {years} years of technical precision.
+- **Headline** (`app/about/page.tsx:100`): {years} years of precision.
 
 ## 3.3 Introduction
 
@@ -305,7 +305,7 @@ Four numbered blocks. The numbers 01–04 are fixed.
 ## 3.10 Closing call to action
 
 - **Heading** (`app/about/page.tsx:289`): Ready to work with us?
-- **Text** (`app/about/page.tsx:292`): Speak to our technical team about your supply needs — chemical, medical, or lab. We respond within one business day.
+- **Text** (`app/about/page.tsx:292`): Speak to our team about your supply needs — chemical, medical, or lab. We respond within one business day.
 - **Main button** (`app/about/page.tsx:301`): Get in Touch
 - **Second button** (`app/about/page.tsx:307`): Browse Products
 
@@ -318,13 +318,13 @@ Page: `app/contact/page.tsx`. Messages from this form are emailed to the right C
 ## 4.1 Search result and tab title
 
 - **Title** (`app/contact/layout.tsx:4`): Contact Us
-- **Description** (`app/contact/layout.tsx:6`): Get in touch with Clover Industries. Our technical team responds within one business day with specifications, pricing, and availability.
+- **Description** (`app/contact/layout.tsx:6`): Get in touch with Clover Industries. Our team responds within one business day with specifications, pricing, and availability.
 
 ## 4.2 Page header
 
 - **Small label** (`app/contact/page.tsx:40`): Get in Touch
 - **Heading** (`app/contact/page.tsx:43`): Contact Us
-- **Intro** (`app/contact/page.tsx:46`): Tell us what you need. Our technical team responds within one business day with specifications, pricing, and availability.
+- **Intro** (`app/contact/page.tsx:46`): Tell us what you need. Our team responds within one business day with specifications, pricing, and availability.
 
 ## 4.3 Form
 
@@ -351,7 +351,7 @@ The names in the "Product interest" list come from section 7.8. Fields with a re
 
 - **Small label** (`app/contact/page.tsx:62`): Message Sent
 - **Heading** (`app/contact/page.tsx:65`): Thank you — we'll be in touch.
-- **Text** (`app/contact/page.tsx:68`): Our technical team will respond within one business day with specifications, pricing, and availability for your enquiry. Your reference is {reference}.
+- **Text** (`app/contact/page.tsx:68`): Our team will respond within one business day with specifications, pricing, and availability for your enquiry. Your reference is {reference}.
 - **Link** (`app/contact/page.tsx:77`): Send another message →
 
 ## 4.5 Error messages
@@ -377,18 +377,16 @@ Names, addresses, phone, email, WhatsApp and hours come from sections 1.2 and 1.
 ## 4.7 Side panel: department contacts
 
 - **Heading** (`app/contact/page.tsx:269`): Department Contacts
-- **Lab: name** (`app/contact/page.tsx:273`): Lab Division
-- **Lab: email** (`app/contact/page.tsx:278`): labdivision@cloverindustries.co.bw
-- **Medical: name** (`app/contact/page.tsx:282`): Medical Division
-- **Medical: email** (`app/contact/page.tsx:287`): madan.kumar@cloverindustries.co.bw
-- **Technical support 1: name** (`app/contact/page.tsx:291`): Technical Support — Dispensing & Hygiene
-- **Technical support 1: email** (`app/contact/page.tsx:296`): technical@cloverindustries.co.bw
-- **Technical support 2: name** (`app/contact/page.tsx:300`): Technical Support — Medical & Lab Service
-- **Technical support 2: email** (`app/contact/page.tsx:305`): service@cloverindustries.co.bw
+- **Group 1: name** (`app/contact/page.tsx:273`): Request for Quote
+- **Group 1: email 1** (`app/contact/page.tsx:277`): sales@cloverindustries.co.bw
+- **Group 1: email 2** (`app/contact/page.tsx:283`): khofi.gabosekwe@cloverindustries.co.bw
+- **Group 1: email 3** (`app/contact/page.tsx:289`): sanka@cloverindustries.co.bw
+- **Group 2: name** (`app/contact/page.tsx:296`): Customer complaints
+- **Group 2: email** (`app/contact/page.tsx:300`): sanka@cloverindustries.co.bw
 
 ## 4.8 Side panel: browse by category
 
-- **Heading** (`app/contact/page.tsx:313`): Browse by Category
+- **Heading** (`app/contact/page.tsx:311`): Browse by Category
 
 The category names are from section 7.8.
 
@@ -459,7 +457,7 @@ Each article shows a category, headline, summary, date and reading time. The fir
 - **Article 3: reading time** (`lib/news.ts:41`): 5 min read
 - **Article 4: category** (`lib/news.ts:47`): Products
 - **Article 4: headline** (`lib/news.ts:48`): Philips Medical Equipment Now Fully Serviced Locally
-- **Article 4: summary ⚠ (note 3)** (`lib/news.ts:50`): Clover Chemical Industries has expanded its technical service capability for Philips Medical imaging and diagnostic equipment, reducing downtime for hospitals and clinics across Botswana.
+- **Article 4: summary ⚠ (note 3)** (`lib/news.ts:50`): Clover Chemical Industries has expanded its service capability for Philips Medical imaging and diagnostic equipment, reducing downtime for hospitals and clinics across Botswana.
 - **Article 4: date** (`lib/news.ts:51`): 5 Feb 2025
 - **Article 4: reading time** (`lib/news.ts:52`): 3 min read
 - **Article 5: category** (`lib/news.ts:58`): Company News
@@ -487,7 +485,7 @@ Page: `app/products/(catalogue)/page.tsx`
 - **Description** (`app/products/(catalogue)/page.tsx:26`): Browse the full Clover Industries catalogue — chemicals, equipment, PPE, and medical and laboratory supplies across every division.
 - **Page heading (hidden, for search engines)** (`app/products/(catalogue)/page.tsx:44`): All Products
 - **Bottom banner: heading** (`app/products/(catalogue)/page.tsx:66`): Can't find what you need?
-- **Bottom banner: text** (`app/products/(catalogue)/page.tsx:69`): We source on request. Speak to our technical team about custom formulations and specialist procurement.
+- **Bottom banner: text** (`app/products/(catalogue)/page.tsx:69`): We source on request. Speak to our team about custom formulations and specialist procurement.
 - **Bottom banner: button** (`app/products/(catalogue)/page.tsx:77`): Contact Us
 
 ## 7.2 Division product pages — `/chemical/products`, `/medical/products`
@@ -520,7 +518,7 @@ Component: `components/product-catalogue.tsx`, `components/product-search.tsx`
 - **Phone: clear button** (`components/product-catalogue.tsx:344`): Clear
 - **Phone: done button** (`components/product-catalogue.tsx:347`): Done
 - **Result count** (`components/product-catalogue.tsx:371`): {count} product{s}
-- **No results message** (`components/product-catalogue.tsx:387`): No products matched your filters. Try a different term, or speak to our technical team about custom sourcing.
+- **No results message** (`components/product-catalogue.tsx:387`): No products matched your filters. Try a different term, or speak to our team about custom sourcing.
 - **No results: clear link** (`components/product-catalogue.tsx:397`): Clear filters
 - **No results: contact link** (`components/product-catalogue.tsx:404`): Contact Us →
 
@@ -532,7 +530,7 @@ Page: `app/products/[category]/page.tsx`. The category name and description come
 - **Small label** (`app/products/[category]/page.tsx:94`): Product Range
 - **Count** (`app/products/[category]/page.tsx:134`): {count} products
 - **Bottom banner: heading** (`app/products/[category]/page.tsx:156`): Need something specific?
-- **Bottom banner: text** (`app/products/[category]/page.tsx:159`): We source on request. Speak to our technical team about custom grades, pack sizes, and specialist procurement.
+- **Bottom banner: text** (`app/products/[category]/page.tsx:159`): We source on request. Speak to our team about custom grades, pack sizes, and specialist procurement.
 - **Bottom banner: button** (`app/products/[category]/page.tsx:167`): Contact Us
 
 ## 7.5 Product page — `/products/{category}/{product}`
@@ -935,7 +933,7 @@ Component: `components/medical-why-partner.tsx`. Three blocks numbered 01–03 (
 - **Block 1: text** (`components/medical-why-partner.tsx:4`): From heavy diagnostic machinery and IT integration to everyday laboratory glassware, pipettes, and consumables, we are your single-source healthcare and research provider.
 - **Block 2: heading** (`components/medical-why-partner.tsx:7`): Uncompromising Quality Standards
 - **Block 2: text** (`components/medical-why-partner.tsx:8`): Every item in our catalog meets strict international medical, scientific, and regulatory benchmarks.
-- **Block 3: heading** (`components/medical-why-partner.tsx:11`): Local Technical Presence
+- **Block 3: heading** (`components/medical-why-partner.tsx:11`): Local Presence
 - **Block 3: text** (`components/medical-why-partner.tsx:12`): Our Gaborone-based engineering support ensures rapid response times and reliable on-site technical assistance whenever your facility or institution needs it.
 
 ## 10.8 Technical and after-sales support
@@ -943,7 +941,7 @@ Component: `components/medical-why-partner.tsx`. Three blocks numbered 01–03 (
 Component: `components/medical-services.tsx`. Three blocks numbered 01–03 (fixed).
 
 - **Small label** (`components/medical-services.tsx:21`): Beyond the Sale
-- **Heading** (`components/medical-services.tsx:24`): Technical & after-sales support.
+- **Heading** (`components/medical-services.tsx:24`): After-sales support.
 - **Block 1: heading** (`components/medical-services.tsx:3`): Professional Installation & Commissioning
 - **Block 1: text** (`components/medical-services.tsx:4`): We manage the complete delivery, assembly, and integration of all medical and laboratory systems to ensure they function seamlessly within your existing facility infrastructure.
 - **Block 2: heading** (`components/medical-services.tsx:7`): Precision Calibration & Quality Assurance
@@ -963,7 +961,7 @@ Component: `components/divisions/medical-home.tsx`
 
 # 11. Emails sent to customers
 
-When a visitor sends an RFQ or a contact message, they get one email, and the right Clover inbox is copied. Every product enquiry and RFQ goes to `sales@cloverindustries.co.bw`. General messages (category "Other / Not sure" or none) go to `info@cloverindustries.co.bw`. Where it goes is set in `config/enquiry-routing.ts`, not in this file.
+When a visitor sends an RFQ or a contact message, they get one email, and the right Clover inbox is copied. Every RFQ goes to `sales@`, `khofi.gabosekwe@` and `sanka@cloverindustries.co.bw`. Contact-form messages about a product go to `sales@cloverindustries.co.bw`. General messages (category "Other / Not sure" or none) go to `info@cloverindustries.co.bw`. Where it goes is set in `config/enquiry-routing.ts`, not in this file.
 
 ## 11.1 Quote request email (RFQ)
 
