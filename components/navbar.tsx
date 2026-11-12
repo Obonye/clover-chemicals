@@ -161,8 +161,15 @@ export const Navbar = ({ categories }: NavbarProps) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isProductsOpen]);
 
+  // Over a dark photo hero the accent can be black (the group theme in light
+  // mode), which vanishes into the image, so the hover/open state there is a
+  // softer white instead. On a light hero or the solid bar the accent is fine.
+  const overDarkHero = isTransparent && navTextStyle !== "dark";
+  const navHoverClass = overDarkHero ? "hover:text-white/70" : "hover:text-accent";
+  const navOpenClass = overDarkHero ? "text-white/70" : "text-accent";
   const navLinkClass = clsx(
-    "text-sm font-semibold whitespace-nowrap transition-colors duration-150 tracking-wide uppercase hover:text-accent",
+    "text-sm font-semibold whitespace-nowrap transition-colors duration-150 tracking-wide uppercase",
+    navHoverClass,
     isTransparent ? heroText : "text-foreground",
   );
 
@@ -217,7 +224,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
               className={clsx(
                 navLinkClass,
                 "group flex cursor-pointer items-center",
-                isProductsOpen && "text-accent",
+                isProductsOpen && navOpenClass,
               )}
               data-open={isProductsOpen}
               onClick={() => setIsProductsOpen((prev) => !prev)}
