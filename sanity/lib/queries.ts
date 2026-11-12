@@ -132,6 +132,15 @@ export const ACTIVE_PROMOTION_QUERY = defineQuery(`
   }
 `);
 
+/** One category by slug, for validating a `?category=` link on the RFQ page (CI-74). */
+export const RFQ_CATEGORY_QUERY = defineQuery(`
+  *[_type == "productCategory" && slug.current == $slug][0] {
+    "slug": slug.current,
+    label,
+    division
+  }
+`);
+
 /**
  * The current state of specific products, by `_id` — the /rfq page re-checks
  * a browser-held list against this (deleted, unavailable, renamed, pack size

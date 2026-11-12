@@ -5,6 +5,8 @@ import { Button } from "@heroui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
+import { resolveRfqCategory } from "@/app/rfq/actions";
+
 import { useCatalogState } from "@/components/catalog-state";
 import { RfqDetailsForm, type RfqSubmitSuccess } from "@/components/rfq/rfq-details-form";
 import { RfqCategoryRow } from "@/components/rfq/rfq-category-row";
@@ -168,6 +170,55 @@ export const RfqList = () => {
   const freshness = useRfqFreshness(catalogEnabled);
   const router = useRouter();
   const [sent, setSent] = React.useState(false);
+  const { addItem } = useRfq();
+  // A `?category=` link adds that range once, then the URL is cleaned so a
+  // refresh or back/forward can't add it again (CI-74).
+  const [entry, setEntry] = React.useState<"checking" | "done">("checking");
+  const [notice, setNotice] = React.useState<string | null>(null);
+  const entryHandled = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!hydrated || entryHandled.current) return;
+    entryHandled.current = true;
+
+    const slug = new URLSearchParams(window.location.search).get("category");
+
+    if (slug === null) {
+      setEntry("done");
+
+      return;
+    }
+    // Drop the parameter straight away, whatever it turns out to be.
+    window.history.replaceState(null, "", "/rfq");
+
+    resolveRfqCategory(slug)
+      .then((category) => {
+        if (!category) return;
+        const result = addItem({
+          type: "category",
+          categorySlug: category.slug,
+          categoryName: category.name,
+          division: category.division,
+          details: "",
+        });
+
+        setNotice(
+          result === "full"
+            ? "Your RFQ is full. Send it or remove something before adding more."
+            : result === "merged"
+              ? `${category.name} is already in your list. Tell us what you need below.`
+              : `${category.name} added. Tell us what you need below.`,
+        );
+        // Wait for the row to render, then put the cursor in its details field.
+        setTimeout(() => {
+          document.querySelector<HTMLTextAreaElement>(`[data-rfq-details="category::${category.slug}"]`)?.focus();
+        }, 150);
+      })
+      .catch(() => {
+        // Couldn't check the link: show the normal RFQ page.
+      })
+      .finally(() => setEntry("done"));
+  }, [hydrated, addItem]);
 
   // While the catalogue is off, saved product lines are neither shown nor
   // checked; category lines are what the RFQ is for (CI-72, CI-73).
@@ -194,7 +245,7 @@ export const RfqList = () => {
   );
 
   if (sent) return <LoadingState />;
-  if (!hydrated || !catalog.ready) return <LoadingState />;
+  if (!hydrated || !catalog.ready || entry !== "done") return <LoadingState />;
   if (visibleCount === 0) return catalogEnabled ? <EmptyState /> : <UnavailableState />;
 
   const flagged =
@@ -213,6 +264,10 @@ export const RfqList = () => {
             </Button>
           </p>
         )}
+
+        <p aria-live="polite" className={notice ? "rounded-lg bg-accent-soft px-4 py-3 text-sm text-accent-soft-foreground" : "sr-only"} role="status">
+          {notice}
+        </p>
 
         {categoryLines.length > 0 && (
           <section aria-labelledby="rfq-ranges-heading">

@@ -2,6 +2,8 @@
 
 import type { RfqContact, RfqLineItem, RfqProductLine } from "@/lib/rfq/types";
 
+import { client } from "@/sanity/lib/client";
+import { RFQ_CATEGORY_QUERY } from "@/sanity/lib/queries";
 import { clientIp } from "@/lib/client-ip";
 import { isCatalogEnabled } from "@/lib/catalog/visibility";
 import { sendRfqEmails } from "@/lib/rfq/email";
@@ -87,6 +89,38 @@ async function rebuildFromSanity(allItems: RfqLineItem[]) {
   }
 
   return { lines, dropped };
+}
+
+export type RfqCategoryEntry = {
+  slug: string;
+  name: string;
+  division: "chemicals" | "medical";
+};
+
+const CATEGORY_SLUG = /^[a-z0-9-]{1,100}$/;
+
+/**
+ * Resolves a `?category=` link from the RFQ page against Sanity (CI-74).
+ * The raw query value is never trusted: only a slug that exists comes back,
+ * with its name and division taken from Sanity. Anything else is null.
+ */
+export async function resolveRfqCategory(slug: string): Promise<RfqCategoryEntry | null> {
+  if (typeof slug !== "string" || !CATEGORY_SLUG.test(slug)) return null;
+
+  try {
+    const category = await client.fetch<{
+      slug: string | null;
+      label: string | null;
+      division: string | null;
+    } | null>(RFQ_CATEGORY_QUERY, { slug }, { perspective: "published", stega: false, cache: "no-store" });
+
+    if (!category?.slug || !category.label) return null;
+    if (category.division !== "chemicals" && category.division !== "medical") return null;
+
+    return { slug: category.slug, name: category.label, division: category.division };
+  } catch {
+    return null;
+  }
 }
 
 export async function submitRfq(
