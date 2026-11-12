@@ -1,10 +1,9 @@
 import type { ContactMessage } from "./schema";
 
-import { rfqInboxes } from "@/config/enquiry-routing";
+import { enquiryTypes, inboxesForEnquiry } from "@/config/enquiry-routing";
 import { formatBotswanaTime } from "@/lib/email/format";
 import { sendEmail, staffCc } from "@/lib/email/send";
 import { renderEnquiryEmail } from "@/lib/email/templates/enquiry-email";
-import { categories } from "@/lib/products";
 
 export type ContactEmailPayload = {
   reference: string;
@@ -12,17 +11,13 @@ export type ContactEmailPayload = {
   submittedAt: Date;
 };
 
-function productLabel(product: string | undefined): string | undefined {
-  if (!product) return undefined;
-  if (product === "other") return "Other / Not sure";
-
-  return categories.find((category) => category.id === product)?.label ?? product;
-}
+const enquiryLabel = (id: string): string => enquiryTypes.find((type) => type.id === id)?.label ?? id;
 
 /**
  * Sends a contact-form message as a single email: to the sender, with the
- * team inboxes on CC (one Resend send per enquiry) — the same people as an RFQ,
- * see config/enquiry-routing.ts. Replies go to them. Throwing surfaces as the form's "couldn't send" error.
+ * inboxes for its nature of enquiry on CC (one Resend send per enquiry) — the
+ * team for most, one person for a complaint; see config/enquiry-routing.ts.
+ * Replies go to them. Throwing surfaces as the form's "couldn't send" error.
  */
 export async function sendContactEmails({ reference, message, submittedAt }: ContactEmailPayload): Promise<void> {
   const { html, text, attachments } = await renderEnquiryEmail({
@@ -39,15 +34,15 @@ export async function sendContactEmails({ reference, message, submittedAt }: Con
       ["Company", message.company],
       ["Email", message.email],
       ["Phone", message.phone],
-      ["Product interest", productLabel(message.product)],
+      ["Nature of enquiry", enquiryLabel(message.enquiryType)],
       ["Message", message.message],
     ],
   });
 
   await sendEmail({
     to: message.email,
-    cc: staffCc(rfqInboxes, message.email),
-    replyTo: staffCc(rfqInboxes, ""),
+    cc: staffCc(inboxesForEnquiry(message.enquiryType), message.email),
+    replyTo: staffCc(inboxesForEnquiry(message.enquiryType), ""),
     idempotencyKey: `contact-${reference}`,
     subject: `We've received your message ${reference}`,
     html,

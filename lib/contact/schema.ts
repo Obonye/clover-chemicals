@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { enquiryTypeIds } from "@/config/enquiry-routing";
+
 /** Browser forms send "" for untouched optional inputs; treat that as absent. */
 const optionalText = (max: number) =>
   z.preprocess(
@@ -18,8 +20,8 @@ export const ContactSchema = z.object({
     (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
     z.string().trim().regex(PHONE_PATTERN, "Enter a valid phone number").optional(),
   ),
-  /** A `categories[].id` from lib/products.ts, "other", or absent. */
-  product: optionalText(80),
+  /** One of config/enquiry-routing.ts `enquiryTypes`. Decides who receives it. */
+  enquiryType: z.enum(enquiryTypeIds, "Choose the nature of your enquiry"),
   message: z.string().trim().min(5).max(4000),
 });
 
