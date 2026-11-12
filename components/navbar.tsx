@@ -102,6 +102,9 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const homeHref = division ? `/${division.slug}` : "/";
   const browseLabel = division?.browseLabel ?? "Browse Products";
   const browseHref = division ? `/${division.slug}/products` : "/products";
+  // "Browse Products" belongs on the division sites only. The group home
+  // keeps just the "Get a Quote" shortcut (CI-32).
+  const showBrowse = pathname !== "/";
 
   useEffect(() => setMounted(true), []);
 
@@ -295,12 +298,14 @@ export const Navbar = ({ categories }: NavbarProps) => {
             className={isTransparent ? heroControl : "text-muted hover:text-foreground"}
             variant="desktop"
           />
-          <NextLink
-            className="whitespace-nowrap rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-            href={browseHref}
-          >
-            {browseLabel}
-          </NextLink>
+          {showBrowse && (
+            <NextLink
+              className="whitespace-nowrap rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+              href={browseHref}
+            >
+              {browseLabel}
+            </NextLink>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -461,15 +466,17 @@ export const Navbar = ({ categories }: NavbarProps) => {
                   </button>
                 )}
               </Drawer.Body>
-              <Drawer.Footer className="flex flex-col gap-3">
-                <NextLink
-                  className="block w-full rounded border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
-                  href={browseHref}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {browseLabel}
-                </NextLink>
-              </Drawer.Footer>
+              {showBrowse && (
+                <Drawer.Footer className="flex flex-col gap-3">
+                  <NextLink
+                    className="block w-full rounded border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
+                    href={browseHref}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {browseLabel}
+                  </NextLink>
+                </Drawer.Footer>
+              )}
             </Drawer.Dialog>
           </Drawer.Content>
         </Drawer.Backdrop>
