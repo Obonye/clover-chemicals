@@ -21,6 +21,8 @@ function groupByDivision(items: RfqLineItem[]): EnquiryGroup[] {
   const groups = new Map<string, EnquiryGroup>();
 
   for (const line of items) {
+    // Category lines get their own section (CI-75).
+    if (line.type !== "product") continue;
     const division = getDivisionBySanityValue(line.division);
     const key = division?.slug ?? line.division;
     const group = groups.get(key) ?? { name: division?.name ?? line.division, lines: [] };

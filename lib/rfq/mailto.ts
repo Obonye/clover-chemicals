@@ -9,6 +9,11 @@ import { productInbox } from "@/config/enquiry-routing";
  */
 export function buildRfqMailto(items: RfqLineItem[]): string {
   const lines = items.map((line, index) => {
+    if (line.type === "category") {
+      const extras = [line.quantity ? `x ${line.quantity}` : "", line.packSize].filter(Boolean).join(", ");
+
+      return `${index + 1}. ${line.categoryName} (range): ${line.details.trim() || "(tell us what you need)"}${extras ? ` - ${extras}` : ""}`;
+    }
     const detail = [line.grade, line.packLabel].filter(Boolean).join(", ");
     const note = line.note ? ` (Note: ${line.note})` : "";
 

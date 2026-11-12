@@ -1,7 +1,7 @@
 "use client";
 
 import type { RfqLineCheck } from "@/lib/rfq/reconcile";
-import type { RfqLineItem as RfqLine } from "@/lib/rfq/types";
+import type { RfqProductLine as RfqLine } from "@/lib/rfq/types";
 
 import * as React from "react";
 import { Button, Input, Tooltip } from "@heroui/react";

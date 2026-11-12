@@ -13,12 +13,12 @@ export const rfqAccessibleName = (count: number) =>
 /** Item count once the store has read localStorage, 0 before that — so the
  *  server render and first client render always agree. */
 export const useRfqNavCount = () => {
-  const { count, hydrated } = useRfq();
-  // The saved list holds products, so it counts for nothing while the
-  // catalogue is off (CI-72).
+  const { items, hydrated } = useRfq();
+  // Saved products count for nothing while the catalogue is off (CI-72);
+  // product-range requests always count (CI-73).
   const catalogEnabled = useCatalogEnabled();
 
-  return hydrated && catalogEnabled ? count : 0;
+  return hydrated ? items.filter((line) => line.type === "category" || catalogEnabled).length : 0;
 };
 
 type BadgeProps = {
@@ -109,8 +109,9 @@ export const RfqCartLink = () => {
   const count = useRfqNavCount();
   const catalogEnabled = useCatalogEnabled();
 
-  // No products to collect while the catalogue is off, so no cart.
-  if (!catalogEnabled) return null;
+  // No products to collect while the catalogue is off: the cart only shows
+  // once there's a product-range request in it.
+  if (!catalogEnabled && count === 0) return null;
 
   return (
     <NextLink

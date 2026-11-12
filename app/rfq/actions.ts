@@ -1,6 +1,6 @@
 "use server";
 
-import type { RfqContact, RfqLineItem } from "@/lib/rfq/types";
+import type { RfqContact, RfqLineItem, RfqProductLine } from "@/lib/rfq/types";
 
 import { clientIp } from "@/lib/client-ip";
 import { isCatalogEnabled } from "@/lib/catalog/visibility";
@@ -63,7 +63,8 @@ function parseItems(raw: FormDataEntryValue | null): unknown {
  * product is gone, unavailable, or whose pack size no longer exists are
  * dropped and reported back.
  */
-async function rebuildFromSanity(items: RfqLineItem[]) {
+async function rebuildFromSanity(allItems: RfqLineItem[]) {
+  const items = allItems.filter((line): line is RfqProductLine => line.type === "product");
   const snapshots = await lookupRfqProducts(items.map((line) => line.productId));
   const byId = new Map(snapshots.map((product) => [product._id, product]));
   const lines: RfqLineItem[] = [];
