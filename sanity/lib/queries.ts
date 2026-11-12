@@ -141,6 +141,15 @@ export const RFQ_CATEGORY_QUERY = defineQuery(`
   }
 `);
 
+/** Categories by slug, for re-checking product-range lines when an RFQ is sent (CI-75). */
+export const RFQ_CATEGORIES_QUERY = defineQuery(`
+  *[_type == "productCategory" && slug.current in $slugs] {
+    "slug": slug.current,
+    label,
+    division
+  }
+`);
+
 /**
  * The current state of specific products, by `_id` — the /rfq page re-checks
  * a browser-held list against this (deleted, unavailable, renamed, pack size

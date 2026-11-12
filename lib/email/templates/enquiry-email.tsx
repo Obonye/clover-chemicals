@@ -49,6 +49,17 @@ export type EnquiryGroup = {
   lines: EnquiryLine[];
 };
 
+/** A request for a whole product range, in the buyer's own words (CI-75). */
+export type EnquiryRequest = {
+  /** The range, e.g. "Pool Chemicals". */
+  category: string;
+  /** e.g. "Clover Chemicals". */
+  division?: string;
+  details: string;
+  quantity?: number;
+  packSize?: string;
+};
+
 export type EnquiryEmailProps = {
   /** The inbox-list preview text. */
   preview: string;
@@ -62,6 +73,8 @@ export type EnquiryEmailProps = {
   intro: string;
   details: Array<[label: string, value: string | undefined]>;
   groups?: EnquiryGroup[];
+  /** Product-range requests, listed in their own section after the products. */
+  requests?: EnquiryRequest[];
 };
 
 function SectionTitle({ children }: { children: string }) {
@@ -79,6 +92,7 @@ export function EnquiryEmail({
   intro,
   details,
   groups,
+  requests,
 }: EnquiryEmailProps) {
   const rows = details.filter((row): row is [string, string] => Boolean(row[1]));
 
@@ -170,6 +184,31 @@ export function EnquiryEmail({
             </Section>
           )}
 
+          {/* Product ranges */}
+          {requests && requests.length > 0 && (
+            <Section className="px" style={{ padding: "16px 32px 8px" }}>
+              <SectionTitle>Product ranges requested</SectionTitle>
+              {requests.map((request, requestIndex) => (
+                <Section key={requestIndex} style={{ borderBottom: `1px solid ${rule}`, padding: "10px 0" }}>
+                  <Text style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: "20px", color: ink }}>
+                    {request.category}
+                    {request.division ? <span style={{ fontWeight: 400, color: muted }}> · {request.division}</span> : null}
+                  </Text>
+                  <Text style={{ margin: "4px 0 0", fontSize: 14, lineHeight: "20px", color: ink, whiteSpace: "pre-wrap" }}>
+                    {request.details}
+                  </Text>
+                  {(request.quantity || request.packSize) && (
+                    <Text style={{ margin: "4px 0 0", fontSize: 13, lineHeight: "18px", color: muted }}>
+                      {[request.quantity ? `Quantity: ${request.quantity}` : "", request.packSize ? `Pack size: ${request.packSize}` : ""]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </Text>
+                  )}
+                </Section>
+              ))}
+            </Section>
+          )}
+
           <Section className="px" style={{ padding: "16px 32px 28px" }}>
             <Text style={{ margin: 0, fontSize: 14, lineHeight: "22px", color: ink }}>
               Need to add or change something? Reply to this email, or call {siteConfig.contact.phone} ({siteConfig.contact.hours}).
@@ -198,7 +237,7 @@ export function EnquiryEmail({
  * clients read. Written by hand because the generated version runs table
  * labels into their values.
  */
-function enquiryText({ kind, reference, receivedAt, name, intro, details, groups }: EnquiryEmailProps): string {
+function enquiryText({ kind, reference, receivedAt, name, intro, details, groups, requests }: EnquiryEmailProps): string {
   const detailLines = details
     .filter((row): row is [string, string] => Boolean(row[1]))
     .map(([label, value]) => `${label}: ${value}`)
@@ -216,6 +255,22 @@ function enquiryText({ kind, reference, receivedAt, name, intro, details, groups
         .join("\n"),
     )
     .join("\n\n");
+  const requestBlock = (requests ?? []).length
+    ? [
+        "Product ranges requested",
+        ...(requests ?? []).map((request) =>
+          [
+            `  - ${request.category}${request.division ? ` (${request.division})` : ""}`,
+            `      ${request.details.replace(/\n/g, "\n      ")}`,
+            request.quantity || request.packSize
+              ? `      ${[request.quantity ? `Quantity: ${request.quantity}` : "", request.packSize ? `Pack size: ${request.packSize}` : ""].filter(Boolean).join(" · ")}`
+              : "",
+          ]
+            .filter(Boolean)
+            .join("\n"),
+        ),
+      ].join("\n")
+    : "";
 
   return [
     `Hi ${name},`,
@@ -223,6 +278,7 @@ function enquiryText({ kind, reference, receivedAt, name, intro, details, groups
     `${kind} reference: ${reference}\nReceived: ${receivedAt}`,
     detailLines,
     lineBlocks,
+    requestBlock,
     `Need to add or change something? Reply to this email, or call ${siteConfig.contact.phone} (${siteConfig.contact.hours}).`,
     `Clover Industries · ${branches.map((branch) => branch.name.replace(" Branch", "")).join(" · ")}, Botswana\n${SITE_URL}`,
   ]

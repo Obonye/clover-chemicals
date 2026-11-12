@@ -1,11 +1,10 @@
 "use server";
 
-import type { RfqContact, RfqLineItem, RfqProductLine } from "@/lib/rfq/types";
+import type { RfqCategoryLine, RfqContact, RfqLineItem, RfqProductLine } from "@/lib/rfq/types";
 
 import { client } from "@/sanity/lib/client";
-import { RFQ_CATEGORY_QUERY } from "@/sanity/lib/queries";
+import { RFQ_CATEGORIES_QUERY, RFQ_CATEGORY_QUERY } from "@/sanity/lib/queries";
 import { clientIp } from "@/lib/client-ip";
-import { isCatalogEnabled } from "@/lib/catalog/visibility";
 import { sendRfqEmails } from "@/lib/rfq/email";
 import { lookupRfqProducts } from "@/lib/rfq/lookup";
 import { checkRateLimit } from "@/lib/rfq/rate-limit";
@@ -57,6 +56,44 @@ function parseItems(raw: FormDataEntryValue | null): unknown {
   } catch {
     return [];
   }
+}
+
+/**
+ * Re-checks product-range lines against Sanity (CI-75): the name and
+ * division come from the published category, never from the payload.
+ * A range that no longer exists is dropped and reported.
+ */
+async function rebuildCategoriesFromSanity(items: RfqCategoryLine[]) {
+  if (items.length === 0) return { lines: [] as RfqLineItem[], dropped: [] as string[] };
+
+  const found = await client.fetch<{ slug: string | null; label: string | null; division: string | null }[]>(
+    RFQ_CATEGORIES_QUERY,
+    { slugs: Array.from(new Set(items.map((line) => line.categorySlug))) },
+    { perspective: "published", stega: false, cache: "no-store" },
+  );
+  const bySlug = new Map(found.map((category) => [category.slug, category]));
+  const lines: RfqLineItem[] = [];
+  const dropped: string[] = [];
+
+  for (const line of items) {
+    const category = bySlug.get(line.categorySlug);
+
+    if (
+      !category?.label ||
+      (category.division !== "chemicals" && category.division !== "medical")
+    ) {
+      dropped.push(line.categoryName);
+      continue;
+    }
+    lines.push({
+      ...line,
+      categoryName: category.label,
+      division: category.division,
+      details: line.details.trim(),
+    });
+  }
+
+  return { lines, dropped };
 }
 
 /**
@@ -137,15 +174,6 @@ export async function submitRfq(
     return { status: "success", reference: createRfqReference(), dropped: [] };
   }
 
-  // Requests are built from products, so none are accepted while the
-  // catalogue is off (CI-72).
-  if (!(await isCatalogEnabled())) {
-    return {
-      status: "error",
-      message: "Product requests aren't open online yet. Please use the contact form or call us.",
-    };
-  }
-
   const parsed = RfqSubmissionSchema.safeParse({
     items: parseItems(formData.get("items")),
     contact,
@@ -159,6 +187,10 @@ export async function submitRfq(
     for (const issue of parsed.error.issues) {
       const [scope, field] = issue.path;
 
+      if (scope === "items" && issue.path[2] === "details") {
+        // A product range with nothing written for it: say which one.
+        return { status: "error", message: issue.message };
+      }
       if (scope === "contact" && typeof field === "string") {
         const name = field as RfqContactField;
 
@@ -193,10 +225,16 @@ export async function submitRfq(
     };
   }
 
-  let rebuilt: Awaited<ReturnType<typeof rebuildFromSanity>>;
+  let rebuilt: { lines: RfqLineItem[]; dropped: string[] };
 
   try {
-    rebuilt = await rebuildFromSanity(parsed.data.items);
+    const items = parsed.data.items;
+    const [products, ranges] = await Promise.all([
+      rebuildFromSanity(items),
+      rebuildCategoriesFromSanity(items.filter((line): line is RfqCategoryLine => line.type === "category")),
+    ]);
+
+    rebuilt = { lines: [...products.lines, ...ranges.lines], dropped: [...products.dropped, ...ranges.dropped] };
   } catch {
     return {
       status: "error",
@@ -207,7 +245,7 @@ export async function submitRfq(
   if (rebuilt.lines.length === 0) {
     return {
       status: "error",
-      message: "None of the products in your list can be quoted right now. Please review your list and try again.",
+      message: "None of the items in your list can be quoted right now. Please review your list and try again.",
     };
   }
 
