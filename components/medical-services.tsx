@@ -21,7 +21,7 @@ export const MedicalServices = () => {
           Beyond the Sale
         </p>
         <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-heading lg:mb-16 lg:text-4xl">
-          Technical &amp; after-sales support.
+          After-sales support.
         </h2>
 
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-3">

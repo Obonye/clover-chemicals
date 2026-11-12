@@ -3,7 +3,7 @@ import NextLink from "next/link";
 
 type CtaBannerProps = {
   /** Duotone highlight colour as 0–1 sRGB channels. Defaults to Clover
-   *  Green; the group home passes its neutral stone (CI-15). */
+   *  Green; the group home passes a neutral grey (CI-15). */
   tint?: [number, number, number];
 };
 
@@ -54,7 +54,7 @@ export const CtaBanner = ({ tint = CLOVER_GREEN }: CtaBannerProps) => {
               Ready to source with confidence?
             </h2>
             <p className="mt-3 text-base leading-relaxed text-white/70" style={{ maxWidth: "48ch" }}>
-              Tell us what you need. Our technical team responds within one business
+              Tell us what you need. Our team responds within one business
               day with specifications, pricing, and availability.
             </p>
           </div>

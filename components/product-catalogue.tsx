@@ -385,7 +385,7 @@ export const ProductCatalogue = ({
               <div className="flex flex-col items-start gap-4 py-4">
                 <p className="text-base text-muted">
                   No products matched your filters. Try a different term, or speak to
-                  our technical team about custom sourcing.
+                  our team about custom sourcing.
                 </p>
                 <div className="flex items-center gap-6">
                   {hasActiveFilters && (

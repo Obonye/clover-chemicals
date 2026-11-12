@@ -1,4 +1,12 @@
 import type { RfqContact, RfqLineItem } from "./types";
+import type { EnquiryGroup } from "@/lib/email/templates/enquiry-email";
+
+import { getBranch } from "@/config/branches";
+import { getDivisionBySanityValue } from "@/config/divisions";
+import { rfqInboxes } from "@/config/enquiry-routing";
+import { formatBotswanaTime } from "@/lib/email/format";
+import { sendEmail, staffCc } from "@/lib/email/send";
+import { renderEnquiryEmail } from "@/lib/email/templates/enquiry-email";
 
 export type RfqEmailPayload = {
   reference: string;
@@ -8,26 +16,81 @@ export type RfqEmailPayload = {
   submittedAt: Date;
 };
 
-/**
- * Sends the RFQ to the relevant division inbox(es) and a confirmation to the
- * buyer.
- *
- * STUB: email delivery is its own ticket (provider, templates, routing per
- * division). Until then this only logs in development, so the submit path can
- * be exercised end to end. Throwing here surfaces as a "couldn't send" error
- * in the form, which is the contract the real implementation should keep.
- */
-export async function sendRfqEmails(payload: RfqEmailPayload): Promise<void> {
-  if (process.env.NODE_ENV !== "production") {
-    const { fulfilment, branch, deliveryLocation } = payload.contact;
+/** Lines grouped under the division that sells them, so the email reads clearly. */
+function groupByDivision(items: RfqLineItem[]): EnquiryGroup[] {
+  const groups = new Map<string, EnquiryGroup>();
 
-    // eslint-disable-next-line no-console
-    console.info(
-      `[rfq] ${payload.reference} from ${payload.contact.email} (email stubbed)\n` +
-        `  ${fulfilment === "collection" ? `Collection from ${branch}` : `Delivery to ${deliveryLocation}`}\n` +
-        payload.items
-          .map((l) => `  - ${l.quantity} × ${l.name}${l.packLabel ? ` (${l.packLabel})` : ""} [${l.division}]`)
-          .join("\n"),
-    );
+  for (const line of items) {
+    const division = getDivisionBySanityValue(line.division);
+    const key = division?.slug ?? line.division;
+    const group = groups.get(key) ?? { name: division?.name ?? line.division, lines: [] };
+
+    group.lines.push({
+      name: line.name,
+      meta: [line.grade, line.packLabel].filter(Boolean).join(" · ") || undefined,
+      quantity: line.quantity,
+      note: line.note,
+    });
+    groups.set(key, group);
   }
+
+  return Array.from(groups.values());
+}
+
+function fulfilmentSummary({ fulfilment, branch, deliveryLocation }: RfqContact): string {
+  if (fulfilment === "collection") {
+    return `Collection from ${(branch && getBranch(branch)?.name) ?? branch ?? "a branch"}`;
+  }
+
+  return `Delivery to ${deliveryLocation}`;
+}
+
+/**
+ * Sends the RFQ as a single email: to the buyer, with the RFQ inboxes on CC (every RFQ is
+ * about products — see config/enquiry-routing.ts). One Resend send per request
+ * keeps usage low on the free tier, and it can't half-succeed — either everyone
+ * got it or the form shows "couldn't send".
+ *
+ * Replies go to Sales so the buyer's answer reaches staff; the team can
+ * reply-all to answer the buyer directly. Throwing surfaces as the form's
+ * "couldn't send" error.
+ */
+export async function sendRfqEmails({ reference, contact, items, submittedAt }: RfqEmailPayload): Promise<void> {
+  const groups = groupByDivision(items);
+  const { html, text, attachments } = await renderEnquiryEmail({
+    preview: `We've received your quote request ${reference}. We'll respond within one business day.`,
+    heading: "We've received your quote request",
+    kind: "Quote request",
+    reference,
+    receivedAt: formatBotswanaTime(submittedAt),
+    name: contact.fullName,
+    intro:
+      "Thank you for your request. Our team will come back to you with availability and pricing within one business day.",
+    details: [
+      ["Name", contact.fullName],
+      ["Company", contact.company],
+      ["Email", contact.email],
+      ["Phone", contact.phone],
+      ["Fulfilment", fulfilmentSummary(contact)],
+      [
+        "Nearest branch",
+        contact.fulfilment === "delivery" && contact.branch ? getBranch(contact.branch)?.name : undefined,
+      ],
+      ["Required by", contact.requiredBy],
+      ["Message", contact.message],
+    ],
+    // Division headings only help when the request spans more than one.
+    groups: groups.length > 1 ? groups : groups.map((group) => ({ ...group, name: undefined })),
+  });
+
+  await sendEmail({
+    to: contact.email,
+    cc: staffCc(rfqInboxes, contact.email),
+    replyTo: staffCc(rfqInboxes, ""),
+    idempotencyKey: `rfq-${reference}`,
+    subject: `Quote request ${reference} received — ${contact.company}`,
+    html,
+    text,
+    attachments,
+  });
 }

@@ -29,7 +29,7 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-[var(--header-h)] lg:px-12">
-          {/* Always over a dark photo: the group accent is graphite in light
+          {/* Always over a dark photo: the group accent is black in light
               mode, so this uses a light tint instead. */}
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/70">
             Est. {siteConfig.foundedYear} · {years}+ Years · 100% Citizen-Owned · EDD Certified
@@ -163,8 +163,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stone duotone to match the group theme (CI-15). */}
-      <CtaBanner tint={[0.79, 0.73, 0.61]} />
+      {/* Black-and-white duotone to match the group theme (CI-15). */}
+      <CtaBanner tint={[0.8, 0.8, 0.8]} />
     </>
   );
 }

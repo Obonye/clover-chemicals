@@ -180,7 +180,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                 isTransparent ? heroText : "text-foreground",
               )}
             >
-              CLOVER
+              CLOVER INDUSTRIES
             </span>
             <span
               className={clsx(
@@ -188,7 +188,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                 isTransparent ? heroTextMuted : "text-muted",
               )}
             >
-              {division ? division.shortName : "Industries"}
+              {division ? division.shortName : "Lift as you rise"}
             </span>
           </div>
         </NextLink>

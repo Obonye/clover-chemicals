@@ -66,7 +66,7 @@ function BottomCta() {
               Can&apos;t find what you need?
             </h2>
             <p className="text-sm text-muted">
-              We source on request. Speak to our technical team about custom
+              We source on request. Speak to our team about custom
               formulations and specialist procurement.
             </p>
           </div>

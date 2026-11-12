@@ -97,7 +97,7 @@ export default function AboutPage() {
             Est. {siteConfig.foundedYear}
           </p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "16ch" }}>
-            {years} years of technical precision.
+            {years} years of precision.
           </h1>
         </div>
       </section>
@@ -289,7 +289,7 @@ export default function AboutPage() {
                 Ready to work with us?
               </h2>
               <p className="text-base text-muted" style={{ maxWidth: "48ch" }}>
-                Speak to our technical team about your supply needs — chemical,
+                Speak to our team about your supply needs — chemical,
                 medical, or lab. We respond within one business day.
               </p>
             </div>

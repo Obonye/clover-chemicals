@@ -47,7 +47,7 @@ export const articles: Article[] = [
     category: "Products",
     title: "Philips Medical Equipment Now Fully Serviced Locally",
     excerpt:
-      "Clover Chemical Industries has expanded its technical service capability for Philips Medical imaging and diagnostic equipment, reducing downtime for hospitals and clinics across Botswana.",
+      "Clover Chemical Industries has expanded its service capability for Philips Medical imaging and diagnostic equipment, reducing downtime for hospitals and clinics across Botswana.",
     date: "5 Feb 2025",
     readTime: "3 min read",
     image:
