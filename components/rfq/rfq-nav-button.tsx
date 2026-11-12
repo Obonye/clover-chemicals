@@ -116,7 +116,7 @@ export const RfqCartLink = () => {
   return (
     <NextLink
       aria-label={count > 0 ? rfqAccessibleName(count) : "Request for quote list"}
-      className="relative flex h-full min-w-11 shrink-0 items-center justify-center text-white/70 transition-colors duration-150 hover:text-white"
+      className="relative flex h-full min-w-11 shrink-0 items-center justify-center text-muted transition-colors duration-150 hover:text-foreground"
       href="/rfq"
     >
       <CartIcon />

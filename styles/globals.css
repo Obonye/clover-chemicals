@@ -73,8 +73,9 @@ body {
   --segment: oklch(100.00% 0.0015 144.21);
   --segment-foreground: oklch(21.03% 0.0015 144.21);
   --separator: oklch(92.00% 0.0015 144.21);
-  --specials: oklch(78% 0.17 92);
-  --specials-foreground: oklch(20% 0.02 90);
+  /* Black on white: a restrained palette, not a separate yellow (CI-33). */
+  --specials: var(--foreground);
+  --specials-foreground: var(--background);
   --success: oklch(73.29% 0.1941 137.66);
   --success-foreground: oklch(21.03% 0.0059 137.66);
   --surface: oklch(100.00% 0.0008 144.21);
@@ -123,8 +124,8 @@ body {
   --segment: oklch(39.64% 0.0015 144.21);
   --segment-foreground: oklch(99.11% 0.0015 144.21);
   --separator: oklch(25.00% 0.0015 144.21);
-  --specials: oklch(82% 0.16 92);
-  --specials-foreground: oklch(20% 0.02 90);
+  --specials: var(--foreground);
+  --specials-foreground: var(--background);
   --success: oklch(73.29% 0.1941 137.66);
   --success-foreground: oklch(21.03% 0.0059 137.66);
   --surface: oklch(21.03% 0.0030 144.21);
