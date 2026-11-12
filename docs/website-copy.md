@@ -20,7 +20,7 @@ Every piece of wording a visitor reads on the site, organised by page and then b
 
 These look like inconsistencies or leftovers. None of them is changed yet. Tell me what you'd like done.
 
-1. **"100% citizen-owned" vs "Majority citizen-owned".** Home and About say *100%*; the About pillar and the Chemical home pillar say *Majority* ("Majority citizen-owned and registered under…").
+1. ~~**"100% citizen-owned" vs "Majority citizen-owned".**~~ Resolved: it now says 100% citizen-owned everywhere.
 2. **"Eight divisions".** About, the Chemical home page and the stats say **8 Divisions**, but the site only has two division pages (Clover Chemicals and Clover Medical).
 3. **"Clover Chemical Industries" vs "Clover Industries".** The News page intro, the news articles and an image description use the old name; everything else uses "Clover Industries".
 4. **Placeholder brands on the Medical home page.** The "Brands We Work With" strip lists *Meridian Health, Solace Labs, Ionic Diagnostics, Halcyon Care, Vertex Medical, Nexora*. These look like stand-ins, not Clover's real partners (Philips Medical, Shimadzu and so on).
@@ -300,7 +300,7 @@ Four numbered blocks. The numbers 01–04 are fixed.
 - **Section label** (`app/about/page.tsx:236`): What Sets Us Apart
 - **Heading** (`app/about/page.tsx:239`): Built on compliance, backed by global brands.
 - **Block 1: heading** (`app/about/page.tsx:16`): Citizen-Owned & EDD Certified
-- **Block 1: text ⚠ (note 1)** (`app/about/page.tsx:17`): Majority citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.
+- **Block 1: text** (`app/about/page.tsx:17`): 100% citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.
 - **Block 2: heading** (`app/about/page.tsx:21`): Global Brands, Local Support
 - **Block 2: text** (`app/about/page.tsx:22`): Authorised distributor for Diversey, Kimberly Clark, Columbus, Coopers, Shimadzu, and Philips Medical — with world-class products backed by a team on the ground in Botswana.
 - **Block 3: heading** (`app/about/page.tsx:26`): Foremost in Medical & Lab Solutions
@@ -806,7 +806,7 @@ Component: `components/specials-banner.tsx`. Headline, description, picture and 
 
 ## 9.6 Heritage
 
-Component: `components/heritage-section.tsx`. ⚠ Notes 1 and 2 apply. Wording here repeats the About page and has to be changed in both places.
+Component: `components/heritage-section.tsx`. ⚠ Note 2 applies. Wording here repeats the About page and has to be changed in both places.
 
 - **Small label** (`components/heritage-section.tsx:36`): Est. {foundedYear}
 - **Heading** (`components/heritage-section.tsx:42`): Rooted in Botswana. Trusted by global industry.
@@ -821,7 +821,7 @@ Component: `components/heritage-section.tsx`. ⚠ Notes 1 and 2 apply. Wording h
 - **Row 4: label** (`components/heritage-section.tsx:7`): Certification
 - **Row 4: value** (`components/heritage-section.tsx:7`): EDD
 - **Block 1: heading** (`components/heritage-section.tsx:12`): Citizen-Owned & EDD Certified
-- **Block 1: text ⚠ (note 1)** (`components/heritage-section.tsx:13`): Majority citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.
+- **Block 1: text** (`components/heritage-section.tsx:13`): 100% citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.
 - **Block 2: heading** (`components/heritage-section.tsx:16`): Global Brands, Local Support
 - **Block 2: text** (`components/heritage-section.tsx:17`): Authorised distributor for Diversey, Kimberly Clark, Columbus, Coopers, Shimadzu, and Philips Medical, with world-class products backed by a team on the ground in Botswana.
 - **Block 3: heading** (`components/heritage-section.tsx:20`): Foremost in Medical & Lab Solutions
