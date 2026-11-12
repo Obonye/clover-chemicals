@@ -4,8 +4,10 @@ import NextLink from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 import { branchesInDisplayOrder } from "@/config/branches";
+import { useCatalogEnabled } from "@/components/catalog-state";
 import { divisions, getDivision } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
+import { browsable } from "@/lib/catalog/rules";
 import { categoryHref } from "@/sanity/lib/format";
 import type { ProductCategory } from "@/sanity/lib/types";
 
@@ -27,12 +29,14 @@ export const Footer = ({ categories }: FooterProps) => {
   // segment, so the footer never disagrees with the page it's attached to.
   const segment = useSelectedLayoutSegment();
   const division = segment ? getDivision(segment) : undefined;
+  // No product links while the catalogue is off (CI-72).
+  const catalogEnabled = useCatalogEnabled();
 
   // On a division page, only that division's categories. On a shared page,
   // every category, since there's no single division to scope to.
   const footerCategories = division
-    ? categories.filter((cat) => cat.division === division.sanityDivision)
-    : categories;
+    ? categories.filter((cat) => cat.division === division.sanityDivision && browsable(catalogEnabled, cat))
+    : categories.filter((cat) => browsable(catalogEnabled, cat));
   const productsHref = division ? `/${division.slug}/products` : "/products";
 
   return (
@@ -51,7 +55,9 @@ export const Footer = ({ categories }: FooterProps) => {
 
       {/* Main grid */}
       <div className="relative z-10 mx-auto max-w-[1280px] px-6 pb-12 pt-16 lg:px-12">
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr_1fr]">
+        <div className={`grid grid-cols-1 gap-12 sm:grid-cols-2 ${
+          catalogEnabled ? "lg:grid-cols-[1.6fr_1fr_1fr_1fr_1fr]" : "lg:grid-cols-[1.6fr_1fr_1fr_1fr]"
+        }`}>
 
           {/* Brand column */}
           <div>
@@ -96,6 +102,7 @@ export const Footer = ({ categories }: FooterProps) => {
           </div>
 
           {/* Products column */}
+          {catalogEnabled && (
           <div>
             <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-muted">
               Products
@@ -121,6 +128,7 @@ export const Footer = ({ categories }: FooterProps) => {
               </li>
             </ul>
           </div>
+          )}
 
           {/* Company column */}
           <div>

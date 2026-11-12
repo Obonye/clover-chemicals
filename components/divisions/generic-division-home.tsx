@@ -3,6 +3,7 @@ import NextLink from "next/link";
 
 import { ProductCard } from "@/components/product-card";
 import { getBranch } from "@/config/branches";
+import { isCatalogEnabled } from "@/lib/catalog/visibility";
 import { loadQuery } from "@/sanity/lib/fetch";
 import { ALL_PRODUCTS_QUERY } from "@/sanity/lib/queries";
 import type { ProductWithCategory } from "@/sanity/lib/types";
@@ -17,9 +18,11 @@ type GenericDivisionHomeProps = {
 // built entirely from that entry's own fields, so a new division gets a
 // working home page with zero other code changes.
 export async function GenericDivisionHome({ division }: GenericDivisionHomeProps) {
-  const allProducts = await loadQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY);
+  // Rendered per request: the flag decides which product surfaces exist (CI-72).
+  const catalogEnabled = await isCatalogEnabled();
+  const allProducts = catalogEnabled ? await loadQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY) : [];
   const products = allProducts
-    .filter((product) => product.category?.division === division.sanityDivision)
+    .filter((product) => product.category?.division === division.sanityDivision && product.category.catalogReady === true)
     .slice(0, 8);
 
   return (
@@ -43,12 +46,14 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
             {division.tagline}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <NextLink
-              className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-              href={`/${division.slug}/products`}
-            >
-              Browse Products
-            </NextLink>
+            {catalogEnabled && (
+              <NextLink
+                className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                href={`/${division.slug}/products`}
+              >
+                Browse Products
+              </NextLink>
+            )}
             <NextLink
               className="rounded border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
               href="/contact"

@@ -1,6 +1,7 @@
 import NextLink from "next/link";
 
 import { HeroMedical } from "@/components/hero-medical";
+import { isCatalogEnabled } from "@/lib/catalog/visibility";
 import { MedicalPartners } from "@/components/medical-partners";
 import { MedicalQuote } from "@/components/medical-quote";
 import { MedicalWhyPartner } from "@/components/medical-why-partner";
@@ -8,14 +9,17 @@ import { MedicalProductBento } from "@/components/medical-product-bento";
 import { MedicalProductCarousel } from "@/components/medical-product-carousel";
 import { MedicalServices } from "@/components/medical-services";
 
-export function MedicalHome() {
+export async function MedicalHome() {
+  // Rendered per request: the flag decides which product surfaces exist (CI-72).
+  const catalogEnabled = await isCatalogEnabled();
+
   return (
     <>
-      <HeroMedical />
+      <HeroMedical showBrowse={catalogEnabled} />
 
       <MedicalPartners />
 
-      <MedicalProductCarousel />
+      <MedicalProductCarousel showViewAll={catalogEnabled} />
 
       <MedicalProductBento />
 

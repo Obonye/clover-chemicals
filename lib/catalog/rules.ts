@@ -18,6 +18,11 @@ export function browsable(catalogEnabled: boolean, category: CategoryReadiness |
   return catalogEnabled && category?.catalogReady === true;
 }
 
+/** The RFQ entry for a category — where its links go while it isn't browsable. */
+export function rfqEntryHref(slug: string | null | undefined): string {
+  return slug ? `/rfq?category=${encodeURIComponent(slug)}` : "/rfq";
+}
+
 /** Where a category's link goes: its product listing when browsable,
  *  otherwise the RFQ entry for that category. */
 export function categoryHref(
@@ -25,9 +30,7 @@ export function categoryHref(
   category: CategoryReadiness,
   listingBase = "/products",
 ): string {
-  const slug = category.slug ?? "";
+  if (browsable(catalogEnabled, category)) return `${listingBase}/${category.slug ?? ""}`;
 
-  if (browsable(catalogEnabled, category)) return `${listingBase}/${slug}`;
-
-  return slug ? `/rfq?category=${encodeURIComponent(slug)}` : "/rfq";
+  return rfqEntryHref(category.slug);
 }

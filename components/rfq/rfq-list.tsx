@@ -5,6 +5,7 @@ import { Button } from "@heroui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
+import { useCatalogEnabled } from "@/components/catalog-state";
 import { RfqDetailsForm, type RfqSubmitSuccess } from "@/components/rfq/rfq-details-form";
 import { RfqTableRow } from "@/components/rfq/rfq-table-row";
 import { divisions } from "@/config/divisions";
@@ -18,7 +19,11 @@ const STEPS = [
   { title: "Send it to us", body: "We price every request for you and reply with a quotation." },
 ];
 
-const EmptyState = () => (
+const EmptyState = () => {
+  // While the catalogue is off there are no products to add and nothing to browse.
+  const catalogEnabled = useCatalogEnabled();
+
+  return (
   <div className="flex flex-col gap-10">
     <div>
       <h2 className="mb-3 font-display text-2xl font-extrabold tracking-tight text-foreground">
@@ -42,6 +47,7 @@ const EmptyState = () => (
       ))}
     </ol>
 
+    {catalogEnabled && (
     <div className="flex flex-wrap gap-3">
       {divisions.map((division) => (
         <NextLink
@@ -53,6 +59,7 @@ const EmptyState = () => (
         </NextLink>
       ))}
     </div>
+    )}
     <p className="text-sm text-muted">
       Just have a single question?{" "}
       <NextLink className="font-semibold text-foreground underline underline-offset-2 hover:text-accent" href="/contact">
@@ -61,7 +68,8 @@ const EmptyState = () => (
       .
     </p>
   </div>
-);
+  );
+};
 
 const LoadingState = () => (
   <div aria-busy="true" aria-label="Loading your RFQ list" className="flex flex-col gap-4">
@@ -132,6 +140,7 @@ const ClearList = ({ count }: { count: number }) => {
 
 export const RfqList = () => {
   const { items, hydrated, clear } = useRfq();
+  const catalogEnabled = useCatalogEnabled();
   const freshness = useRfqFreshness();
   const router = useRouter();
   const [sent, setSent] = React.useState(false);
@@ -199,12 +208,16 @@ export const RfqList = () => {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-separator pt-4">
-          <NextLink
-            className="min-h-11 content-center font-mono text-xs font-semibold uppercase tracking-wider text-foreground underline-offset-2 hover:text-accent hover:underline"
-            href="/products"
-          >
-            ← Add more products
-          </NextLink>
+          {catalogEnabled ? (
+            <NextLink
+              className="min-h-11 content-center font-mono text-xs font-semibold uppercase tracking-wider text-foreground underline-offset-2 hover:text-accent hover:underline"
+              href="/products"
+            >
+              ← Add more products
+            </NextLink>
+          ) : (
+            <span />
+          )}
           <ClearList count={items.length} />
         </div>
 

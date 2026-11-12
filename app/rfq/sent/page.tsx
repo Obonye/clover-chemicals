@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { divisions } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
+import { isCatalogEnabled } from "@/lib/catalog/visibility";
 
 export const metadata: Metadata = {
   title: "Request sent",
@@ -30,6 +31,7 @@ export default async function RfqSentPage({ searchParams }: SentPageProps) {
   // Opened directly, with no (or a made-up) reference: there is nothing to confirm.
   if (!reference || !REFERENCE_PATTERN.test(reference)) redirect("/rfq");
 
+  const catalogEnabled = await isCatalogEnabled();
   const dropped = asList(params.dropped)
     .map((name) => name.slice(0, 120))
     .slice(0, 50);
@@ -78,7 +80,7 @@ export default async function RfqSentPage({ searchParams }: SentPageProps) {
           )}
 
           <div className="flex flex-wrap gap-3">
-            {divisions.map((division) => (
+            {catalogEnabled && divisions.map((division) => (
               <NextLink
                 key={division.slug}
                 className="inline-flex min-h-11 items-center rounded bg-accent px-5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"

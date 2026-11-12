@@ -74,7 +74,12 @@ const medicalProducts: MedicalProduct[] = [
   },
 ];
 
-export const MedicalProductCarousel = () => {
+type MedicalProductCarouselProps = {
+  /** Show the "View All Products" link. Off while the catalogue is hidden (CI-72). */
+  showViewAll?: boolean;
+};
+
+export const MedicalProductCarousel = ({ showViewAll = true }: MedicalProductCarouselProps) => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   // How many cards are visible at once — measured, not assumed, since it
@@ -191,13 +196,15 @@ export const MedicalProductCarousel = () => {
           <h2 className="font-display text-3xl font-extrabold tracking-tight text-heading lg:text-4xl">
             A closer look at each line.
           </h2>
-          <NextLink
-            className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-medical transition-colors hover:text-medical/80"
-            href="/medical/products"
-          >
-            View All Products
-            <span aria-hidden="true">→</span>
-          </NextLink>
+          {showViewAll && (
+            <NextLink
+              className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-medical transition-colors hover:text-medical/80"
+              href="/medical/products"
+            >
+              View All Products
+              <span aria-hidden="true">→</span>
+            </NextLink>
+          )}
         </div>
 
         <div className="relative">

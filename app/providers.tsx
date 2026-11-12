@@ -5,6 +5,7 @@ import type { ThemeProviderProps } from "next-themes";
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
+import { CatalogStateProvider } from "@/components/catalog-state";
 import { RfqProvider } from "@/lib/rfq/store";
 
 export interface ProvidersProps {
@@ -15,7 +16,9 @@ export interface ProvidersProps {
 export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <NextThemesProvider {...themeProps}>
-      <RfqProvider>{children}</RfqProvider>
+      <CatalogStateProvider>
+        <RfqProvider>{children}</RfqProvider>
+      </CatalogStateProvider>
     </NextThemesProvider>
   );
 }

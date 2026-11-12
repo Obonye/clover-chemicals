@@ -3,7 +3,12 @@ import NextLink from "next/link";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import { MedicalHighlights } from "@/components/medical-highlights";
 
-export const HeroMedical = () => {
+type HeroMedicalProps = {
+  /** Show "Explore Product Lines". Off while the catalogue is hidden (CI-72). */
+  showBrowse?: boolean;
+};
+
+export const HeroMedical = ({ showBrowse = true }: HeroMedicalProps) => {
   return (
     <section className="relative -mt-[var(--navbar-h)] overflow-hidden bg-background">
       {/* Light-theme spotlight — same sweeping-beam mechanic as the
@@ -37,12 +42,14 @@ export const HeroMedical = () => {
         </p>
 
         <div className="flex flex-wrap justify-center gap-4">
-          <NextLink
-            className="rounded-full bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
-            href="/medical/products"
-          >
-            Explore Product Lines
-          </NextLink>
+          {showBrowse && (
+            <NextLink
+              className="rounded-full bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
+              href="/medical/products"
+            >
+              Explore Product Lines
+            </NextLink>
+          )}
           <NextLink
             className="rounded-full border-2 border-separator px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
             href="/contact?enquiry=medical"

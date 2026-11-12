@@ -3,7 +3,12 @@ import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 
-export const HeroChemicals = () => {
+type HeroChemicalsProps = {
+  /** Show "Browse Products". Off while the catalogue is hidden (CI-72). */
+  showBrowse?: boolean;
+};
+
+export const HeroChemicals = ({ showBrowse = true }: HeroChemicalsProps) => {
   const years = new Date().getFullYear() - siteConfig.foundedYear;
 
   return (
@@ -39,12 +44,14 @@ export const HeroChemicals = () => {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
-            <NextLink
-              className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-              href="/products"
-            >
-              Browse Products
-            </NextLink>
+            {showBrowse && (
+              <NextLink
+                className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                href="/products"
+              >
+                Browse Products
+              </NextLink>
+            )}
             <NextLink
               className="rounded border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
               href="/contact"
