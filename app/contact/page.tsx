@@ -5,7 +5,7 @@ import NextLink from "next/link";
 
 import { submitContact, type ContactField } from "./actions";
 
-import { branches } from "@/config/branches";
+import { branchesInDisplayOrder } from "@/config/branches";
 import { enquiryTypes } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
 import { categories } from "@/lib/products";
@@ -227,7 +227,7 @@ export default function ContactPage() {
                   Our Offices
                 </p>
                 <address className="flex flex-col gap-5 not-italic">
-                  {branches.map((branch) => (
+                  {branchesInDisplayOrder.map((branch) => (
                     <div key={branch.slug}>
                       <p className="mb-1 text-sm font-semibold text-foreground">{branch.name}</p>
                       <NextLink

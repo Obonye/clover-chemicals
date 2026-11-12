@@ -3,7 +3,7 @@
 import NextLink from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import { branches } from "@/config/branches";
+import { branchesInDisplayOrder } from "@/config/branches";
 import { divisions, getDivision } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
 import { categoryHref } from "@/sanity/lib/format";
@@ -147,7 +147,7 @@ export const Footer = ({ categories }: FooterProps) => {
               Branches
             </p>
             <ul className="flex flex-col gap-4">
-              {branches.map((branch) => (
+              {branchesInDisplayOrder.map((branch) => (
                 <li key={branch.slug}>
                   <NextLink
                     className="mb-1 block text-sm font-semibold text-foreground transition-colors duration-150 hover:text-accent"
