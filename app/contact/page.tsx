@@ -6,6 +6,7 @@ import NextLink from "next/link";
 import { submitContact, type ContactField } from "./actions";
 
 import { branches } from "@/config/branches";
+import { enquiryTypes } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
 import { categories } from "@/lib/products";
 
@@ -164,18 +165,27 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className={labelClass} htmlFor="product">
-                      Product Interest
+                    <label className={labelClass} htmlFor="enquiryType">
+                      Nature of Enquiry <span className="text-accent">*</span>
                     </label>
-                    <select className={fieldClass} id="product" name="product">
-                      <option value="">Select a category</option>
-                      {categories.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.label}
+                    <select
+                      className={fieldClass}
+                      aria-invalid={fieldErrors.enquiryType ? true : undefined}
+                      defaultValue=""
+                      id="enquiryType"
+                      name="enquiryType"
+                      required
+                    >
+                      <option disabled value="">
+                        Select an option
+                      </option>
+                      {enquiryTypes.map((type) => (
+                        <option key={type.id} value={type.id}>
+                          {type.label}
                         </option>
                       ))}
-                      <option value="other">Other / Not sure</option>
                     </select>
+                    {fieldErrors.enquiryType && <p className={errorClass}>{fieldErrors.enquiryType}</p>}
                   </div>
 
                   <div>

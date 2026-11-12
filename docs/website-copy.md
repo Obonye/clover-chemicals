@@ -28,7 +28,7 @@ These look like inconsistencies or leftovers. None of them is changed yet. Tell 
 6. **News articles can't be opened.** The news list links each story to `/news/{slug}`, but there is no article page, so "Read →" leads to a 404. The six articles are summaries only.
 7. **Empty pages.** `/blog`, `/docs` and `/pricing` exist but only show a heading ("Blog", "Docs", "Pricing"). They aren't linked from the menus.
 8. **Unused menu text.** `navMenuItems` and `footerItems` in the site config (Personal Protective Equipment, Pool Chemicals, and so on) aren't used anywhere; the menus use live Sanity categories instead.
-9. **Contact form categories.** The "Product Interest" dropdown uses a fixed list of four categories (Agricultural, Medical & Pharma, Laboratory, Industrial) and not the live Sanity categories, so it doesn't mention PPE or pool chemicals.
+9. **Contact page category list.** The "Browse by Category" links on the Contact page use a fixed list of four categories (Agricultural, Medical & Pharma, Laboratory, Industrial), not the live Sanity categories, so they don't mention PPE or pool chemicals.
 10. **Plain error page.** The "Something went wrong!" page is unstyled and doesn't offer a way back or a contact number.
 
 ---
@@ -322,71 +322,75 @@ Page: `app/contact/page.tsx`. Messages from this form are emailed to the right C
 
 ## 4.2 Page header
 
-- **Small label** (`app/contact/page.tsx:40`): Get in Touch
-- **Heading** (`app/contact/page.tsx:43`): Contact Us
-- **Intro** (`app/contact/page.tsx:46`): Tell us what you need. Our team responds within one business day with specifications, pricing, and availability.
+- **Small label** (`app/contact/page.tsx:41`): Get in Touch
+- **Heading** (`app/contact/page.tsx:44`): Contact Us
+- **Intro** (`app/contact/page.tsx:47`): Tell us what you need. Our team responds within one business day with specifications, pricing, and availability.
 
 ## 4.3 Form
 
-- **Name: label** (`app/contact/page.tsx:102`): Full Name
-- **Name: example text** (`app/contact/page.tsx:110`): John Smith
-- **Company: label** (`app/contact/page.tsx:118`): Company / Organisation
-- **Company: example text** (`app/contact/page.tsx:125`): Acme Ltd.
-- **Email: label** (`app/contact/page.tsx:135`): Email Address
-- **Email: example text** (`app/contact/page.tsx:143`): john@example.com
-- **Phone: label** (`app/contact/page.tsx:151`): Phone Number
-- **Phone: example text** (`app/contact/page.tsx:159`): +267 71 234 567
-- **Product interest: label** (`app/contact/page.tsx:168`): Product Interest
-- **Product interest: first option** (`app/contact/page.tsx:171`): Select a category
-- **Product interest: last option** (`app/contact/page.tsx:177`): Other / Not sure
-- **Message: label** (`app/contact/page.tsx:183`): Message / Requirements
-- **Message: example text** (`app/contact/page.tsx:190`): Describe what you need — product names, quantities, grades, pack sizes, or any other details.
-- **Submit button** (`app/contact/page.tsx:203`): Send Message
-- **Submit button while sending** (`app/contact/page.tsx:203`): Sending…
-- **Note under the button** (`app/contact/page.tsx:206`): We respond within one business day.
+- **Name: label** (`app/contact/page.tsx:103`): Full Name
+- **Name: example text** (`app/contact/page.tsx:111`): John Smith
+- **Company: label** (`app/contact/page.tsx:119`): Company / Organisation
+- **Company: example text** (`app/contact/page.tsx:126`): Acme Ltd.
+- **Email: label** (`app/contact/page.tsx:136`): Email Address
+- **Email: example text** (`app/contact/page.tsx:144`): john@example.com
+- **Phone: label** (`app/contact/page.tsx:152`): Phone Number
+- **Phone: example text** (`app/contact/page.tsx:160`): +267 71 234 567
+- **Nature of enquiry: label** (`app/contact/page.tsx:169`): Nature of Enquiry
+- **Nature of enquiry: first option** (`app/contact/page.tsx:180`): Select an option
+- **Nature of enquiry: option 1** (`config/enquiry-routing.ts:22`): Chemicals
+- **Nature of enquiry: option 2** (`config/enquiry-routing.ts:23`): Medical
+- **Nature of enquiry: option 3** (`config/enquiry-routing.ts:24`): Complaint
+- **Nature of enquiry: option 4** (`config/enquiry-routing.ts:25`): Other
+- **Message: label** (`app/contact/page.tsx:193`): Message / Requirements
+- **Message: example text** (`app/contact/page.tsx:200`): Describe what you need — product names, quantities, grades, pack sizes, or any other details.
+- **Submit button** (`app/contact/page.tsx:213`): Send Message
+- **Submit button while sending** (`app/contact/page.tsx:213`): Sending…
+- **Note under the button** (`app/contact/page.tsx:216`): We respond within one business day.
 
-The names in the "Product interest" list come from section 7.8. Fields with a red star (*) are Full Name, Email Address and Message.
+Fields with a red star (*) are Full Name, Email Address, Nature of Enquiry and Message. A complaint goes to one person; everything else goes to the three team inboxes (section 11).
 
 ## 4.4 After sending
 
-- **Small label** (`app/contact/page.tsx:62`): Message Sent
-- **Heading** (`app/contact/page.tsx:65`): Thank you — we'll be in touch.
-- **Text** (`app/contact/page.tsx:68`): Our team will respond within one business day with specifications, pricing, and availability for your enquiry. Your reference is {reference}.
-- **Link** (`app/contact/page.tsx:77`): Send another message →
+- **Small label** (`app/contact/page.tsx:63`): Message Sent
+- **Heading** (`app/contact/page.tsx:66`): Thank you — we'll be in touch.
+- **Text** (`app/contact/page.tsx:69`): Our team will respond within one business day with specifications, pricing, and availability for your enquiry. Your reference is {reference}.
+- **Link** (`app/contact/page.tsx:78`): Send another message →
 
 ## 4.5 Error messages
 
 - **Name missing** (`app/contact/actions.ts:23`): Enter your full name
 - **Email invalid** (`app/contact/actions.ts:24`): Enter a valid email address
-- **Message missing** (`app/contact/actions.ts:25`): Tell us a little about what you need
-- **Phone invalid** (`lib/contact/schema.ts:19`): Enter a valid phone number
-- **Banner above the form** (`app/contact/actions.ts:52`): Please check the highlighted fields.
-- **Too many messages** (`app/contact/actions.ts:63`): You've sent several messages in the last hour. Please try again in about {minutes} minute{s}, or call us directly.
-- **Could not send** (`app/contact/actions.ts:74`): We couldn't send your message just now. Please try again, or email us directly.
+- **Nature of enquiry not chosen** (`app/contact/actions.ts:25`): Choose the nature of your enquiry
+- **Message missing** (`app/contact/actions.ts:26`): Tell us a little about what you need
+- **Phone invalid** (`lib/contact/schema.ts:21`): Enter a valid phone number
+- **Banner above the form** (`app/contact/actions.ts:53`): Please check the highlighted fields.
+- **Too many messages** (`app/contact/actions.ts:64`): You've sent several messages in the last hour. Please try again in about {minutes} minute{s}, or call us directly.
+- **Could not send** (`app/contact/actions.ts:75`): We couldn't send your message just now. Please try again, or email us directly.
 
 ## 4.6 Side panel: our offices
 
 Names, addresses, phone, email, WhatsApp and hours come from sections 1.2 and 1.4.
 
-- **Heading** (`app/contact/page.tsx:217`): Our Offices
-- **Email label** (`app/contact/page.tsx:232`): Email
-- **Phone label** (`app/contact/page.tsx:241`): Phone
-- **WhatsApp label** (`app/contact/page.tsx:250`): WhatsApp
-- **Hours label** (`app/contact/page.tsx:261`): Business Hours
+- **Heading** (`app/contact/page.tsx:227`): Our Offices
+- **Email label** (`app/contact/page.tsx:242`): Email
+- **Phone label** (`app/contact/page.tsx:251`): Phone
+- **WhatsApp label** (`app/contact/page.tsx:260`): WhatsApp
+- **Hours label** (`app/contact/page.tsx:271`): Business Hours
 
 ## 4.7 Side panel: department contacts
 
-- **Heading** (`app/contact/page.tsx:269`): Department Contacts
-- **Group 1: name** (`app/contact/page.tsx:273`): Request for Quote
-- **Group 1: email 1** (`app/contact/page.tsx:277`): sales@cloverindustries.co.bw
-- **Group 1: email 2** (`app/contact/page.tsx:283`): khofi.gabosekwe@cloverindustries.co.bw
-- **Group 1: email 3** (`app/contact/page.tsx:289`): sanka@cloverindustries.co.bw
-- **Group 2: name** (`app/contact/page.tsx:296`): Customer complaints
-- **Group 2: email** (`app/contact/page.tsx:300`): sanka@cloverindustries.co.bw
+- **Heading** (`app/contact/page.tsx:279`): Department Contacts
+- **Group 1: name** (`app/contact/page.tsx:283`): Request for Quote
+- **Group 1: email 1** (`app/contact/page.tsx:287`): sales@cloverindustries.co.bw
+- **Group 1: email 2** (`app/contact/page.tsx:293`): khofi.gabosekwe@cloverindustries.co.bw
+- **Group 1: email 3** (`app/contact/page.tsx:299`): sanka@cloverindustries.co.bw
+- **Group 2: name** (`app/contact/page.tsx:306`): Customer complaints
+- **Group 2: email** (`app/contact/page.tsx:299`): sanka@cloverindustries.co.bw
 
 ## 4.8 Side panel: browse by category
 
-- **Heading** (`app/contact/page.tsx:311`): Browse by Category
+- **Heading** (`app/contact/page.tsx:321`): Browse by Category
 
 The category names are from section 7.8.
 
@@ -575,7 +579,7 @@ Used when a product document has no title of its own. Source: `sanity/lib/format
 
 ## 7.8 Fixed category list (contact form)
 
-The Contact page's "Product Interest" list and "Browse by Category" links use this list, not the live catalogue (note 9). Source: `lib/products.ts`. Only the four names below are used. The same file also holds a category description and four sample products for each category (Clover Pure Lawn, Glyphosate 360 SL Herbicide, Hydrochloric Acid 37% and so on), but no page shows them, so they aren't listed here.
+The Contact page's "Browse by Category" links use this list, not the live catalogue (note 9). Source: `lib/products.ts`. Only the four names below are used. The same file also holds a category description and four sample products for each category (Clover Pure Lawn, Glyphosate 360 SL Herbicide, Hydrochloric Acid 37% and so on), but no page shows them, so they aren't listed here.
 
 - **Category 1** (`lib/products.ts:21`): Agricultural Chemicals
 - **Category 2** (`lib/products.ts:60`): Medical & Pharma
@@ -961,7 +965,7 @@ Component: `components/divisions/medical-home.tsx`
 
 # 11. Emails sent to customers
 
-When a visitor sends an RFQ or a contact message, they get one email, and the Clover team is copied. Both RFQs and contact-form messages go to `sales@`, `khofi.gabosekwe@` and `sanka@cloverindustries.co.bw`. Where it goes is set in `config/enquiry-routing.ts`, not in this file.
+When a visitor sends an RFQ or a contact message, they get one email, and the Clover team is copied. RFQs, and contact-form messages of any type except Complaint, go to `sales@`, `khofi.gabosekwe@` and `sanka@cloverindustries.co.bw`. A Complaint goes to `sanka@cloverindustries.co.bw` only. Where it goes is set in `config/enquiry-routing.ts`, not in this file.
 
 ## 11.1 Quote request email (RFQ)
 
@@ -986,17 +990,16 @@ Source: `lib/rfq/email.ts`
 
 Source: `lib/contact/email.ts`
 
-- **Subject** (`lib/contact/email.ts:54`): We've received your message {reference}
-- **Preview text in the inbox list** (`lib/contact/email.ts:31`): We've received your message {reference}. We'll respond within one business day.
-- **Heading** (`lib/contact/email.ts:32`): We've received your message
-- **Intro** (`lib/contact/email.ts:38`): Thank you for getting in touch. Our team will respond within one business day with specifications, pricing and availability.
-- **Row label: name** (`lib/contact/email.ts:40`): Name
-- **Row label: company** (`lib/contact/email.ts:41`): Company
+- **Subject** (`lib/contact/email.ts:47`): We've received your message {reference}
+- **Preview text in the inbox list** (`lib/contact/email.ts:25`): We've received your message {reference}. We'll respond within one business day.
+- **Heading** (`lib/contact/email.ts:25`): We've received your message
+- **Intro** (`lib/contact/email.ts:31`): Thank you for getting in touch. Our team will respond within one business day with specifications, pricing and availability.
+- **Row label: name** (`lib/contact/email.ts:33`): Name
+- **Row label: company** (`lib/contact/email.ts:34`): Company
 - **Row label: email** (`lib/contact/email.ts:42`): Email
-- **Row label: phone** (`lib/contact/email.ts:43`): Phone
-- **Row label: product interest** (`lib/contact/email.ts:44`): Product interest
-- **Row label: message** (`lib/contact/email.ts:45`): Message
-- **Product interest when "Other" was chosen** (`lib/contact/email.ts:17`): Other / Not sure
+- **Row label: phone** (`lib/contact/email.ts:36`): Phone
+- **Row label: nature of enquiry** (`lib/contact/email.ts:37`): Nature of enquiry
+- **Row label: message** (`lib/contact/email.ts:38`): Message
 
 ## 11.3 Wording shared by both emails
 
