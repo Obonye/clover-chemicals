@@ -24,7 +24,9 @@ import {
 } from "@heroui/react";
 
 import { submitRfq } from "@/app/rfq/actions";
-import { branches } from "@/config/branches";
+import { branchesInDisplayOrder } from "@/config/branches";
+import { siteConfig } from "@/config/site";
+import { buildRfqMailto } from "@/lib/rfq/mailto";
 import { RFQ_FULFILMENT } from "@/lib/rfq/schema";
 
 export type RfqSubmitSuccess = Extract<RfqSubmitState, { status: "success" }>;
@@ -81,8 +83,8 @@ const radioControlClass =
 const radioIndicatorClass =
   "before:rounded-full before:bg-default group-data-[selected=true]:before:scale-50 group-data-[selected=true]:before:bg-accent-foreground";
 
-const BranchSelect = ({ label, isRequired, placeholder }: { label: string; isRequired?: boolean; placeholder: string }) => (
-  <Select fullWidth isRequired={isRequired} name="branch" placeholder={placeholder} variant="secondary">
+const BranchSelect = ({ label, placeholder }: { label: string; placeholder: string }) => (
+  <Select fullWidth isRequired name="branch" placeholder={placeholder} variant="secondary">
     <Label>{label}</Label>
     <Select.Trigger className="h-11 min-h-11">
       <Select.Value />
@@ -91,7 +93,7 @@ const BranchSelect = ({ label, isRequired, placeholder }: { label: string; isReq
     <FieldError />
     <Select.Popover>
       <ListBox>
-        {branches.map((branch) => (
+        {branchesInDisplayOrder.map((branch) => (
           <ListBox.Item key={branch.slug} id={branch.slug} textValue={branch.name}>
             {branch.name}
             <ListBox.ItemIndicator />
@@ -106,6 +108,13 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
   const [state, formAction, pending] = React.useActionState(submitRfq, { status: "idle" });
   const errorRef = React.useRef<HTMLParagraphElement>(null);
   const [fulfilment, setFulfilment] = React.useState<Fulfilment | null>(null);
+  // Set synchronously on submit: `pending` only flips after a render, so a
+  // fast double-click could otherwise send two requests.
+  const submitting = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!pending) submitting.current = false;
+  }, [pending]);
 
   React.useEffect(() => {
     if (state.status === "success") onSuccess(state);
@@ -124,6 +133,8 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
       // an action runs, which would wipe what the buyer typed on an error.
       onSubmit={(event) => {
         event.preventDefault();
+        if (submitting.current) return;
+        submitting.current = true;
         const data = new FormData(event.currentTarget);
 
         React.startTransition(() => formAction(data));
@@ -137,14 +148,32 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
       </div>
 
       {state.status === "error" && (
-        <p
+        <div
           ref={errorRef}
-          className="rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
+          className="flex flex-col gap-2 rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
           role="alert"
           tabIndex={-1}
         >
-          {state.message}
-        </p>
+          <p>{state.message}</p>
+          {/* No field errors means the request itself failed: keep the list
+              usable by offering the same RFQ by email or phone. */}
+          {!state.fieldErrors && items.length > 0 && (
+            <p>
+              Your list is still saved. You can try again below, or{" "}
+              <a className="font-semibold underline underline-offset-2" href={buildRfqMailto(items)}>
+                email it to us
+              </a>{" "}
+              or call{" "}
+              <a
+                className="font-semibold underline underline-offset-2"
+                href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
+              >
+                {siteConfig.contact.phone}
+              </a>
+              .
+            </p>
+          )}
+        </div>
       )}
 
       <input name="items" type="hidden" value={JSON.stringify(items)} />
@@ -159,7 +188,22 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
         <Field isRequired autoComplete="name" label="Full name" name="fullName" />
         <Field isRequired autoComplete="organization" label="Company" name="company" />
         <Field isRequired autoComplete="email" label="Email" name="email" type="email" />
-        <Field isRequired autoComplete="tel" label="Phone" name="phone" placeholder="+267 71 234 567" type="tel" />
+        <Field
+          autoComplete="tel"
+          description="Preferred. Give a mobile or a landline."
+          label="Mobile"
+          name="mobile"
+          placeholder="+267 71 234 567"
+          type="tel"
+        />
+        <Field
+          autoComplete="tel"
+          description="Optional if you gave a mobile."
+          label="Landline"
+          name="landline"
+          placeholder="+267 391 2345"
+          type="tel"
+        />
       </div>
 
       <RadioGroup
@@ -194,19 +238,16 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
       {/* Only the fields that matter for the chosen option. */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {fulfilment === "delivery" && (
-          <>
-            <Field
-              isRequired
-              autoComplete="street-address"
-              description="Town or site address."
-              label="Delivery location"
-              name="deliveryLocation"
-            />
-            <BranchSelect label="Nearest branch" placeholder="No preference" />
-          </>
+          <Field
+            isRequired
+            autoComplete="street-address"
+            description="Street, area and town, or the site address."
+            label="Delivery address"
+            name="deliveryAddress"
+          />
         )}
         {fulfilment === "collection" && (
-          <BranchSelect isRequired label="Collect from" placeholder="Choose a branch" />
+          <BranchSelect label="Collect from" placeholder="Choose a branch" />
         )}
 
         {/* Submits as YYYY-MM-DD, which the server schema re-checks. */}
@@ -253,7 +294,11 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
 
       <div className="flex flex-wrap items-center gap-4">
         <Button className="h-11 px-6" isDisabled={!canSend} isPending={pending} type="submit">
-          {pending ? "Sending…" : `Send request (${items.length} item${items.length === 1 ? "" : "s"})`}
+          {pending
+            ? "Sending…"
+            : state.status === "error" && !state.fieldErrors
+              ? "Try again"
+              : `Send request (${items.length} item${items.length === 1 ? "" : "s"})`}
         </Button>
         {!ready && <span className="text-sm text-muted">Checking your list…</span>}
         {ready && items.length === 0 && (

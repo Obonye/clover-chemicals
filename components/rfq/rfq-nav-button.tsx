@@ -3,6 +3,7 @@
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { useCatalogEnabled } from "@/components/catalog-state";
 import { useRfq } from "@/lib/rfq/store";
 
 /** Screen-reader label for the RFQ entry point, e.g. "Request for quote, 3 items". */
@@ -13,8 +14,11 @@ export const rfqAccessibleName = (count: number) =>
  *  server render and first client render always agree. */
 export const useRfqNavCount = () => {
   const { count, hydrated } = useRfq();
+  // The saved list holds products, so it counts for nothing while the
+  // catalogue is off (CI-72).
+  const catalogEnabled = useCatalogEnabled();
 
-  return hydrated ? count : 0;
+  return hydrated && catalogEnabled ? count : 0;
 };
 
 type BadgeProps = {
@@ -39,6 +43,8 @@ const Badge = ({ count, inverse = false, className }: BadgeProps) => (
 
 type RfqNavButtonProps = {
   variant: "desktop" | "drawer";
+  /** Where the button goes; defaults to the RFQ list. */
+  href?: string;
   /** Desktop only: text colour classes, which change over transparent heroes. */
   className?: string;
   onNavigate?: () => void;
@@ -49,7 +55,7 @@ type RfqNavButtonProps = {
  * flow and links to /contact). In the mobile drawer it shows the item count
  * once there is one.
  */
-export const RfqNavButton = ({ variant, className, onNavigate }: RfqNavButtonProps) => {
+export const RfqNavButton = ({ variant, href = "/rfq", className, onNavigate }: RfqNavButtonProps) => {
   const count = useRfqNavCount();
   const hasItems = count > 0;
 
@@ -58,10 +64,10 @@ export const RfqNavButton = ({ variant, className, onNavigate }: RfqNavButtonPro
       <NextLink
         aria-label={hasItems ? rfqAccessibleName(count) : undefined}
         className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded bg-accent px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-        href="/rfq"
+        href={href}
         onClick={onNavigate}
       >
-        {hasItems ? (
+        {hasItems && href === "/rfq" ? (
           <>
             View RFQ
             <Badge inverse count={count} />
@@ -81,7 +87,7 @@ export const RfqNavButton = ({ variant, className, onNavigate }: RfqNavButtonPro
         "inline-flex items-center whitespace-nowrap rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
         className,
       )}
-      href="/rfq"
+      href={href}
       onClick={onNavigate}
     >
       Get a Quote
@@ -101,6 +107,10 @@ const CartIcon = () => (
  *  holds products from all of them. */
 export const RfqCartLink = () => {
   const count = useRfqNavCount();
+  const catalogEnabled = useCatalogEnabled();
+
+  // No products to collect while the catalogue is off, so no cart.
+  if (!catalogEnabled) return null;
 
   return (
     <NextLink

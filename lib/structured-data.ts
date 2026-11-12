@@ -6,7 +6,7 @@
 import type { BranchConfig } from "@/config/branches";
 import type { DivisionConfig } from "@/config/divisions";
 
-import { branches, mapUrl } from "@/config/branches";
+import { branchesInDisplayOrder, mapUrl } from "@/config/branches";
 import { divisions } from "@/config/divisions";
 import { siteConfig, SITE_URL } from "@/config/site";
 
@@ -58,7 +58,7 @@ function divisionOrganization(division: DivisionConfig): JsonLd {
 
 export function organizationJsonLd(
   divisionList: DivisionConfig[] = divisions,
-  branchList: BranchConfig[] = branches,
+  branchList: BranchConfig[] = branchesInDisplayOrder,
 ): JsonLd {
   const headOffice = branchList.find((branch) => branch.isHeadOffice) ?? branchList[0];
   const { contact, sameAs } = siteConfig;
@@ -92,7 +92,7 @@ export function organizationJsonLd(
  * own (see config/branches.ts). `geo` is left out until the client confirms
  * coordinates; `hasMap` links to the same map search the page uses.
  */
-export function branchesJsonLd(branchList: BranchConfig[] = branches): JsonLd {
+export function branchesJsonLd(branchList: BranchConfig[] = branchesInDisplayOrder): JsonLd {
   const { contact } = siteConfig;
 
   return {

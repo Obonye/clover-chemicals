@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import NextLink from "next/link";
 
+import { rfqEntryHref } from "@/lib/catalog/rules";
 import { categoryHref } from "@/sanity/lib/format";
 import { imageUrl } from "@/sanity/lib/image";
 import type { ProductCategory } from "@/sanity/lib/types";
@@ -13,9 +14,17 @@ const EXPANDED_BASIS = 46;
 
 type ProductsSectionProps = {
   categories: ProductCategory[];
+  /** Category `_id` to whether it's browsable right now. A category that
+   *  isn't links to the RFQ instead of its product listing (CI-72). */
+  categoryLinks: Record<string, boolean>;
+  /** Show the "View all" link to the product listing. */
+  showViewAll: boolean;
 };
 
-export const ProductsSection = ({ categories }: ProductsSectionProps) => {
+export const ProductsSection = ({ categories, categoryLinks, showViewAll }: ProductsSectionProps) => {
+  const linkFor = (cat: ProductCategory) =>
+    categoryLinks[cat._id] ? categoryHref(cat.slug) : rfqEntryHref(cat.slug);
+
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   if (categories.length === 0) return null;
@@ -51,12 +60,14 @@ export const ProductsSection = ({ categories }: ProductsSectionProps) => {
             <h2 className="font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
               Our Product Lines.
             </h2>
-            <NextLink
-              className="hidden text-sm font-semibold uppercase tracking-widest text-muted transition-colors duration-200 hover:text-accent md:block"
-              href="/products"
-            >
-              View all →
-            </NextLink>
+            {showViewAll && (
+              <NextLink
+                className="hidden text-sm font-semibold uppercase tracking-widest text-muted transition-colors duration-200 hover:text-accent md:block"
+                href="/products"
+              >
+                View all →
+              </NextLink>
+            )}
           </div>
         </div>
       </div>
@@ -77,7 +88,7 @@ export const ProductsSection = ({ categories }: ProductsSectionProps) => {
             <NextLink
               key={cat._id}
               className="product-row relative flex flex-col justify-end overflow-hidden rounded"
-              href={categoryHref(cat.slug)}
+              href={linkFor(cat)}
               style={{
                 animationDelay: `${index * 90}ms`,
                 flexBasis: `${basis}%`,
@@ -218,7 +229,7 @@ export const ProductsSection = ({ categories }: ProductsSectionProps) => {
               <NextLink
                 key={cat._id}
                 className="product-row relative flex items-center justify-between overflow-hidden rounded px-4"
-                href={categoryHref(cat.slug)}
+                href={linkFor(cat)}
                 style={{
                   animationDelay: `${index * 90}ms`,
                   paddingBottom: py,

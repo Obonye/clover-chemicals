@@ -86,6 +86,21 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
         ? `Your RFQ already has ${RFQ_MAX_ITEMS} items. Send it or remove some before adding more.`
         : "";
 
+  // Medical sales vary by request, so Medical products don't go into the RFQ
+  // list: the buyer sends the simple contact form, routed to Medical (CI-41).
+  if (division && stegaClean(division) === "medical") {
+    const medicalHref = `/contact?enquiry=medical${slug ? `&product=${encodeURIComponent(slug)}` : ""}`;
+
+    return (
+      <NextLink
+        className={`inline-flex ${controlHeight} w-full items-center justify-center rounded bg-accent px-4 font-mono font-semibold uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
+        href={medicalHref}
+      >
+        Request a quote
+      </NextLink>
+    );
+  }
+
   if (unavailable) {
     return (
       <div className="flex flex-col gap-1.5">

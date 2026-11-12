@@ -1,6 +1,7 @@
 import Image from "next/image";
 import NextLink from "next/link";
 
+import { CatalogOnly } from "@/components/catalog-state";
 import { siteConfig } from "@/config/site";
 
 const stats = [
@@ -300,12 +301,14 @@ export default function AboutPage() {
               >
                 Get in Touch
               </NextLink>
-              <NextLink
-                className="rounded border border-separator px-6 py-3 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:border-foreground/30"
-                href="/products"
-              >
-                Browse Products
-              </NextLink>
+              <CatalogOnly>
+                <NextLink
+                  className="rounded border border-separator px-6 py-3 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:border-foreground/30"
+                  href="/products"
+                >
+                  Browse Products
+                </NextLink>
+              </CatalogOnly>
             </div>
           </div>
         </div>

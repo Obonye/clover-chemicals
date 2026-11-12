@@ -1,11 +1,23 @@
 {
   "version": 1,
   "skills": {
+    "flags-sdk": {
+      "source": "vercel/flags",
+      "sourceType": "github",
+      "skillPath": "skills/flags-sdk/SKILL.md",
+      "computedHash": "cef2adeb0e1d66078503a2f2fbf2bfa6033e00ec429c564333e5852499b2eece"
+    },
     "heroui-react": {
       "source": "heroui-inc/heroui",
       "sourceType": "github",
       "skillPath": "skills/heroui-react/SKILL.md",
       "computedHash": "c9e1bb41fbc3cee782faae08bd465ae05cd685a6ed7cc3392464fdf29b3ab467"
+    },
+    "vercel-flags": {
+      "source": "vercel/flags",
+      "sourceType": "github",
+      "skillPath": "skills/vercel-flags/SKILL.md",
+      "computedHash": "dbb1f0808126f16eed46e844de694a47650dbd1cf5a1e167060e3ee1ba7ce21c"
     }
   }
 }

@@ -37,7 +37,8 @@ const CATEGORY_FIELDS = /* groq */ `
   "slug": slug.current,
   division,
   description,
-  image
+  image,
+  catalogReady
 `;
 
 // Queries ------------------------------------------------------------------

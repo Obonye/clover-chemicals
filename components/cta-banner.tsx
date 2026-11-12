@@ -5,11 +5,14 @@ type CtaBannerProps = {
   /** Duotone highlight colour as 0–1 sRGB channels. Defaults to Clover
    *  Green; the group home passes a neutral grey (CI-15). */
   tint?: [number, number, number];
+  /** Show the "Browse Products" link. Off on the group home, which only
+   *  keeps the quote shortcut (CI-32). */
+  showBrowse?: boolean;
 };
 
 const CLOVER_GREEN: [number, number, number] = [0.57, 0.79, 0.03];
 
-export const CtaBanner = ({ tint = CLOVER_GREEN }: CtaBannerProps) => {
+export const CtaBanner = ({ tint = CLOVER_GREEN, showBrowse = true }: CtaBannerProps) => {
   const [r, g, b] = tint;
 
   return (
@@ -67,12 +70,14 @@ export const CtaBanner = ({ tint = CLOVER_GREEN }: CtaBannerProps) => {
             >
               Request a Quote
             </NextLink>
-            <NextLink
-              className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white/70 transition-colors duration-200 hover:text-white"
-              href="/products"
-            >
-              Browse Products →
-            </NextLink>
+            {showBrowse && (
+              <NextLink
+                className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white/70 transition-colors duration-200 hover:text-white"
+                href="/products"
+              >
+                Browse Products →
+              </NextLink>
+            )}
           </div>
 
         </div>

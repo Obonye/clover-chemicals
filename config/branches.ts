@@ -37,6 +37,14 @@ export const branches: BranchConfig[] = [
   },
 ];
 
+/** Branches in display order: the head office first, then the rest in
+ *  their declared order (CI-39). Use this wherever branches are listed so
+ *  the order doesn't depend on how the array above happens to be written. */
+export const branchesInDisplayOrder: BranchConfig[] = [
+  ...branches.filter((b) => b.isHeadOffice),
+  ...branches.filter((b) => !b.isHeadOffice),
+];
+
 export function getBranch(slug: string): BranchConfig | undefined {
   return branches.find((b) => b.slug === slug);
 }

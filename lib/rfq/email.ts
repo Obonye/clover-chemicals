@@ -37,12 +37,12 @@ function groupByDivision(items: RfqLineItem[]): EnquiryGroup[] {
   return Array.from(groups.values());
 }
 
-function fulfilmentSummary({ fulfilment, branch, deliveryLocation }: RfqContact): string {
+function fulfilmentSummary({ fulfilment, branch, deliveryAddress }: RfqContact): string {
   if (fulfilment === "collection") {
     return `Collection from ${(branch && getBranch(branch)?.name) ?? branch ?? "a branch"}`;
   }
 
-  return `Delivery to ${deliveryLocation}`;
+  return `Delivery to ${deliveryAddress}`;
 }
 
 /**
@@ -70,12 +70,9 @@ export async function sendRfqEmails({ reference, contact, items, submittedAt }: 
       ["Name", contact.fullName],
       ["Company", contact.company],
       ["Email", contact.email],
-      ["Phone", contact.phone],
+      ["Mobile", contact.mobile],
+      ["Landline", contact.landline],
       ["Fulfilment", fulfilmentSummary(contact)],
-      [
-        "Nearest branch",
-        contact.fulfilment === "delivery" && contact.branch ? getBranch(contact.branch)?.name : undefined,
-      ],
       ["Required by", contact.requiredBy],
       ["Message", contact.message],
     ],

@@ -222,7 +222,7 @@ export default function Home() {
       </section>
 
       {/* Black-and-white duotone to match the group theme (CI-15). */}
-      <CtaBanner tint={[0.8, 0.8, 0.8]} />
+      <CtaBanner showBrowse={false} tint={[0.8, 0.8, 0.8]} />
     </>
   );
 }

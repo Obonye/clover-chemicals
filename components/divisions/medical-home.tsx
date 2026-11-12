@@ -1,6 +1,7 @@
 import NextLink from "next/link";
 
 import { HeroMedical } from "@/components/hero-medical";
+import { isCatalogEnabled } from "@/lib/catalog/visibility";
 import { MedicalPartners } from "@/components/medical-partners";
 import { MedicalQuote } from "@/components/medical-quote";
 import { MedicalWhyPartner } from "@/components/medical-why-partner";
@@ -8,14 +9,17 @@ import { MedicalProductBento } from "@/components/medical-product-bento";
 import { MedicalProductCarousel } from "@/components/medical-product-carousel";
 import { MedicalServices } from "@/components/medical-services";
 
-export function MedicalHome() {
+export async function MedicalHome() {
+  // Rendered per request: the flag decides which product surfaces exist (CI-72).
+  const catalogEnabled = await isCatalogEnabled();
+
   return (
     <>
-      <HeroMedical />
+      <HeroMedical showBrowse={catalogEnabled} />
 
       <MedicalPartners />
 
-      <MedicalProductCarousel />
+      <MedicalProductCarousel showViewAll={catalogEnabled} />
 
       <MedicalProductBento />
 
@@ -39,7 +43,7 @@ export function MedicalHome() {
           </div>
           <NextLink
             className="inline-flex w-fit items-center gap-1.5 rounded bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
-            href="/contact"
+            href="/contact?enquiry=medical"
           >
             Contact Us
             <span aria-hidden="true">→</span>

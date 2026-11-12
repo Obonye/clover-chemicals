@@ -3,10 +3,13 @@
 import * as React from "react";
 import { Button } from "@heroui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 
+import { useCatalogState } from "@/components/catalog-state";
 import { RfqDetailsForm, type RfqSubmitSuccess } from "@/components/rfq/rfq-details-form";
 import { RfqTableRow } from "@/components/rfq/rfq-table-row";
 import { divisions } from "@/config/divisions";
+import { siteConfig } from "@/config/site";
 import { rfqLineKey } from "@/lib/rfq/schema";
 import { useRfq } from "@/lib/rfq/store";
 import { useRfqFreshness } from "@/lib/rfq/use-rfq-freshness";
@@ -17,6 +20,34 @@ const STEPS = [
   { title: "Send it to us", body: "We price every request for you and reply with a quotation." },
 ];
 
+/** Shown while the catalogue is off: there are no products to collect yet. */
+const UnavailableState = () => (
+  <div className="flex max-w-[60ch] flex-col items-start gap-4">
+    <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
+      Online product requests open soon
+    </h2>
+    <p className="text-base leading-relaxed text-muted">
+      For now, tell us what you need and our team will reply within one business day with availability and a
+      quotation.
+    </p>
+    <div className="flex flex-wrap items-center gap-4">
+      <NextLink
+        className="inline-flex min-h-11 items-center rounded bg-accent px-5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+        href="/contact"
+      >
+        Send an enquiry
+      </NextLink>
+      <a
+        className="text-sm font-semibold text-foreground underline underline-offset-2 hover:text-accent"
+        href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
+      >
+        {siteConfig.contact.phone}
+      </a>
+    </div>
+  </div>
+);
+
+// Only rendered while the catalogue is on, so browsing is always offered.
 const EmptyState = () => (
   <div className="flex flex-col gap-10">
     <div>
@@ -129,51 +160,33 @@ const ClearList = ({ count }: { count: number }) => {
   );
 };
 
-const SentState = ({ result, onDone }: { result: RfqSubmitSuccess; onDone: () => void }) => {
-  const headingRef = React.useRef<HTMLHeadingElement>(null);
-
-  React.useEffect(() => headingRef.current?.focus(), []);
-
-  return (
-    <div className="flex max-w-[60ch] flex-col items-start gap-4" role="status">
-      <p className="font-mono text-xs font-semibold uppercase tracking-widest text-accent">Request sent</p>
-      <h2 ref={headingRef} className="font-display text-2xl font-extrabold tracking-tight text-foreground outline-none" tabIndex={-1}>
-        Thank you. We&apos;ll be in touch with your quotation.
-      </h2>
-      <p className="text-base leading-relaxed text-muted">
-        Your reference is{" "}
-        <span className="font-mono font-semibold text-foreground">{result.reference}</span>. Please quote it if you
-        contact us about this request.
-      </p>
-      {result.dropped.length > 0 && (
-        <p className="rounded-lg bg-warning-soft px-4 py-3 text-sm text-warning-soft-foreground">
-          {result.dropped.length === 1 ? "One item was" : `${result.dropped.length} items were`} left out because{" "}
-          {result.dropped.length === 1 ? "it's" : "they're"} no longer available as listed: {result.dropped.join(", ")}.
-        </p>
-      )}
-      <Button className="h-11" variant="tertiary" onPress={onDone}>
-        Start a new request
-      </Button>
-    </div>
-  );
-};
-
 export const RfqList = () => {
   const { items, hydrated, clear } = useRfq();
-  const freshness = useRfqFreshness();
-  const [sent, setSent] = React.useState<RfqSubmitSuccess | null>(null);
+  const catalog = useCatalogState();
+  const catalogEnabled = catalog.enabled;
+  const freshness = useRfqFreshness(catalogEnabled);
+  const router = useRouter();
+  const [sent, setSent] = React.useState(false);
 
+  // The list is cleared only once the server has confirmed the send, then
+  // the buyer lands on the confirmation page (CI-24). `sent` keeps the
+  // empty-list state from flashing while that navigation happens.
   const handleSent = React.useCallback(
     (result: RfqSubmitSuccess) => {
-      setSent(result);
+      const params = new URLSearchParams({ ref: result.reference });
+
+      for (const name of result.dropped) params.append("dropped", name);
+      setSent(true);
       clear();
-      window.scrollTo({ top: 0 });
+      router.push(`/rfq/sent?${params.toString()}`);
     },
-    [clear],
+    [clear, router],
   );
 
-  if (sent) return <SentState result={sent} onDone={() => setSent(null)} />;
-  if (!hydrated) return <LoadingState />;
+  if (sent) return <LoadingState />;
+  if (!hydrated || !catalog.ready) return <LoadingState />;
+  // Saved product lines aren't shown or checked while the catalogue is off.
+  if (!catalogEnabled) return <UnavailableState />;
   if (items.length === 0) return <EmptyState />;
 
   const flagged = freshness.status === "ready" ? items.length - freshness.sendable.length : 0;
@@ -220,12 +233,16 @@ export const RfqList = () => {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-separator pt-4">
-          <NextLink
-            className="min-h-11 content-center font-mono text-xs font-semibold uppercase tracking-wider text-foreground underline-offset-2 hover:text-accent hover:underline"
-            href="/products"
-          >
-            ← Add more products
-          </NextLink>
+          {catalogEnabled ? (
+            <NextLink
+              className="min-h-11 content-center font-mono text-xs font-semibold uppercase tracking-wider text-foreground underline-offset-2 hover:text-accent hover:underline"
+              href="/products"
+            >
+              ← Add more products
+            </NextLink>
+          ) : (
+            <span />
+          )}
           <ClearList count={items.length} />
         </div>
 

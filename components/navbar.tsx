@@ -7,9 +7,11 @@ import clsx from "clsx";
 import { useTheme } from "next-themes";
 import { Drawer } from "@heroui/react";
 
+import { useCatalogEnabled } from "@/components/catalog-state";
 import { RfqNavButton } from "@/components/rfq/rfq-nav-button";
 import { siteConfig } from "@/config/site";
 import { divisionCssVars, divisions, getDivision, themeFor } from "@/config/divisions";
+import { browsable } from "@/lib/catalog/rules";
 import type { ProductCategory } from "@/sanity/lib/types";
 
 // Nav category links jump straight into the filterable products grid with
@@ -60,6 +62,8 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const productsTriggerRef = useRef<HTMLButtonElement>(null);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  // Product navigation only exists while the catalogue is on (CI-72).
+  const catalogEnabled = useCatalogEnabled();
 
   // The URL's first segment is the only source of division now — "chemical"
   // or "medical" under app/[division]/, undefined on every shared route
@@ -71,7 +75,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
   // Desktop dropdown's own list — categories for the current division, or
   // none at all on umbrella pages (where the dropdown lists divisions instead).
   const divisionCategories = division
-    ? categories.filter((cat) => cat.division === division.sanityDivision)
+    ? categories.filter((cat) => cat.division === division.sanityDivision && browsable(catalogEnabled, cat))
     : [];
 
   // Which page layout is under the navbar right now — strictly path-based,
@@ -102,6 +106,13 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const homeHref = division ? `/${division.slug}` : "/";
   const browseLabel = division?.browseLabel ?? "Browse Products";
   const browseHref = division ? `/${division.slug}/products` : "/products";
+  // "Browse Products" belongs on the division sites only. The group home
+  // keeps just the "Get a Quote" shortcut (CI-32).
+  const showBrowse = catalogEnabled && pathname !== "/";
+  // On a division, "Products" is the dropdown of its categories. With no
+  // division it lists the divisions instead, which stays.
+  const showProductsMenu = !division || catalogEnabled;
+  const quoteHref = division?.quoteHref ?? "/rfq";
 
   useEffect(() => setMounted(true), []);
 
@@ -197,6 +208,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
         <ul className="hidden items-center gap-8 lg:flex">
           {/* Scoped to the current division; on shared routes (no division
               in the URL) it lists divisions instead — see `division` above. */}
+          {showProductsMenu && (
           <li ref={dropdownRef} className="relative">
             <button
               ref={productsTriggerRef}
@@ -267,6 +279,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
               </div>
             )}
           </li>
+          )}
 
           {siteConfig.navItems.map((item) => (
             <li key={item.href}>
@@ -293,14 +306,17 @@ export const Navbar = ({ categories }: NavbarProps) => {
           )}
           <RfqNavButton
             className={isTransparent ? heroControl : "text-muted hover:text-foreground"}
+            href={quoteHref}
             variant="desktop"
           />
-          <NextLink
-            className="whitespace-nowrap rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
-            href={browseHref}
-          >
-            {browseLabel}
-          </NextLink>
+          {showBrowse && (
+            <NextLink
+              className="whitespace-nowrap rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+              href={browseHref}
+            >
+              {browseLabel}
+            </NextLink>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -360,9 +376,10 @@ export const Navbar = ({ categories }: NavbarProps) => {
               </Drawer.Header>
               <Drawer.Body className="flex flex-col gap-1">
                 <div className="mb-3">
-                  <RfqNavButton variant="drawer" onNavigate={() => setIsMenuOpen(false)} />
+                  <RfqNavButton href={quoteHref} variant="drawer" onNavigate={() => setIsMenuOpen(false)} />
                 </div>
                 {division ? (
+                  catalogEnabled && (
                   <>
                     <button
                       aria-expanded={isMobileProductsOpen}
@@ -399,6 +416,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                       </ul>
                     )}
                   </>
+                  )
                 ) : (
                   <>
                     <p className="mt-2 font-mono text-xs font-medium uppercase tracking-widest text-muted">
@@ -461,15 +479,17 @@ export const Navbar = ({ categories }: NavbarProps) => {
                   </button>
                 )}
               </Drawer.Body>
-              <Drawer.Footer className="flex flex-col gap-3">
-                <NextLink
-                  className="block w-full rounded border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
-                  href={browseHref}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {browseLabel}
-                </NextLink>
-              </Drawer.Footer>
+              {showBrowse && (
+                <Drawer.Footer className="flex flex-col gap-3">
+                  <NextLink
+                    className="block w-full rounded border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
+                    href={browseHref}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {browseLabel}
+                  </NextLink>
+                </Drawer.Footer>
+              )}
             </Drawer.Dialog>
           </Drawer.Content>
         </Drawer.Backdrop>

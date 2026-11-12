@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 
 import { notFound } from "next/navigation";
 
+import { CategoryDirectory } from "@/components/category-directory";
 import { ProductCatalogue } from "@/components/product-catalogue";
 import { getDivision } from "@/config/divisions";
+import { getCatalog } from "@/lib/catalog/visibility";
 import { loadQuery } from "@/sanity/lib/fetch";
 import { ALL_PRODUCTS_QUERY, CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
@@ -41,10 +43,27 @@ export default async function DivisionProductsPage({ params, searchParams }: Pro
 
   if (!division) notFound();
 
-  const [products, categories] = await Promise.all([
-    loadQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY),
-    loadQuery<ProductCategory[]>(CATEGORIES_QUERY),
-  ]);
+  const catalog = await getCatalog();
+  const allCategories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
+
+  // Products hidden, or on but none of this division's categories is ready
+  // yet: just its ranges, each leading to a quote request.
+  const divisionCategories = allCategories.filter((category) => category.division === division.sanityDivision);
+
+  if (!catalog.enabled || !divisionCategories.some((category) => catalog.isBrowsable(category))) {
+    return (
+      <CategoryDirectory
+        heading={`${division.name} product ranges`}
+        items={divisionCategories.map((category) => ({ category, href: catalog.hrefFor(category) }))}
+      />
+    );
+  }
+
+  // Only categories marked ready show their products.
+  const categories = allCategories.filter((category) => catalog.isBrowsable(category));
+  const products = (await loadQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY)).filter((product) =>
+    catalog.isBrowsable(product.category),
+  );
 
   return (
     <>

@@ -25,7 +25,7 @@ export type RfqFreshness = {
  * in it changes: flags deleted/unavailable products and vanished pack sizes,
  * and writes renames back to the stored lines.
  */
-export function useRfqFreshness(): RfqFreshness {
+export function useRfqFreshness(enabled = true): RfqFreshness {
   const { items, hydrated, updateItem } = useRfq();
   const [status, setStatus] = React.useState<RfqFreshness["status"]>("idle");
   const [snapshots, setSnapshots] = React.useState<Map<string, RfqProductSnapshot> | null>(null);
@@ -39,7 +39,8 @@ export function useRfqFreshness(): RfqFreshness {
   );
 
   React.useEffect(() => {
-    if (!hydrated || idsKey === "") {
+    // While the catalogue is off no product is looked up (CI-72).
+    if (!enabled || !hydrated || idsKey === "") {
       setStatus("idle");
 
       return;
@@ -60,7 +61,7 @@ export function useRfqFreshness(): RfqFreshness {
     return () => {
       cancelled = true;
     };
-  }, [hydrated, idsKey, attempt]);
+  }, [enabled, hydrated, idsKey, attempt]);
 
   const checks = React.useMemo(() => {
     const map = new Map<string, RfqLineCheck>();

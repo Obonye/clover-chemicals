@@ -29,6 +29,12 @@ export const RfqLineItemSchema = z.object({
 /** Botswana (+267 / local) and international numbers. */
 const PHONE_PATTERN = /^\+?[0-9][0-9 ()-]{5,18}[0-9]$/;
 
+/** Optional phone field: "" counts as absent, anything else must look like a number. */
+const optionalPhone = z.preprocess(
+  (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+  z.string().trim().regex(PHONE_PATTERN, "Enter a valid phone number").optional(),
+);
+
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
 export const RFQ_FULFILMENT = ["delivery", "collection"] as const;
@@ -38,15 +44,18 @@ export const RfqContactSchema = z.object({
   fullName: z.string().trim().min(2).max(120),
   company: z.string().trim().min(2).max(160),
   email: z.email().max(200),
-  phone: z.string().trim().regex(PHONE_PATTERN, "Enter a valid phone number"),
+  /** Mobile is preferred; at least one of mobile or landline is required. */
+  mobile: optionalPhone,
+  landline: optionalPhone,
   fulfilment: z.enum(RFQ_FULFILMENT, "Choose delivery or collection"),
-  /** Collection: the branch to collect from. Delivery: optional nearest branch. */
+  /** Collection only: the branch to collect from. Stock isn't necessarily dispatched
+   *  from the nearest branch, so delivery orders don't ask for one (CI-40). */
   branch: optionalText(80).refine(
     (slug) => slug === undefined || BRANCH_SLUGS.includes(slug),
     "Choose one of our branches",
   ),
   /** Required for delivery. */
-  deliveryLocation: optionalText(200),
+  deliveryAddress: optionalText(300),
   requiredBy: z.preprocess(
     (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
     z
@@ -56,8 +65,11 @@ export const RfqContactSchema = z.object({
   ),
   message: optionalText(2000),
 }).superRefine((contact, ctx) => {
-  if (contact.fulfilment === "delivery" && !contact.deliveryLocation) {
-    ctx.addIssue({ code: "custom", path: ["deliveryLocation"], message: "Enter where we should deliver to" });
+  if (!contact.mobile && !contact.landline) {
+    ctx.addIssue({ code: "custom", path: ["mobile"], message: "Enter a mobile or landline number" });
+  }
+  if (contact.fulfilment === "delivery" && !contact.deliveryAddress) {
+    ctx.addIssue({ code: "custom", path: ["deliveryAddress"], message: "Enter the address we should deliver to" });
   }
   if (contact.fulfilment === "collection" && !contact.branch) {
     ctx.addIssue({ code: "custom", path: ["branch"], message: "Choose the branch you'll collect from" });

@@ -1,7 +1,7 @@
 import NextLink from "next/link";
 
 import { JsonLd } from "@/components/json-ld";
-import { branches, mapUrl } from "@/config/branches";
+import { branchesInDisplayOrder, mapUrl } from "@/config/branches";
 import { divisions } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
 import { branchesJsonLd } from "@/lib/structured-data";
@@ -31,7 +31,7 @@ export default function LocationsPage() {
       <section className="bg-background py-16 lg:py-24">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {branches.map((branch) => {
+            {branchesInDisplayOrder.map((branch) => {
               const servedDivisions = divisions.filter((d) =>
                 branch.divisions.includes(d.slug),
               );

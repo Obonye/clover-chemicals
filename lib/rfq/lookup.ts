@@ -4,6 +4,7 @@ import type { RfqProductSnapshot } from "@/sanity/lib/types";
 
 import { z } from "zod";
 
+import { isCatalogEnabled } from "@/lib/catalog/visibility";
 import { client } from "@/sanity/lib/client";
 import { PRODUCTS_BY_IDS_QUERY } from "@/sanity/lib/queries";
 
@@ -20,6 +21,8 @@ export async function lookupRfqProducts(ids: string[]): Promise<RfqProductSnapsh
   const parsed = IdsSchema.safeParse(Array.from(new Set(ids)));
 
   if (!parsed.success || parsed.data.length === 0) return [];
+  // This returns product data, so it returns none while the catalogue is off (CI-71).
+  if (!(await isCatalogEnabled())) return [];
 
   return client.fetch<RfqProductSnapshot[]>(
     PRODUCTS_BY_IDS_QUERY,

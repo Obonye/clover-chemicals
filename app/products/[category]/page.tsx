@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 import NextLink from "next/link";
 import { stegaClean } from "next-sanity";
 
 import { ProductCard } from "@/components/product-card";
+import { getCatalog } from "@/lib/catalog/visibility";
 import { loadQuery } from "@/sanity/lib/fetch";
 import {
   CATEGORIES_QUERY,
@@ -64,8 +65,14 @@ export default async function CategoryPage({ params }: Props) {
 
   if (!active) notFound();
 
+  // Hidden or not-yet-ready categories send the visitor to the RFQ. A
+  // temporary (307) redirect, so nothing caches it for after launch (CI-71).
+  const catalog = await getCatalog();
+
+  if (!catalog.isBrowsable(active)) redirect(catalog.hrefFor(active));
+
   const cat = active;
-  const categories = allCategories;
+  const categories = allCategories.filter((tab) => catalog.isBrowsable(tab));
   const heroSrc = imageUrl(cat.image, { width: 1920, height: 900 });
 
   return (
