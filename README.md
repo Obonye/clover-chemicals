@@ -48,9 +48,10 @@ links are hidden.
   `vercel flags enable product-catalog` / `vercel flags disable product-catalog`.
   No redeploy is needed.
 - **See it yourself in production** without changing it for visitors: use the
-  Flags Explorer in the Vercel Toolbar. It needs `FLAGS_SECRET` (see `.env.example`).
-- **Locally**, run `vercel env pull` to get `FLAGS`. Without it the flag
-  evaluates to off.
+  Flags Explorer in the Vercel Toolbar. It needs `FLAGS_SECRET`, which Vercel sets for you (see `.env.example`).
+- **Locally**, run `vercel link` and `vercel env pull`. That provides the
+  OIDC token the Vercel adapter signs in with (no SDK key needed). Without it
+  the flag evaluates to off.
 - **In code**, never import `flags.ts` directly. Use `isCatalogEnabled()` or
   `isCategoryBrowsable()` from `lib/catalog/visibility.ts`.
 
