@@ -3,6 +3,7 @@
 import type { RfqContact, RfqLineItem } from "@/lib/rfq/types";
 
 import { clientIp } from "@/lib/client-ip";
+import { isCatalogEnabled } from "@/lib/catalog/visibility";
 import { sendRfqEmails } from "@/lib/rfq/email";
 import { lookupRfqProducts } from "@/lib/rfq/lookup";
 import { checkRateLimit } from "@/lib/rfq/rate-limit";
@@ -99,6 +100,15 @@ export async function submitRfq(
   // Honeypot: bots fill every field. Pretend it worked and send nothing.
   if (typeof website === "string" && website !== "") {
     return { status: "success", reference: createRfqReference(), dropped: [] };
+  }
+
+  // Requests are built from products, so none are accepted while the
+  // catalogue is off (CI-72).
+  if (!(await isCatalogEnabled())) {
+    return {
+      status: "error",
+      message: "Product requests aren't open online yet. Please use the contact form or call us.",
+    };
   }
 
   const parsed = RfqSubmissionSchema.safeParse({

@@ -3,6 +3,7 @@
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { useCatalogEnabled } from "@/components/catalog-state";
 import { useRfq } from "@/lib/rfq/store";
 
 /** Screen-reader label for the RFQ entry point, e.g. "Request for quote, 3 items". */
@@ -13,8 +14,11 @@ export const rfqAccessibleName = (count: number) =>
  *  server render and first client render always agree. */
 export const useRfqNavCount = () => {
   const { count, hydrated } = useRfq();
+  // The saved list holds products, so it counts for nothing while the
+  // catalogue is off (CI-72).
+  const catalogEnabled = useCatalogEnabled();
 
-  return hydrated ? count : 0;
+  return hydrated && catalogEnabled ? count : 0;
 };
 
 type BadgeProps = {
@@ -103,6 +107,10 @@ const CartIcon = () => (
  *  holds products from all of them. */
 export const RfqCartLink = () => {
   const count = useRfqNavCount();
+  const catalogEnabled = useCatalogEnabled();
+
+  // No products to collect while the catalogue is off, so no cart.
+  if (!catalogEnabled) return null;
 
   return (
     <NextLink
