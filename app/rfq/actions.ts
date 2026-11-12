@@ -32,10 +32,11 @@ const CONTACT_FIELDS: RfqContactField[] = [
   "fullName",
   "company",
   "email",
-  "phone",
+  "mobile",
+  "landline",
   "fulfilment",
   "branch",
-  "deliveryLocation",
+  "deliveryAddress",
   "requiredBy",
   "message",
 ];
