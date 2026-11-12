@@ -1,8 +1,8 @@
 import type { ContactMessage } from "./schema";
 
-import { isProductEnquiry, productInbox } from "@/config/enquiry-routing";
+import { rfqInboxes } from "@/config/enquiry-routing";
 import { formatBotswanaTime } from "@/lib/email/format";
-import { sendEmail, staffCc, WEBSITE_INBOX } from "@/lib/email/send";
+import { sendEmail, staffCc } from "@/lib/email/send";
 import { renderEnquiryEmail } from "@/lib/email/templates/enquiry-email";
 import { categories } from "@/lib/products";
 
@@ -21,12 +21,10 @@ function productLabel(product: string | undefined): string | undefined {
 
 /**
  * Sends a contact-form message as a single email: to the sender, with the
- * right inbox on CC (one Resend send per enquiry): Sales for product enquiries,
- * the website inbox otherwise — see config/enquiry-routing.ts. Replies go to
- * that inbox. Throwing surfaces as the form's "couldn't send" error.
+ * team inboxes on CC (one Resend send per enquiry) — the same people as an RFQ,
+ * see config/enquiry-routing.ts. Replies go to them. Throwing surfaces as the form's "couldn't send" error.
  */
 export async function sendContactEmails({ reference, message, submittedAt }: ContactEmailPayload): Promise<void> {
-  const inbox = isProductEnquiry(message.product) ? productInbox : WEBSITE_INBOX;
   const { html, text, attachments } = await renderEnquiryEmail({
     preview: `We've received your message ${reference}. We'll respond within one business day.`,
     heading: "We've received your message",
@@ -48,8 +46,8 @@ export async function sendContactEmails({ reference, message, submittedAt }: Con
 
   await sendEmail({
     to: message.email,
-    cc: staffCc([inbox], message.email),
-    replyTo: staffCc([inbox], ""),
+    cc: staffCc(rfqInboxes, message.email),
+    replyTo: staffCc(rfqInboxes, ""),
     idempotencyKey: `contact-${reference}`,
     subject: `We've received your message ${reference}`,
     html,
