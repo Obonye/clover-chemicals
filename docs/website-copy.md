@@ -24,7 +24,7 @@ These look like inconsistencies or leftovers. None of them is changed yet. Tell 
 2. **"Eight divisions".** About, the Chemical home page and the stats say **8 Divisions**, but the site only has two division pages (Clover Chemicals and Clover Medical).
 3. **"Clover Chemical Industries" vs "Clover Industries".** The News page intro, the news articles and an image description use the old name; everything else uses "Clover Industries".
 4. **Placeholder brands on the Medical home page.** The "Brands We Work With" strip lists *Meridian Health, Solace Labs, Ionic Diagnostics, Halcyon Care, Vertex Medical, Nexora*. These look like stand-ins, not Clover's real partners (Philips Medical, Shimadzu and so on).
-5. **Brochure link.** The quick-links bar has a "Brochure" button pointing to `/brochure.pdf`, but that file isn't in the site, so it leads nowhere.
+5. **Brochure link (hidden).** The quick-links bar's "Brochure" button pointed to `/brochure.pdf`, which isn't in the site, so it is hidden for now. To bring it back, add the PDF and restore the entry in `components/quick-links-bar.tsx`.
 6. **News articles can't be opened.** The news list links each story to `/news/{slug}`, but there is no article page, so "Read →" leads to a 404. The six articles are summaries only.
 7. **Empty pages.** `/blog`, `/docs` and `/pricing` exist but only show a heading ("Blog", "Docs", "Pricing"). They aren't linked from the menus.
 8. **Unused menu text.** `navMenuItems` and `footerItems` in the site config (Personal Protective Equipment, Pool Chemicals, and so on) aren't used anywhere; the menus use live Sanity categories instead.
@@ -134,9 +134,8 @@ Component: `components/footer.tsx`
 
 Component: `components/quick-links-bar.tsx`
 
-- **Button: WhatsApp** (`components/quick-links-bar.tsx:10`): WhatsApp
-- **Button: phone** (`components/quick-links-bar.tsx:15`): Call Us
-- **Button: brochure ⚠ (file missing, note 5)** (`components/quick-links-bar.tsx:20`): Brochure
+- **Button: WhatsApp** (`components/quick-links-bar.tsx:11`): WhatsApp
+- **Button: phone** (`components/quick-links-bar.tsx:16`): Call Us
 
 ## 1.9 Error page
 
