@@ -20,11 +20,11 @@ Every piece of wording a visitor reads on the site, organised by page and then b
 
 These look like inconsistencies or leftovers. None of them is changed yet. Tell me what you'd like done.
 
-1. **"100% citizen-owned" vs "Majority citizen-owned".** Home and About say *100%*; the About pillar and the Chemical home pillar say *Majority* ("Majority citizen-owned and registered under…").
+1. ~~**"100% citizen-owned" vs "Majority citizen-owned".**~~ Resolved: it now says 100% citizen-owned everywhere.
 2. **"Eight divisions".** About, the Chemical home page and the stats say **8 Divisions**, but the site only has two division pages (Clover Chemicals and Clover Medical).
 3. **"Clover Chemical Industries" vs "Clover Industries".** The News page intro, the news articles and an image description use the old name; everything else uses "Clover Industries".
 4. **Placeholder brands on the Medical home page.** The "Brands We Work With" strip lists *Meridian Health, Solace Labs, Ionic Diagnostics, Halcyon Care, Vertex Medical, Nexora*. These look like stand-ins, not Clover's real partners (Philips Medical, Shimadzu and so on).
-5. **Brochure link.** The quick-links bar has a "Brochure" button pointing to `/brochure.pdf`, but that file isn't in the site, so it leads nowhere.
+5. **Brochure link (hidden).** The quick-links bar's "Brochure" button pointed to `/brochure.pdf`, which isn't in the site, so it is hidden for now. To bring it back, add the PDF and restore the entry in `components/quick-links-bar.tsx`.
 6. **News articles can't be opened.** The news list links each story to `/news/{slug}`, but there is no article page, so "Read →" leads to a 404. The six articles are summaries only.
 7. **Empty pages.** `/blog`, `/docs` and `/pricing` exist but only show a heading ("Blog", "Docs", "Pricing"). They aren't linked from the menus.
 8. **Unused menu text.** `navMenuItems` and `footerItems` in the site config (Personal Protective Equipment, Pool Chemicals, and so on) aren't used anywhere; the menus use live Sanity categories instead.
@@ -134,9 +134,8 @@ Component: `components/footer.tsx`
 
 Component: `components/quick-links-bar.tsx`
 
-- **Button: WhatsApp** (`components/quick-links-bar.tsx:10`): WhatsApp
-- **Button: phone** (`components/quick-links-bar.tsx:15`): Call Us
-- **Button: brochure ⚠ (file missing, note 5)** (`components/quick-links-bar.tsx:20`): Brochure
+- **Button: WhatsApp** (`components/quick-links-bar.tsx:11`): WhatsApp
+- **Button: phone** (`components/quick-links-bar.tsx:16`): Call Us
 
 ## 1.9 Error page
 
@@ -168,8 +167,9 @@ Page: `app/page.tsx`. The page title is the company name.
 
 ## 2.1 Hero
 
-- **Small line above the headline** (`app/page.tsx:35`): Est. {foundedYear} · {years}+ Years · 100% Citizen-Owned · EDD Certified
-- **Headline** (`app/page.tsx:38`): Botswana's total solutions partner, division by division.
+- **Small line above the headline** (`app/page.tsx:38`): Est. {foundedYear} · {years}+ Years · 100% Citizen-Owned · EDD Certified
+- **Headline** (`app/page.tsx:41`): Botswana's total solutions partner, division by division.
+- **Tagline** (`app/page.tsx:44`): Lift as you rise.
 - **Description** (`app/page.tsx:41`): {siteDescription}
 
 The description is the site description in section 1.1.
@@ -178,26 +178,42 @@ The description is the site description in section 1.1.
 
 Two cards, one per division. Name and tagline come from section 1.3.
 
-- **Section label** (`app/page.tsx:50`): Our Divisions
-- **Heading** (`app/page.tsx:53`): One group, built to circle the customer.
-- **Card link** (`app/page.tsx:80`): Explore {divisionName} →
+- **Section label** (`app/page.tsx:56`): Our Divisions
+- **Heading** (`app/page.tsx:59`): One group, built to circle the customer.
+- **Card link** (`app/page.tsx:86`): Explore {divisionName} →
 
 ## 2.3 Who we are
 
-- **Section label** (`app/page.tsx:95`): Who We Are
+- **Section label** (`app/page.tsx:101`): Who We Are
 - **Paragraph** (`app/page.tsx:100`): {siteName} was established in Botswana in {foundedYear} to manufacture and supply chemicals for domestic and industrial use. Today we're 100% citizen-owned, EDD certified, and operating across chemicals, equipment, PPE, and medical divisions.
-- **Button** (`app/page.tsx:109`): Learn More →
+- **Button** (`app/page.tsx:115`): Learn More →
 
-## 2.4 Latest news
+## 2.4 At a glance
+
+New. Facts and the vision and mission in one place (CI-31). The wording repeats the About page, so change it in both. The head office and other branch addresses come from section 1.4.
+
+- **Section label** (`app/page.tsx:125`): At a Glance
+- **Heading** (`app/page.tsx:128`): Rooted in Botswana since {foundedYear}.
+- **Fact 1: label** (`app/page.tsx:132`): Established
+- **Fact 2: label** (`app/page.tsx:136`): Registered
+- **Fact 2: text** (`app/page.tsx:138`): 100% citizen-owned and registered under the Economic Diversification Drive (EDD)
+- **Fact 3: label** (`app/page.tsx:142`): Head Office
+- **Fact 4: label** (`app/page.tsx:147`): Also At
+- **Vision: label** (`app/page.tsx:158`): Vision
+- **Vision: text** (`app/page.tsx:160`): To become a one-stop total solutions provider.
+- **Mission: label** (`app/page.tsx:164`): Mission
+- **Mission: text** (`app/page.tsx:166`): To provide quality, state-of-the-art, affordable total solutions through excellent customer service.
+
+## 2.5 Latest news
 
 Shows the first three articles from section 6.
 
-- **Section label** (`app/page.tsx:121`): Latest Updates
-- **Heading** (`app/page.tsx:124`): News across the group.
-- **Link, top right** (`app/page.tsx:131`): View all →
-- **Link on each article** (`app/page.tsx:157`): Read →
+- **Section label** (`app/page.tsx:179`): Latest Updates
+- **Heading** (`app/page.tsx:182`): News across the group.
+- **Link, top right** (`app/page.tsx:189`): View all →
+- **Link on each article** (`app/page.tsx:215`): Read →
 
-## 2.5 Call to action banner
+## 2.6 Call to action banner
 
 Component: `components/cta-banner.tsx`. Also used at the bottom of the Chemical home page (section 9).
 
@@ -283,7 +299,7 @@ Four numbered blocks. The numbers 01–04 are fixed.
 - **Section label** (`app/about/page.tsx:236`): What Sets Us Apart
 - **Heading** (`app/about/page.tsx:239`): Built on compliance, backed by global brands.
 - **Block 1: heading** (`app/about/page.tsx:16`): Citizen-Owned & EDD Certified
-- **Block 1: text ⚠ (note 1)** (`app/about/page.tsx:17`): Majority citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.
+- **Block 1: text** (`app/about/page.tsx:17`): 100% citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.
 - **Block 2: heading** (`app/about/page.tsx:21`): Global Brands, Local Support
 - **Block 2: text** (`app/about/page.tsx:22`): Authorised distributor for Diversey, Kimberly Clark, Columbus, Coopers, Shimadzu, and Philips Medical — with world-class products backed by a team on the ground in Botswana.
 - **Block 3: heading** (`app/about/page.tsx:26`): Foremost in Medical & Lab Solutions
@@ -789,7 +805,7 @@ Component: `components/specials-banner.tsx`. Headline, description, picture and 
 
 ## 9.6 Heritage
 
-Component: `components/heritage-section.tsx`. ⚠ Notes 1 and 2 apply. Wording here repeats the About page and has to be changed in both places.
+Component: `components/heritage-section.tsx`. ⚠ Note 2 applies. Wording here repeats the About page and has to be changed in both places.
 
 - **Small label** (`components/heritage-section.tsx:36`): Est. {foundedYear}
 - **Heading** (`components/heritage-section.tsx:42`): Rooted in Botswana. Trusted by global industry.
@@ -804,7 +820,7 @@ Component: `components/heritage-section.tsx`. ⚠ Notes 1 and 2 apply. Wording h
 - **Row 4: label** (`components/heritage-section.tsx:7`): Certification
 - **Row 4: value** (`components/heritage-section.tsx:7`): EDD
 - **Block 1: heading** (`components/heritage-section.tsx:12`): Citizen-Owned & EDD Certified
-- **Block 1: text ⚠ (note 1)** (`components/heritage-section.tsx:13`): Majority citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.
+- **Block 1: text** (`components/heritage-section.tsx:13`): 100% citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.
 - **Block 2: heading** (`components/heritage-section.tsx:16`): Global Brands, Local Support
 - **Block 2: text** (`components/heritage-section.tsx:17`): Authorised distributor for Diversey, Kimberly Clark, Columbus, Coopers, Shimadzu, and Philips Medical, with world-class products backed by a team on the ground in Botswana.
 - **Block 3: heading** (`components/heritage-section.tsx:20`): Foremost in Medical & Lab Solutions
@@ -814,7 +830,7 @@ Row 1's value is the founding year.
 
 ## 9.7 Call to action
 
-The same banner as the group home page. See section 2.5.
+The same banner as the group home page. See section 2.6.
 
 ---
 

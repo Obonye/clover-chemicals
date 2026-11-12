@@ -14,7 +14,7 @@ const pillars = [
   {
     index: "01",
     heading: "Citizen-Owned & EDD Certified",
-    body: "Majority citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.",
+    body: "100% citizen-owned and registered under Botswana's Economic Diversification Drive, giving our clients the procurement compliance they need for government and institutional contracts.",
   },
   {
     index: "02",

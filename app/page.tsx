@@ -3,12 +3,15 @@ import NextLink from "next/link";
 
 import { CtaBanner } from "@/components/cta-banner";
 import { JsonLd } from "@/components/json-ld";
+import { branches } from "@/config/branches";
 import { siteConfig } from "@/config/site";
 import { divisionCssVars, divisions } from "@/config/divisions";
 import { articles } from "@/lib/news";
 import { organizationJsonLd } from "@/lib/structured-data";
 
 const latestArticles = articles.slice(0, 3);
+const headOffice = branches.find((branch) => branch.isHeadOffice) ?? branches[0];
+const otherBranches = branches.filter((branch) => branch !== headOffice);
 
 export default function Home() {
   const years = new Date().getFullYear() - siteConfig.foundedYear;
@@ -37,7 +40,10 @@ export default function Home() {
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "18ch" }}>
             Botswana&apos;s total solutions partner, division by division.
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">
+          <p className="mt-5 font-display text-2xl font-bold tracking-tight text-white lg:text-3xl">
+            Lift as you rise.
+          </p>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/75">
             {siteConfig.description}
           </p>
         </div>
@@ -108,6 +114,58 @@ export default function Home() {
             >
               Learn More →
             </NextLink>
+          </div>
+        </div>
+      </section>
+
+      {/* At a glance */}
+      <section className="border-b border-separator bg-background py-20">
+        <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
+          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+            At a Glance
+          </p>
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+            Rooted in Botswana since {siteConfig.foundedYear}.
+          </h2>
+          <dl className="mb-16 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="border-t border-separator pt-4">
+              <dt className="mb-2 font-mono text-xs uppercase tracking-widest text-muted">Established</dt>
+              <dd className="text-base font-semibold text-foreground">{siteConfig.foundedYear}</dd>
+            </div>
+            <div className="border-t border-separator pt-4">
+              <dt className="mb-2 font-mono text-xs uppercase tracking-widest text-muted">Registered</dt>
+              <dd className="text-base font-semibold leading-snug text-foreground">
+                100% citizen-owned and registered under the Economic Diversification Drive (EDD)
+              </dd>
+            </div>
+            <div className="border-t border-separator pt-4">
+              <dt className="mb-2 font-mono text-xs uppercase tracking-widest text-muted">Head Office</dt>
+              <dd className="text-base font-semibold leading-snug text-foreground">{headOffice.address}</dd>
+            </div>
+            {otherBranches.length > 0 && (
+              <div className="border-t border-separator pt-4">
+                <dt className="mb-2 font-mono text-xs uppercase tracking-widest text-muted">Also At</dt>
+                <dd className="flex flex-col gap-2 text-base font-semibold leading-snug text-foreground">
+                  {otherBranches.map((branch) => (
+                    <span key={branch.slug}>{branch.address}</span>
+                  ))}
+                </dd>
+              </div>
+            )}
+          </dl>
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted">Vision</p>
+              <p className="text-lg font-medium leading-relaxed text-foreground" style={{ maxWidth: "36ch" }}>
+                To become a one-stop total solutions provider.
+              </p>
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted">Mission</p>
+              <p className="text-lg font-medium leading-relaxed text-foreground" style={{ maxWidth: "36ch" }}>
+                To provide quality, state-of-the-art, affordable total solutions through excellent customer service.
+              </p>
+            </div>
           </div>
         </div>
       </section>

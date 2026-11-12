@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
 
-import { DocumentIcon, PhoneIcon, WhatsAppIcon } from "@/components/icons";
+import { PhoneIcon, WhatsAppIcon } from "@/components/icons";
 
+// The Brochure button (/brochure.pdf, DocumentIcon) is hidden until the PDF exists.
 const links = [
   {
     label: "WhatsApp",
@@ -15,11 +16,6 @@ const links = [
     label: "Call Us",
     href: "tel:+2673953035",
     icon: PhoneIcon,
-  },
-  {
-    label: "Brochure",
-    href: "/brochure.pdf",
-    icon: DocumentIcon,
   },
 ];
 
