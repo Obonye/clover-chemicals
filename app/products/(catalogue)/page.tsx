@@ -36,8 +36,9 @@ export default async function ProductsPage({ searchParams }: Props) {
   const catalog = await getCatalog();
   const allCategories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
 
-  // Products hidden: just the ranges, each leading to a quote request.
-  if (!catalog.enabled) {
+  // Products hidden, or on but no category is ready yet: just the ranges,
+  // each leading to a quote request.
+  if (!catalog.enabled || !allCategories.some((category) => catalog.isBrowsable(category))) {
     return (
       <>
         <CategoryDirectory

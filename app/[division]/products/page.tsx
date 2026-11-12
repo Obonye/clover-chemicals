@@ -46,14 +46,15 @@ export default async function DivisionProductsPage({ params, searchParams }: Pro
   const catalog = await getCatalog();
   const allCategories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
 
-  // Products hidden: just this division's ranges, each leading to a quote request.
-  if (!catalog.enabled) {
+  // Products hidden, or on but none of this division's categories is ready
+  // yet: just its ranges, each leading to a quote request.
+  const divisionCategories = allCategories.filter((category) => category.division === division.sanityDivision);
+
+  if (!catalog.enabled || !divisionCategories.some((category) => catalog.isBrowsable(category))) {
     return (
       <CategoryDirectory
         heading={`${division.name} product ranges`}
-        items={allCategories
-          .filter((category) => category.division === division.sanityDivision)
-          .map((category) => ({ category, href: catalog.hrefFor(category) }))}
+        items={divisionCategories.map((category) => ({ category, href: catalog.hrefFor(category) }))}
       />
     );
   }
