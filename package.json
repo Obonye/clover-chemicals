@@ -8,7 +8,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint --fix",
-		"test": "node --test lib/catalog/rules.test.ts"
+		"test": "node --test lib/catalog/rules.test.ts lib/rfq/schema.test.ts"
 	},
 	"dependencies": {
 		"@flags-sdk/vercel": "^1.6.0",

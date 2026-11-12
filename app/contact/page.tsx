@@ -37,9 +37,9 @@ function ContactContent() {
   const enquiryParam = searchParams.get("enquiry");
   const defaultEnquiry = enquiryTypeIds.includes(enquiryParam as EnquiryTypeId) ? (enquiryParam as EnquiryTypeId) : "";
   const productParam = searchParams.get("product")?.trim().slice(0, 120);
-  const defaultMessage = productParam ? `Enquiry about: ${productParam.replace(/-/g, " ")}
-
-` : "";
+  const categoryParam = searchParams.get("category")?.trim().slice(0, 120);
+  const subject = productParam ?? categoryParam;
+  const defaultMessage = subject ? `Enquiry about: ${subject.replace(/-/g, " ")}\n\n` : "";
   const [state, formAction, pending] = useActionState(submitContact, { status: "idle" });
   // The success panel replaces the form; "Send another message" dismisses that
   // result so the (freshly mounted, empty) form shows again.

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { browsable, categoryHref } from "./rules.ts";
+import { browsable, categoryHref, rfqEntryHref } from "./rules.ts";
 
 const ready = { slug: "pool", catalogReady: true };
 const notReady = { slug: "pool", catalogReady: false };
@@ -33,6 +33,15 @@ describe("categoryHref", () => {
     assert.equal(categoryHref(true, notReady), "/rfq?category=pool");
     assert.equal(categoryHref(false, ready), "/rfq?category=pool");
     assert.equal(categoryHref(false, notReady), "/rfq?category=pool");
+  });
+
+  it("sends Medical categories to the Medical enquiry form", () => {
+    const medical = { slug: "lab-equipment", division: "medical" };
+
+    assert.equal(categoryHref(false, medical), "/contact?enquiry=medical&category=lab-equipment");
+    assert.equal(categoryHref(true, { ...medical, catalogReady: true }), "/products/lab-equipment");
+    assert.equal(rfqEntryHref("lab-equipment", "medical"), "/contact?enquiry=medical&category=lab-equipment");
+    assert.equal(rfqEntryHref("pool", "chemicals"), "/rfq?category=pool");
   });
 
   it("encodes the slug and falls back to /rfq without one", () => {

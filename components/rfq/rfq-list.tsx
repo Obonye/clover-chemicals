@@ -5,12 +5,16 @@ import { Button } from "@heroui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
+import { resolveRfqCategory } from "@/app/rfq/actions";
+
 import { useCatalogState } from "@/components/catalog-state";
 import { RfqDetailsForm, type RfqSubmitSuccess } from "@/components/rfq/rfq-details-form";
+import { RfqCategoryRow } from "@/components/rfq/rfq-category-row";
 import { RfqTableRow } from "@/components/rfq/rfq-table-row";
 import { divisions } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
 import { rfqLineKey } from "@/lib/rfq/schema";
+import { isCategoryLine, isProductLine } from "@/lib/rfq/types";
 import { useRfq } from "@/lib/rfq/store";
 import { useRfqFreshness } from "@/lib/rfq/use-rfq-freshness";
 
@@ -20,29 +24,28 @@ const STEPS = [
   { title: "Send it to us", body: "We price every request for you and reply with a quotation." },
 ];
 
-/** Shown while the catalogue is off: there are no products to collect yet. */
+/** Shown while the catalogue is off and the list is empty: requests start
+ *  from a product range. */
 const UnavailableState = () => (
   <div className="flex max-w-[60ch] flex-col items-start gap-4">
-    <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
-      Online product requests open soon
-    </h2>
+    <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground">Your RFQ list is empty</h2>
     <p className="text-base leading-relaxed text-muted">
-      For now, tell us what you need and our team will reply within one business day with availability and a
-      quotation.
+      Choose a product range and tell us what you need. Our team will reply within one business day with availability
+      and a quotation.
     </p>
     <div className="flex flex-wrap items-center gap-4">
       <NextLink
         className="inline-flex min-h-11 items-center rounded bg-accent px-5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+        href="/products"
+      >
+        Choose a product range
+      </NextLink>
+      <NextLink
+        className="text-sm font-semibold text-foreground underline underline-offset-2 hover:text-accent"
         href="/contact"
       >
-        Send an enquiry
+        Or send an enquiry
       </NextLink>
-      <a
-        className="text-sm font-semibold text-foreground underline underline-offset-2 hover:text-accent"
-        href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
-      >
-        {siteConfig.contact.phone}
-      </a>
     </div>
   </div>
 );
@@ -167,6 +170,64 @@ export const RfqList = () => {
   const freshness = useRfqFreshness(catalogEnabled);
   const router = useRouter();
   const [sent, setSent] = React.useState(false);
+  const { addItem } = useRfq();
+  // A `?category=` link adds that range once, then the URL is cleaned so a
+  // refresh or back/forward can't add it again (CI-74).
+  const [entry, setEntry] = React.useState<"checking" | "done">("checking");
+  const [notice, setNotice] = React.useState<string | null>(null);
+  const entryHandled = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!hydrated || entryHandled.current) return;
+    entryHandled.current = true;
+
+    const slug = new URLSearchParams(window.location.search).get("category");
+
+    if (slug === null) {
+      setEntry("done");
+
+      return;
+    }
+    // Drop the parameter straight away, whatever it turns out to be.
+    window.history.replaceState(null, "", "/rfq");
+
+    resolveRfqCategory(slug)
+      .then((category) => {
+        if (!category) return;
+        const result = addItem({
+          type: "category",
+          categorySlug: category.slug,
+          categoryName: category.name,
+          division: category.division,
+          details: "",
+        });
+
+        setNotice(
+          result === "full"
+            ? "Your RFQ is full. Send it or remove something before adding more."
+            : result === "merged"
+              ? `${category.name} is already in your list. Tell us what you need below.`
+              : `${category.name} added. Tell us what you need below.`,
+        );
+        // Wait for the row to render, then put the cursor in its details field.
+        setTimeout(() => {
+          document.querySelector<HTMLTextAreaElement>(`[data-rfq-details="category::${category.slug}"]`)?.focus();
+        }, 150);
+      })
+      .catch(() => {
+        // Couldn't check the link: show the normal RFQ page.
+      })
+      .finally(() => setEntry("done"));
+  }, [hydrated, addItem]);
+
+  // While the catalogue is off, saved product lines are neither shown nor
+  // checked; category lines are what the RFQ is for (CI-72, CI-73).
+  const productLines = React.useMemo(
+    () => (catalogEnabled ? items.filter(isProductLine) : []),
+    [items, catalogEnabled],
+  );
+  const categoryLines = React.useMemo(() => items.filter(isCategoryLine), [items]);
+  const visibleCount = productLines.length + categoryLines.length;
 
   // The list is cleared only once the server has confirmed the send, then
   // the buyer lands on the confirmation page (CI-24). `sent` keeps the
@@ -184,17 +245,18 @@ export const RfqList = () => {
   );
 
   if (sent) return <LoadingState />;
-  if (!hydrated || !catalog.ready) return <LoadingState />;
-  // Saved product lines aren't shown or checked while the catalogue is off.
-  if (!catalogEnabled) return <UnavailableState />;
-  if (items.length === 0) return <EmptyState />;
+  if (!hydrated || !catalog.ready || entry !== "done") return <LoadingState />;
+  if (visibleCount === 0) return catalogEnabled ? <EmptyState /> : <UnavailableState />;
 
-  const flagged = freshness.status === "ready" ? items.length - freshness.sendable.length : 0;
+  const flagged =
+    freshness.status === "ready" ? productLines.length - (freshness.sendable.length - categoryLines.length) : 0;
+  // With no products to check, there's nothing to wait for.
+  const checkDone = productLines.length === 0 || freshness.status === "ready" || freshness.status === "error";
 
   return (
     <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_240px]">
       <div className="flex min-w-0 flex-col gap-8">
-        {freshness.status === "error" && (
+        {freshness.status === "error" && productLines.length > 0 && (
           <p className="rounded-lg bg-warning-soft px-4 py-3 text-sm text-warning-soft-foreground" role="alert">
             We couldn&apos;t check your list against our latest catalogue.{" "}
             <Button className="h-auto p-0 font-semibold underline underline-offset-2" variant="ghost" onPress={freshness.retry}>
@@ -203,55 +265,66 @@ export const RfqList = () => {
           </p>
         )}
 
-        <div className="table-root table-root--primary max-md:bg-transparent max-md:p-0">
-          <table className="table__content table-fixed max-md:block">
-            <caption className="sr-only">Products in your request for quote</caption>
-            <colgroup className="max-md:hidden">
-              <col />
-              <col className="w-36" />
-              <col className="w-40" />
-              <col className="w-[28%]" />
-              <col className="w-12" />
-            </colgroup>
-            <thead className="table__header max-md:hidden">
-              <tr>
-                <th className="table__column" scope="col">Product</th>
-                <th className="table__column" scope="col">Pack size</th>
-                <th className="table__column" scope="col">Quantity</th>
-                <th className="table__column" scope="col">Note</th>
-                <th className="table__column" scope="col">
-                  <span className="sr-only">Remove</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="table__body max-md:flex max-md:flex-col max-md:gap-2 max-md:shadow-none">
-              {items.map((line) => (
-                <RfqTableRow key={rfqLineKey(line)} check={freshness.checks.get(rfqLineKey(line))} line={line} />
+        <p aria-live="polite" className={notice ? "rounded-lg bg-accent-soft px-4 py-3 text-sm text-accent-soft-foreground" : "sr-only"} role="status">
+          {notice}
+        </p>
+
+        {categoryLines.length > 0 && (
+          <section aria-labelledby="rfq-ranges-heading">
+            <h2 className="mb-3 font-display text-lg font-extrabold tracking-tight text-foreground" id="rfq-ranges-heading">
+              Product ranges
+            </h2>
+            <ul className="flex flex-col gap-3">
+              {categoryLines.map((line) => (
+                <RfqCategoryRow key={rfqLineKey(line)} line={line} />
               ))}
-            </tbody>
-          </table>
-        </div>
+            </ul>
+          </section>
+        )}
+
+        {productLines.length > 0 && (
+          <div className="table-root table-root--primary max-md:bg-transparent max-md:p-0">
+            <table className="table__content table-fixed max-md:block">
+              <caption className="sr-only">Products in your request for quote</caption>
+              <colgroup className="max-md:hidden">
+                <col />
+                <col className="w-36" />
+                <col className="w-40" />
+                <col className="w-[28%]" />
+                <col className="w-12" />
+              </colgroup>
+              <thead className="table__header max-md:hidden">
+                <tr>
+                  <th className="table__column" scope="col">Product</th>
+                  <th className="table__column" scope="col">Pack size</th>
+                  <th className="table__column" scope="col">Quantity</th>
+                  <th className="table__column" scope="col">Note</th>
+                  <th className="table__column" scope="col">
+                    <span className="sr-only">Remove</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="table__body max-md:flex max-md:flex-col max-md:gap-2 max-md:shadow-none">
+                {productLines.map((line) => (
+                  <RfqTableRow key={rfqLineKey(line)} check={freshness.checks.get(rfqLineKey(line))} line={line} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-separator pt-4">
-          {catalogEnabled ? (
-            <NextLink
-              className="min-h-11 content-center font-mono text-xs font-semibold uppercase tracking-wider text-foreground underline-offset-2 hover:text-accent hover:underline"
-              href="/products"
-            >
-              ← Add more products
-            </NextLink>
-          ) : (
-            <span />
-          )}
-          <ClearList count={items.length} />
+          <NextLink
+            className="min-h-11 content-center font-mono text-xs font-semibold uppercase tracking-wider text-foreground underline-offset-2 hover:text-accent hover:underline"
+            href="/products"
+          >
+            {catalogEnabled ? "← Add more products" : "← Add another range"}
+          </NextLink>
+          <ClearList count={visibleCount} />
         </div>
 
         <div className="rounded-2xl border border-separator bg-surface p-5 lg:p-8">
-          <RfqDetailsForm
-            items={freshness.sendable}
-            ready={freshness.status === "ready" || freshness.status === "error"}
-            onSuccess={handleSent}
-          />
+          <RfqDetailsForm items={freshness.sendable} ready={checkDone} onSuccess={handleSent} />
         </div>
       </div>
 
@@ -262,7 +335,7 @@ export const RfqList = () => {
             <div className="flex justify-between gap-4">
               <dt className="text-muted">Items</dt>
               <dd className="font-mono font-semibold text-foreground" aria-live="polite">
-                {items.length}
+                {visibleCount}
               </dd>
             </div>
             {flagged > 0 && (

@@ -84,7 +84,7 @@ const MobileDivisionMenu = ({ segment }: { segment: string | null }) => {
         ref={triggerRef}
         aria-controls="mobile-division-menu"
         aria-expanded={isOpen}
-        className="group flex h-full min-w-0 items-center gap-2 text-sm font-semibold uppercase tracking-[0.1em] text-white"
+        className="group flex h-full min-w-0 items-center gap-2 text-sm font-semibold uppercase tracking-[0.1em] text-foreground"
         data-open={isOpen}
         type="button"
         onClick={() => setIsOpen((open) => !open)}
@@ -98,7 +98,7 @@ const MobileDivisionMenu = ({ segment }: { segment: string | null }) => {
       {isOpen && (
         <nav
           aria-label="Divisions"
-          className="fixed inset-x-0 top-[var(--utility-bar-h)] border-t border-white/10 bg-[#111111] shadow-lg"
+          className="fixed inset-x-0 top-[var(--utility-bar-h)] border-t border-separator bg-background shadow-lg"
           id="mobile-division-menu"
         >
           <ul className="py-1">
@@ -106,16 +106,16 @@ const MobileDivisionMenu = ({ segment }: { segment: string | null }) => {
               <li key={option.href}>
                 <NextLink
                   aria-current={option.active ? "page" : undefined}
-                  className="flex min-h-14 items-start gap-3 px-6 py-3 transition-colors duration-150 hover:bg-white/10"
+                  className="flex min-h-14 items-start gap-3 px-6 py-3 transition-colors duration-150 hover:bg-surface-secondary"
                   href={option.href}
                   onClick={() => setIsOpen(false)}
                 >
                   <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-semibold text-white">{option.name}</span>
-                    <span className="mt-0.5 block text-xs leading-snug text-white/55">{option.tagline}</span>
+                    <span className="block text-sm font-semibold text-foreground">{option.name}</span>
+                    <span className="mt-0.5 block text-xs leading-snug text-muted">{option.tagline}</span>
                   </span>
                   {option.active && (
-                    <span className="mt-0.5 text-white">
+                    <span className="mt-0.5 text-foreground">
                       <CheckIcon />
                     </span>
                   )}
@@ -171,7 +171,7 @@ export const UtilityBar = () => {
   }, [isOpen, useDropdown]);
 
   return (
-    <div className="fixed top-0 z-50 h-[var(--utility-bar-h)] w-full bg-[#111111] text-white">
+    <div className="fixed top-0 z-50 h-[var(--utility-bar-h)] w-full border-b border-separator bg-background text-foreground">
       <div className="mx-auto flex h-full max-w-[1280px] items-center gap-6 px-6 lg:px-12">
         <MobileDivisionMenu segment={segment} />
 
@@ -182,14 +182,14 @@ export const UtilityBar = () => {
             className={clsx(
               "flex h-full shrink-0 items-center text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
               // Active on the group home and every shared (non-division) page.
-              currentDivision ? "text-white/60 hover:text-white/80" : "text-white",
+              currentDivision ? "text-muted hover:text-foreground" : "text-foreground",
             )}
             href="/"
           >
             Clover Industries
           </NextLink>
 
-          <span aria-hidden="true" className="h-4 w-px shrink-0 bg-white/20" />
+          <span aria-hidden="true" className="h-4 w-px shrink-0 bg-separator" />
 
           {useDropdown ? (
             <div ref={dropdownRef} className="relative h-full shrink-0">
@@ -200,7 +200,7 @@ export const UtilityBar = () => {
                   "group flex h-full items-center gap-1.5 text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
                   currentDivision
                     ? "bg-accent px-3 text-accent-foreground"
-                    : "text-white/45 hover:text-white/75",
+                    : "text-muted hover:text-foreground",
                 )}
                 data-open={isOpen}
                 type="button"
@@ -211,18 +211,18 @@ export const UtilityBar = () => {
               </button>
 
               {isOpen && (
-                <div className="absolute left-0 top-full mt-2 w-64 rounded border border-white/10 bg-[#111111] shadow-lg">
+                <div className="absolute left-0 top-full mt-2 w-64 rounded border border-separator bg-background shadow-lg">
                   <ul className="py-1">
                     {divisions.map((d) => (
                       <li key={d.slug}>
                         <NextLink
                           aria-current={d.slug === segment ? "page" : undefined}
-                          className="block min-h-11 px-4 py-2.5 transition-colors duration-150 hover:bg-white/10"
+                          className="block min-h-11 px-4 py-2.5 transition-colors duration-150 hover:bg-surface-secondary"
                           href={`/${d.slug}`}
                           onClick={() => setIsOpen(false)}
                         >
-                          <span className="block text-sm font-semibold text-white">{d.name}</span>
-                          <span className="mt-0.5 block text-xs leading-snug text-white/50">
+                          <span className="block text-sm font-semibold text-foreground">{d.name}</span>
+                          <span className="mt-0.5 block text-xs leading-snug text-muted">
                             {d.tagline}
                           </span>
                         </NextLink>
@@ -251,12 +251,12 @@ export const UtilityBar = () => {
                         "flex h-full items-center gap-2 px-3 text-sm font-semibold uppercase tracking-[0.1em] transition-colors duration-150",
                         isActive
                           ? "bg-accent text-accent-foreground"
-                          : "text-white/45 hover:text-white/75",
+                          : "text-muted hover:text-foreground",
                       )}
                       href={`/${division.slug}`}
                     >
                       {!isActive && (
-                        <span aria-hidden="true" className="h-2 w-2 rounded-full bg-white/25" />
+                        <span aria-hidden="true" className="h-2 w-2 rounded-full bg-muted/40" />
                       )}
                       {division.name}
                     </NextLink>

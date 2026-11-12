@@ -121,7 +121,9 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
     if (state.status === "error") errorRef.current?.focus();
   }, [state, onSuccess]);
 
-  const canSend = ready && items.length > 0 && !pending;
+  // Every product-range request needs the buyer's description (CI-73).
+  const missingDetails = items.filter((line) => line.type === "category" && line.details.trim() === "");
+  const canSend = ready && items.length > 0 && missingDetails.length === 0 && !pending;
 
   return (
     <Form
@@ -301,6 +303,12 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
               : `Send request (${items.length} item${items.length === 1 ? "" : "s"})`}
         </Button>
         {!ready && <span className="text-sm text-muted">Checking your list…</span>}
+        {ready && missingDetails.length > 0 && (
+          <span className="text-sm text-warning" role="status">
+            Tell us what you need for{" "}
+            {missingDetails.map((line) => (line.type === "category" ? line.categoryName : "")).join(", ")}.
+          </span>
+        )}
         {ready && items.length === 0 && (
           <span className="text-sm text-warning">Fix the items marked above to send your request.</span>
         )}

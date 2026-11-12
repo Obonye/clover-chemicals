@@ -23,7 +23,7 @@ type ProductsSectionProps = {
 
 export const ProductsSection = ({ categories, categoryLinks, showViewAll }: ProductsSectionProps) => {
   const linkFor = (cat: ProductCategory) =>
-    categoryLinks[cat._id] ? categoryHref(cat.slug) : rfqEntryHref(cat.slug);
+    categoryLinks[cat._id] ? categoryHref(cat.slug) : rfqEntryHref(cat.slug, cat.division);
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 

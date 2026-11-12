@@ -1,5 +1,5 @@
 import type { RfqContact, RfqLineItem } from "./types";
-import type { EnquiryGroup } from "@/lib/email/templates/enquiry-email";
+import type { EnquiryGroup, EnquiryRequest } from "@/lib/email/templates/enquiry-email";
 
 import { getBranch } from "@/config/branches";
 import { getDivisionBySanityValue } from "@/config/divisions";
@@ -21,6 +21,8 @@ function groupByDivision(items: RfqLineItem[]): EnquiryGroup[] {
   const groups = new Map<string, EnquiryGroup>();
 
   for (const line of items) {
+    // Category lines get their own section (CI-75).
+    if (line.type !== "product") continue;
     const division = getDivisionBySanityValue(line.division);
     const key = division?.slug ?? line.division;
     const group = groups.get(key) ?? { name: division?.name ?? line.division, lines: [] };
@@ -35,6 +37,24 @@ function groupByDivision(items: RfqLineItem[]): EnquiryGroup[] {
   }
 
   return Array.from(groups.values());
+}
+
+/** Product-range requests, in their own section of the email (CI-75). */
+function buildRequests(items: RfqLineItem[]): EnquiryRequest[] {
+  const requests: EnquiryRequest[] = [];
+
+  for (const line of items) {
+    if (line.type !== "category") continue;
+    requests.push({
+      category: line.categoryName,
+      division: getDivisionBySanityValue(line.division)?.name,
+      details: line.details.trim(),
+      quantity: line.quantity,
+      packSize: line.packSize,
+    });
+  }
+
+  return requests;
 }
 
 function fulfilmentSummary({ fulfilment, branch, deliveryAddress }: RfqContact): string {
@@ -78,6 +98,7 @@ export async function sendRfqEmails({ reference, contact, items, submittedAt }: 
     ],
     // Division headings only help when the request spans more than one.
     groups: groups.length > 1 ? groups : groups.map((group) => ({ ...group, name: undefined })),
+    requests: buildRequests(items),
   });
 
   await sendEmail({
