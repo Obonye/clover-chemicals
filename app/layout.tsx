@@ -29,8 +29,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  // The Clover mark, trimmed and squared from public/clover-logo.svg:
+  // favicon.ico (16/32/48), icon.png (512) and the iOS home-screen icon.
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
 };
 
