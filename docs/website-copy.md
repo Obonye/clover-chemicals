@@ -378,19 +378,9 @@ Names, addresses, phone, email, WhatsApp and hours come from sections 1.2 and 1.
 - **WhatsApp label** (`app/contact/page.tsx:260`): WhatsApp
 - **Hours label** (`app/contact/page.tsx:271`): Business Hours
 
-## 4.7 Side panel: department contacts
+## 4.7 Side panel: browse by category
 
-- **Heading** (`app/contact/page.tsx:279`): Department Contacts
-- **Group 1: name** (`app/contact/page.tsx:283`): Request for Quote
-- **Group 1: email 1** (`app/contact/page.tsx:287`): sales@cloverindustries.co.bw
-- **Group 1: email 2** (`app/contact/page.tsx:293`): khofi.gabosekwe@cloverindustries.co.bw
-- **Group 1: email 3** (`app/contact/page.tsx:299`): sanka@cloverindustries.co.bw
-- **Group 2: name** (`app/contact/page.tsx:306`): Customer complaints
-- **Group 2: email** (`app/contact/page.tsx:299`): sanka@cloverindustries.co.bw
-
-## 4.8 Side panel: browse by category
-
-- **Heading** (`app/contact/page.tsx:321`): Browse by Category
+- **Heading** (`app/contact/page.tsx:279`): Browse by Category
 
 The category names are from section 7.8.
 

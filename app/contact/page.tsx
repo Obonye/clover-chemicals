@@ -276,48 +276,6 @@ export default function ContactPage() {
 
               <div className="border-t border-separator pt-10">
                 <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-muted">
-                  Department Contacts
-                </p>
-                <ul className="flex flex-col gap-4">
-                  <li>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Request for Quote</p>
-                    <div className="flex flex-col gap-1">
-                      <a
-                        className="text-sm text-muted transition-colors hover:text-accent"
-                        href="mailto:sales@cloverindustries.co.bw"
-                      >
-                        sales@cloverindustries.co.bw
-                      </a>
-                      <a
-                        className="text-sm text-muted transition-colors hover:text-accent"
-                        href="mailto:khofi.gabosekwe@cloverindustries.co.bw"
-                      >
-                        khofi.gabosekwe@cloverindustries.co.bw
-                      </a>
-                      <a
-                        className="text-sm text-muted transition-colors hover:text-accent"
-                        href="mailto:sanka@cloverindustries.co.bw"
-                      >
-                        sanka@cloverindustries.co.bw
-                      </a>
-                    </div>
-                  </li>
-                  <li>
-                    <p className="mb-1 text-sm font-semibold text-foreground">Customer complaints</p>
-                    <div className="flex flex-col gap-1">
-                      <a
-                        className="text-sm text-muted transition-colors hover:text-accent"
-                        href="mailto:sanka@cloverindustries.co.bw"
-                      >
-                        sanka@cloverindustries.co.bw
-                      </a>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="border-t border-separator pt-10">
-                <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-muted">
                   Browse by Category
                 </p>
                 <ul className="flex flex-col">
