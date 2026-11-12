@@ -25,6 +25,8 @@ import {
 
 import { submitRfq } from "@/app/rfq/actions";
 import { branchesInDisplayOrder } from "@/config/branches";
+import { siteConfig } from "@/config/site";
+import { buildRfqMailto } from "@/lib/rfq/mailto";
 import { RFQ_FULFILMENT } from "@/lib/rfq/schema";
 
 export type RfqSubmitSuccess = Extract<RfqSubmitState, { status: "success" }>;
@@ -106,6 +108,13 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
   const [state, formAction, pending] = React.useActionState(submitRfq, { status: "idle" });
   const errorRef = React.useRef<HTMLParagraphElement>(null);
   const [fulfilment, setFulfilment] = React.useState<Fulfilment | null>(null);
+  // Set synchronously on submit: `pending` only flips after a render, so a
+  // fast double-click could otherwise send two requests.
+  const submitting = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!pending) submitting.current = false;
+  }, [pending]);
 
   React.useEffect(() => {
     if (state.status === "success") onSuccess(state);
@@ -124,6 +133,8 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
       // an action runs, which would wipe what the buyer typed on an error.
       onSubmit={(event) => {
         event.preventDefault();
+        if (submitting.current) return;
+        submitting.current = true;
         const data = new FormData(event.currentTarget);
 
         React.startTransition(() => formAction(data));
@@ -137,14 +148,32 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
       </div>
 
       {state.status === "error" && (
-        <p
+        <div
           ref={errorRef}
-          className="rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
+          className="flex flex-col gap-2 rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
           role="alert"
           tabIndex={-1}
         >
-          {state.message}
-        </p>
+          <p>{state.message}</p>
+          {/* No field errors means the request itself failed: keep the list
+              usable by offering the same RFQ by email or phone. */}
+          {!state.fieldErrors && items.length > 0 && (
+            <p>
+              Your list is still saved. You can try again below, or{" "}
+              <a className="font-semibold underline underline-offset-2" href={buildRfqMailto(items)}>
+                email it to us
+              </a>{" "}
+              or call{" "}
+              <a
+                className="font-semibold underline underline-offset-2"
+                href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
+              >
+                {siteConfig.contact.phone}
+              </a>
+              .
+            </p>
+          )}
+        </div>
       )}
 
       <input name="items" type="hidden" value={JSON.stringify(items)} />
@@ -265,7 +294,11 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
 
       <div className="flex flex-wrap items-center gap-4">
         <Button className="h-11 px-6" isDisabled={!canSend} isPending={pending} type="submit">
-          {pending ? "Sending…" : `Send request (${items.length} item${items.length === 1 ? "" : "s"})`}
+          {pending
+            ? "Sending…"
+            : state.status === "error" && !state.fieldErrors
+              ? "Try again"
+              : `Send request (${items.length} item${items.length === 1 ? "" : "s"})`}
         </Button>
         {!ready && <span className="text-sm text-muted">Checking your list…</span>}
         {ready && items.length === 0 && (
