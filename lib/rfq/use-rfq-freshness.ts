@@ -1,7 +1,7 @@
 "use client";
 
 import type { RfqLineCheck } from "./reconcile";
-import type { RfqLineItem, RfqProductLine } from "./types";
+import type { RfqLineItem } from "./types";
 import type { RfqProductSnapshot } from "@/sanity/lib/types";
 
 import * as React from "react";
@@ -26,14 +26,7 @@ export type RfqFreshness = {
  * and writes renames back to the stored lines.
  */
 export function useRfqFreshness(enabled = true): RfqFreshness {
-  const { items: allItems, hydrated, updateItem } = useRfq();
-  // Only products are checked against Sanity here; category lines are
-  // validated when the request is sent.
-  const items = React.useMemo(
-    () => allItems.filter((line): line is RfqProductLine => line.type === "product"),
-    [allItems],
-  );
-  const categoryLines = React.useMemo(() => allItems.filter((line) => line.type === "category"), [allItems]);
+  const { items, hydrated, updateItem } = useRfq();
   const [status, setStatus] = React.useState<RfqFreshness["status"]>("idle");
   const [snapshots, setSnapshots] = React.useState<Map<string, RfqProductSnapshot> | null>(null);
   const [attempt, setAttempt] = React.useState(0);
@@ -97,16 +90,15 @@ export function useRfqFreshness(enabled = true): RfqFreshness {
     }
   }, [checks, updateItem]);
 
-  const sendable = React.useMemo<RfqLineItem[]>(() => {
-    const products =
+  const sendable = React.useMemo(
+    () =>
       status === "ready"
         ? items.filter((line) => !checks.get(rfqLineKey(line))?.problem)
         : status === "error"
           ? items
-          : [];
-
-    return [...products, ...categoryLines];
-  }, [items, categoryLines, checks, status]);
+          : [],
+    [items, checks, status],
+  );
 
   const retry = React.useCallback(() => setAttempt((n) => n + 1), []);
 

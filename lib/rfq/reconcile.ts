@@ -1,4 +1,4 @@
-import type { RfqProductLine } from "./types";
+import type { RfqLineItem } from "./types";
 import type { PackSize, RfqProductSnapshot } from "@/sanity/lib/types";
 
 import { packLabel } from "@/sanity/lib/format";
@@ -16,14 +16,14 @@ export type RfqLineCheck = {
   problem: RfqLineProblem | null;
   /** Fields that changed in Sanity (rename, re-grade, new pack label…) and
    *  should be written back to the stored line. Empty when nothing changed. */
-  patch: Partial<RfqProductLine>;
+  patch: Partial<RfqLineItem>;
   /** The product's current, labelled pack sizes (for the pack select). */
   packSizes: PackSize[];
   snapshot: RfqProductSnapshot | null;
 };
 
 export function reconcileRfqLine(
-  line: RfqProductLine,
+  line: RfqLineItem,
   snapshot: RfqProductSnapshot | undefined,
 ): RfqLineCheck {
   const division = snapshot?.category?.division ?? null;
@@ -37,16 +37,16 @@ export function reconcileRfqLine(
     ? (packSizes.find((p) => p._key === line.packSizeKey) ?? null)
     : null;
 
-  const current: Partial<RfqProductLine> = {
+  const current: Partial<RfqLineItem> = {
     name: snapshot.name,
     slug: snapshot.slug,
     grade: snapshot.grade ?? null,
     division,
     ...(pack ? { packLabel: packLabel(pack) } : {}),
   };
-  const patch: Partial<RfqProductLine> = {};
+  const patch: Partial<RfqLineItem> = {};
 
-  for (const [field, value] of Object.entries(current) as [keyof RfqProductLine, unknown][]) {
+  for (const [field, value] of Object.entries(current) as [keyof RfqLineItem, unknown][]) {
     if (line[field] !== value) (patch as Record<string, unknown>)[field] = value;
   }
 
