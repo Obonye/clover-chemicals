@@ -47,6 +47,11 @@ const FilterIcon = () => (
   </svg>
 );
 
+// The selected chip is inverted (foreground fill, background text) so it stands
+// out in both light and dark mode; the default selected tint is too faint on dark.
+const CATEGORY_TAG_CLASS =
+  "shrink-0 whitespace-nowrap data-[selected=true]:bg-foreground data-[selected=true]:text-background";
+
 function firstKey<T extends string>(keys: Selection, fallback: T): T {
   if (keys === "all") return fallback;
 
@@ -289,13 +294,13 @@ export const ProductCatalogue = ({
               onSelectionChange={handleCategoryChange}
             >
               <TagGroup.List className="flex flex-nowrap gap-3 lg:flex-wrap">
-                <Tag className="shrink-0 whitespace-nowrap" id="all">
+                <Tag className={CATEGORY_TAG_CLASS} id="all">
                   All
                 </Tag>
                 {visibleCategories.map((cat) => (
                   <Tag
                     key={cat._id}
-                    className="shrink-0 whitespace-nowrap"
+                    className={CATEGORY_TAG_CLASS}
                     id={cat.slug ?? cat._id}
                   >
                     {cat.label}
