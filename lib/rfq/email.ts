@@ -1,5 +1,5 @@
-import type { RfqContact, RfqLineItem } from "./types";
-import type { EnquiryGroup, EnquiryRequest } from "@/lib/email/templates/enquiry-email";
+import type { RfqContact, RfqLineItem, RfqRange } from "./types";
+import type { EnquiryGroup, EnquiryRange } from "@/lib/email/templates/enquiry-email";
 
 import { getBranch } from "@/config/branches";
 import { getDivisionBySanityValue } from "@/config/divisions";
@@ -13,6 +13,8 @@ export type RfqEmailPayload = {
   contact: RfqContact;
   /** Lines rebuilt from Sanity — never the browser's copy. */
   items: RfqLineItem[];
+  /** Ranges the buyer picked, confirmed against Sanity. */
+  ranges: RfqRange[];
   submittedAt: Date;
 };
 
@@ -21,8 +23,6 @@ function groupByDivision(items: RfqLineItem[]): EnquiryGroup[] {
   const groups = new Map<string, EnquiryGroup>();
 
   for (const line of items) {
-    // Category lines get their own section (CI-75).
-    if (line.type !== "product") continue;
     const division = getDivisionBySanityValue(line.division);
     const key = division?.slug ?? line.division;
     const group = groups.get(key) ?? { name: division?.name ?? line.division, lines: [] };
@@ -39,22 +39,12 @@ function groupByDivision(items: RfqLineItem[]): EnquiryGroup[] {
   return Array.from(groups.values());
 }
 
-/** Product-range requests, in their own section of the email (CI-75). */
-function buildRequests(items: RfqLineItem[]): EnquiryRequest[] {
-  const requests: EnquiryRequest[] = [];
-
-  for (const line of items) {
-    if (line.type !== "category") continue;
-    requests.push({
-      category: line.categoryName,
-      division: getDivisionBySanityValue(line.division)?.name,
-      details: line.details.trim(),
-      quantity: line.quantity,
-      packSize: line.packSize,
-    });
-  }
-
-  return requests;
+/** The ranges the buyer picked, as a short list in the email (CI-75). */
+function buildRanges(ranges: RfqRange[]): EnquiryRange[] {
+  return ranges.map((range) => ({
+    name: range.name,
+    division: getDivisionBySanityValue(range.division)?.name,
+  }));
 }
 
 function fulfilmentSummary({ fulfilment, branch, deliveryAddress }: RfqContact): string {
@@ -75,7 +65,7 @@ function fulfilmentSummary({ fulfilment, branch, deliveryAddress }: RfqContact):
  * reply-all to answer the buyer directly. Throwing surfaces as the form's
  * "couldn't send" error.
  */
-export async function sendRfqEmails({ reference, contact, items, submittedAt }: RfqEmailPayload): Promise<void> {
+export async function sendRfqEmails({ reference, contact, items, ranges, submittedAt }: RfqEmailPayload): Promise<void> {
   const groups = groupByDivision(items);
   const { html, text, attachments } = await renderEnquiryEmail({
     preview: `We've received your quote request ${reference}. We'll respond within one business day.`,
@@ -98,7 +88,7 @@ export async function sendRfqEmails({ reference, contact, items, submittedAt }: 
     ],
     // Division headings only help when the request spans more than one.
     groups: groups.length > 1 ? groups : groups.map((group) => ({ ...group, name: undefined })),
-    requests: buildRequests(items),
+    ranges: buildRanges(ranges),
   });
 
   await sendEmail({

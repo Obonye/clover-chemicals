@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { RfqLineItemSchema, RfqSubmissionSchema, rfqLineKey } from "./schema.ts";
+import { RFQ_MAX_RANGES, RfqLineItemSchema, RfqSubmissionSchema, rfqLineKey } from "./schema.ts";
 
-const legacyProduct = {
+const product = {
   productId: "p1",
   slug: "mancozeb",
   name: "Mancozeb",
@@ -12,14 +12,6 @@ const legacyProduct = {
   packSizeKey: "a2",
   packLabel: "5 kg",
   quantity: 3,
-};
-
-const category = {
-  type: "category",
-  categorySlug: "pool",
-  categoryName: "Pool Chemicals",
-  division: "chemicals",
-  details: "Chlorine tablets, about 200 kg a month",
 };
 
 const contact = {
@@ -31,58 +23,61 @@ const contact = {
   deliveryAddress: "Plot 1, Gaborone",
 };
 
+const submit = (over: Record<string, unknown> = {}) =>
+  RfqSubmissionSchema.safeParse({ items: [], ranges: [], contact, website: "", ...over });
+
 describe("line items", () => {
-  it("loads a saved product line that has no type, as a product", () => {
-    const parsed = RfqLineItemSchema.parse(legacyProduct);
-
-    assert.equal(parsed.type, "product");
+  it("accepts a product line, with or without a leftover `type` from older carts", () => {
+    assert.equal(RfqLineItemSchema.safeParse(product).success, true);
+    assert.equal(RfqLineItemSchema.safeParse({ ...product, type: "product" }).success, true);
   });
 
-  it("accepts a category line with only the required fields", () => {
-    const parsed = RfqLineItemSchema.parse(category);
+  it("rejects a saved range line from the earlier cart design, so it is dropped on load", () => {
+    const oldRangeLine = {
+      type: "category",
+      categorySlug: "pool",
+      categoryName: "Pool Chemicals",
+      division: "chemicals",
+      details: "Chlorine tablets",
+    };
 
-    assert.equal(parsed.type, "category");
+    assert.equal(RfqLineItemSchema.safeParse(oldRangeLine).success, false);
   });
 
-  it("rejects a category line with an unknown division or no slug", () => {
-    assert.equal(RfqLineItemSchema.safeParse({ ...category, division: "other" }).success, false);
-    assert.equal(RfqLineItemSchema.safeParse({ ...category, categorySlug: "" }).success, false);
-  });
-
-  it("treats a blank pack size as absent and caps quantity", () => {
-    const parsed = RfqLineItemSchema.parse({ ...category, packSize: "  ", quantity: 5 });
-
-    assert.equal(parsed.type === "category" && parsed.packSize, undefined);
-    assert.equal(RfqLineItemSchema.safeParse({ ...category, quantity: 0 }).success, false);
-    assert.equal(RfqLineItemSchema.safeParse({ ...category, quantity: 999_999 }).success, false);
-  });
-});
-
-describe("rfqLineKey", () => {
-  it("keys products by product and pack size, categories by slug", () => {
-    assert.equal(rfqLineKey({ type: "product", productId: "p1", packSizeKey: "a2" }), "p1::a2");
+  it("keys a line by product and pack size", () => {
+    assert.equal(rfqLineKey({ productId: "p1", packSizeKey: "a2" }), "p1::a2");
     assert.equal(rfqLineKey({ productId: "p1", packSizeKey: null }), "p1::");
-    assert.equal(rfqLineKey({ type: "category", categorySlug: "pool" }), "category::pool");
   });
 });
 
 describe("submission", () => {
-  it("accepts product-only, category-only and mixed requests", () => {
-    for (const items of [[legacyProduct], [category], [legacyProduct, category]]) {
-      const result = RfqSubmissionSchema.safeParse({ items, contact, website: "" });
-
-      assert.equal(result.success, true);
-    }
+  it("accepts products only, ranges only (with a message), and both", () => {
+    assert.equal(submit({ items: [product] }).success, true);
+    assert.equal(submit({ ranges: ["pool"], contact: { ...contact, message: "Chlorine, 200 kg a month" } }).success, true);
+    assert.equal(submit({ items: [product], ranges: ["agro", "pool"] }).success, true);
   });
 
-  it("rejects a category line with no details, naming the category", () => {
-    const result = RfqSubmissionSchema.safeParse({
-      items: [{ ...category, details: "   " }],
-      contact,
-      website: "",
-    });
+  it("rejects an empty request", () => {
+    const result = submit();
 
     assert.equal(result.success, false);
-    assert.match(result.error?.issues[0]?.message ?? "", /Pool Chemicals/);
+    assert.match(result.error?.issues[0]?.message ?? "", /Add a product or choose a product range/);
+  });
+
+  it("needs a message when there are ranges but no products", () => {
+    const result = submit({ ranges: ["pool"] });
+
+    assert.equal(result.success, false);
+    assert.deepEqual(result.error?.issues[0]?.path, ["contact", "message"]);
+    assert.equal(submit({ ranges: ["pool"], contact: { ...contact, message: "  " } }).success, false);
+  });
+
+  it("only takes slug-shaped ranges, and not too many", () => {
+    const message = { ...contact, message: "Chlorine tablets please" };
+
+    assert.equal(submit({ ranges: ["Pool Chemicals"], contact: message }).success, false);
+    assert.equal(submit({ ranges: ["<script>alert(1)</script>"], contact: message }).success, false);
+    assert.equal(submit({ ranges: [""], contact: message }).success, false);
+    assert.equal(submit({ ranges: Array.from({ length: RFQ_MAX_RANGES + 1 }, (_, i) => `r${i}`), contact: message }).success, false);
   });
 });

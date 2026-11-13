@@ -7,13 +7,8 @@ import { productInbox } from "@/config/enquiry-routing";
  * never costs them their request: they can send the same RFQ from their own
  * mail app instead. Subject and body are pre-filled.
  */
-export function buildRfqMailto(items: RfqLineItem[]): string {
+export function buildRfqMailto(items: RfqLineItem[], rangeNames: string[] = []): string {
   const lines = items.map((line, index) => {
-    if (line.type === "category") {
-      const extras = [line.quantity ? `x ${line.quantity}` : "", line.packSize].filter(Boolean).join(", ");
-
-      return `${index + 1}. ${line.categoryName} (range): ${line.details.trim() || "(tell us what you need)"}${extras ? ` - ${extras}` : ""}`;
-    }
     const detail = [line.grade, line.packLabel].filter(Boolean).join(", ");
     const note = line.note ? ` (Note: ${line.note})` : "";
 
@@ -26,6 +21,8 @@ export function buildRfqMailto(items: RfqLineItem[]): string {
     "I'd like a quotation for the following:",
     "",
     ...lines,
+    ...(rangeNames.length > 0 ? [`Ranges of interest: ${rangeNames.join(", ")}`] : []),
+    "What I need:",
     "",
     "My name:",
     "Company:",
@@ -33,7 +30,10 @@ export function buildRfqMailto(items: RfqLineItem[]): string {
     "Delivery address, or the branch I'll collect from:",
   ].join("\r\n");
 
-  const subject = `Request for quote (${items.length} item${items.length === 1 ? "" : "s"})`;
+  const subject =
+    items.length > 0
+      ? `Request for quote (${items.length} item${items.length === 1 ? "" : "s"})`
+      : "Request for quote";
 
   return `mailto:${productInbox}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }

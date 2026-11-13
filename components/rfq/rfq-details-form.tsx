@@ -1,7 +1,7 @@
 "use client";
 
 import type { RfqSubmitState } from "@/app/rfq/actions";
-import type { RfqLineItem } from "@/lib/rfq/types";
+import type { RfqLineItem, RfqRange } from "@/lib/rfq/types";
 
 import * as React from "react";
 import { getLocalTimeZone, today } from "@internationalized/date";
@@ -19,6 +19,8 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Tag,
+  TagGroup,
   TextArea,
   TextField,
 } from "@heroui/react";
@@ -34,6 +36,11 @@ export type RfqSubmitSuccess = Extract<RfqSubmitState, { status: "success" }>;
 type RfqDetailsFormProps = {
   /** The lines that will be sent (problem lines already left out). */
   items: RfqLineItem[];
+  /** The product ranges to offer as chips. */
+  ranges: RfqRange[];
+  /** Slugs of the ranges currently picked. */
+  selectedRanges: string[];
+  onRangesChange: (slugs: string[]) => void;
   /** False while the list is still being checked against the catalogue. */
   ready: boolean;
   onSuccess: (result: RfqSubmitSuccess) => void;
@@ -104,7 +111,14 @@ const BranchSelect = ({ label, placeholder }: { label: string; placeholder: stri
   </Select>
 );
 
-export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps) => {
+export const RfqDetailsForm = ({
+  items,
+  ranges,
+  selectedRanges,
+  onRangesChange,
+  ready,
+  onSuccess,
+}: RfqDetailsFormProps) => {
   const [state, formAction, pending] = React.useActionState(submitRfq, { status: "idle" });
   const errorRef = React.useRef<HTMLParagraphElement>(null);
   const [fulfilment, setFulfilment] = React.useState<Fulfilment | null>(null);
@@ -121,9 +135,11 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
     if (state.status === "error") errorRef.current?.focus();
   }, [state, onSuccess]);
 
-  // Every product-range request needs the buyer's description (CI-73).
-  const missingDetails = items.filter((line) => line.type === "category" && line.details.trim() === "");
-  const canSend = ready && items.length > 0 && missingDetails.length === 0 && !pending;
+  const hasProducts = items.length > 0;
+  const selectedNames = ranges.filter((range) => selectedRanges.includes(range.slug)).map((range) => range.name);
+  // A request is products, ranges, or both.
+  const hasRequest = hasProducts || selectedRanges.length > 0;
+  const canSend = ready && hasRequest && !pending;
 
   return (
     <Form
@@ -159,10 +175,10 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
           <p>{state.message}</p>
           {/* No field errors means the request itself failed: keep the list
               usable by offering the same RFQ by email or phone. */}
-          {!state.fieldErrors && items.length > 0 && (
+          {!state.fieldErrors && hasRequest && (
             <p>
-              Your list is still saved. You can try again below, or{" "}
-              <a className="font-semibold underline underline-offset-2" href={buildRfqMailto(items)}>
+              Your request is still here. You can try again below, or{" "}
+              <a className="font-semibold underline underline-offset-2" href={buildRfqMailto(items, selectedNames)}>
                 email it to us
               </a>{" "}
               or call{" "}
@@ -179,6 +195,44 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
       )}
 
       <input name="items" type="hidden" value={JSON.stringify(items)} />
+      <input name="ranges" type="hidden" value={JSON.stringify(selectedRanges)} />
+
+      {/* What the buyer needs: ranges are tags on the request, with one shared message. */}
+      <div className="flex flex-col gap-5">
+        {ranges.length > 0 && (
+          <TagGroup
+            aria-label="Product ranges"
+            selectedKeys={new Set(selectedRanges)}
+            selectionMode="multiple"
+            onSelectionChange={(keys) =>
+              onRangesChange(keys === "all" ? ranges.map((range) => range.slug) : Array.from(keys, String))
+            }
+          >
+            <Label>Product ranges you&apos;re interested in</Label>
+            <TagGroup.List className="mt-2">
+              {ranges.map((range) => (
+                <Tag key={range.slug} id={range.slug}>
+                  {range.name}
+                </Tag>
+              ))}
+            </TagGroup.List>
+            <Description>Pick any that apply{hasProducts ? "" : ", then tell us what you need"}.</Description>
+          </TagGroup>
+        )}
+
+        <TextField fullWidth isRequired={!hasProducts} name="message" variant="secondary">
+          <Label>{hasProducts ? "Anything else we should know?" : "What do you need?"}</Label>
+          <TextArea
+            placeholder={
+              hasProducts
+                ? "Anything else we should know about this request."
+                : "Products or grades, how much, how often, anything we should know."
+            }
+            rows={4}
+          />
+          <FieldError />
+        </TextField>
+      </div>
 
       {/* Honeypot: hidden from people and assistive tech, but bots fill it. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
@@ -288,29 +342,19 @@ export const RfqDetailsForm = ({ items, ready, onSuccess }: RfqDetailsFormProps)
         </DatePicker>
       </div>
 
-      <TextField fullWidth name="message" variant="secondary">
-        <Label>Message</Label>
-        <TextArea placeholder="Anything else we should know about this request." rows={4} />
-        <FieldError />
-      </TextField>
-
       <div className="flex flex-wrap items-center gap-4">
         <Button className="h-11 px-6" isDisabled={!canSend} isPending={pending} type="submit">
           {pending
             ? "Sending…"
             : state.status === "error" && !state.fieldErrors
               ? "Try again"
-              : `Send request (${items.length} item${items.length === 1 ? "" : "s"})`}
+              : hasProducts
+                ? `Send request (${items.length} item${items.length === 1 ? "" : "s"})`
+                : "Send request"}
         </Button>
         {!ready && <span className="text-sm text-muted">Checking your list…</span>}
-        {ready && missingDetails.length > 0 && (
-          <span className="text-sm text-warning" role="status">
-            Tell us what you need for{" "}
-            {missingDetails.map((line) => (line.type === "category" ? line.categoryName : "")).join(", ")}.
-          </span>
-        )}
-        {ready && items.length === 0 && (
-          <span className="text-sm text-warning">Fix the items marked above to send your request.</span>
+        {ready && !hasRequest && (
+          <span className="text-sm text-warning">Pick a product range, or fix the items marked above, to send.</span>
         )}
       </div>
     </Form>

@@ -47,12 +47,12 @@ function foldLines(lines: RfqLineItem[]): RfqLineItem[] {
     const key = rfqLineKey(line);
     const existing = byKey.get(key);
 
-    if (!existing) {
-      byKey.set(key, line);
-    } else if (existing.type === "product" && line.type === "product") {
-      byKey.set(key, { ...existing, quantity: capQuantity(existing.quantity + line.quantity) });
-    }
-    // The same category can't be listed twice: the first one stays.
+    byKey.set(
+      key,
+      existing
+        ? { ...existing, quantity: capQuantity(existing.quantity + line.quantity) }
+        : line,
+    );
   }
 
   return Array.from(byKey.values());
@@ -158,11 +158,10 @@ export function RfqProvider({ children }: { children: React.ReactNode }) {
     (key: string, patch: Partial<RfqLineItem>) => {
       const next = itemsRef.current.map((line) => {
         if (rfqLineKey(line) !== key) return line;
-        const parsed = RfqLineItemSchema.safeParse({ ...line, ...patch, type: line.type });
+        const parsed = RfqLineItemSchema.safeParse({ ...line, ...patch });
 
         // Ignore edits that would make the line invalid (e.g. quantity 0).
-        // A line's `type` never changes.
-        return parsed.success && parsed.data.type === line.type ? parsed.data : line;
+        return parsed.success ? parsed.data : line;
       });
 
       // A pack-size change can make two lines identical: fold them together.
