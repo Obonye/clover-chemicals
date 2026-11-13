@@ -102,35 +102,36 @@ const ClearList = ({ count }: { count: number }) => {
 };
 
 type RfqListProps = {
-  /** The product ranges Sanity lists. Also the allow-list for `?category=`. */
+  /** The product ranges Sanity lists. Also the allow-list for `?category=` and saved ranges. */
   ranges: RfqRange[];
 };
 
 export const RfqList = ({ ranges }: RfqListProps) => {
-  const { items, hydrated, clear } = useRfq();
+  const { items, ranges: savedRanges, hydrated, clear, addRange, setRanges } = useRfq();
   const catalog = useCatalogState();
   const catalogEnabled = catalog.enabled;
   const freshness = useRfqFreshness(catalogEnabled);
   const router = useRouter();
   const [sent, setSent] = React.useState(false);
-  const [selectedRanges, setSelectedRanges] = React.useState<string[]>([]);
   const entryHandled = React.useRef(false);
 
   // `?category=<slug>` (from a range card) preselects that range once, then the
   // URL is cleaned so a refresh or back/forward can't select it again. Only a
   // slug Sanity actually lists is accepted: anything else is ignored (CI-74).
   React.useEffect(() => {
-    if (entryHandled.current) return;
+    // Wait for the saved request to load, or loading it would overwrite the add.
+    if (!hydrated || entryHandled.current) return;
     entryHandled.current = true;
 
     const slug = new URLSearchParams(window.location.search).get("category");
 
     if (slug === null) return;
     window.history.replaceState(null, "", "/rfq");
-    if (ranges.some((range) => range.slug === slug)) {
-      setSelectedRanges((current) => (current.includes(slug) ? current : [...current, slug]));
-    }
-  }, [ranges]);
+    if (ranges.some((range) => range.slug === slug)) addRange(slug);
+  }, [hydrated, ranges, addRange]);
+
+  // Ranges are saved with the request; only ones Sanity still lists are shown.
+  const selectedRanges = savedRanges.filter((slug) => ranges.some((range) => range.slug === slug));
 
   // The list is cleared only once the server has confirmed the send, then
   // the buyer lands on the confirmation page (CI-24). `sent` keeps the form
@@ -163,7 +164,7 @@ export const RfqList = ({ ranges }: RfqListProps) => {
         ranges={ranges}
         ready={checkDone}
         selectedRanges={selectedRanges}
-        onRangesChange={setSelectedRanges}
+        onRangesChange={setRanges}
         onSuccess={handleSent}
       />
     </div>

@@ -21,19 +21,20 @@ export function browsable(catalogEnabled: boolean, category: CategoryReadiness |
 }
 
 /**
- * Where a category's links go while it isn't browsable: the RFQ with that
- * range added (CI-74), or, for Medical, the simple Medical enquiry form
- * with the range named (CI-41).
+ * Where a category's links go while it isn't browsable: its own range page,
+ * which shows an "add to my quote" panel instead of products. Medical ranges
+ * go to the simple Medical enquiry form with the range named (CI-41).
  */
-export function rfqEntryHref(slug: string | null | undefined, division?: string | null): string {
-  if (!slug) return division === "medical" ? "/contact?enquiry=medical" : "/rfq";
-  if (division === "medical") return `/contact?enquiry=medical&category=${encodeURIComponent(slug)}`;
+export function rangeHref(slug: string | null | undefined, division?: string | null): string {
+  if (division === "medical") {
+    return slug ? `/contact?enquiry=medical&category=${encodeURIComponent(slug)}` : "/contact?enquiry=medical";
+  }
 
-  return `/rfq?category=${encodeURIComponent(slug)}`;
+  return slug ? `/products/${encodeURIComponent(slug)}` : "/products";
 }
 
 /** Where a category's link goes: its product listing when browsable,
- *  otherwise the RFQ entry for that category. */
+ *  otherwise its range page (or the Medical form). */
 export function categoryHref(
   catalogEnabled: boolean,
   category: CategoryReadiness,
@@ -41,5 +42,5 @@ export function categoryHref(
 ): string {
   if (browsable(catalogEnabled, category)) return `${listingBase}/${category.slug ?? ""}`;
 
-  return rfqEntryHref(category.slug, category.division);
+  return rangeHref(category.slug, category.division);
 }

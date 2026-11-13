@@ -6,6 +6,7 @@ import NextLink from "next/link";
 import { stegaClean } from "next-sanity";
 
 import { ProductCard } from "@/components/product-card";
+import { AddRangeToQuote } from "@/components/rfq/add-range-to-quote";
 import { getCatalog } from "@/lib/catalog/visibility";
 import { loadCatalogQuery, loadQuery } from "@/sanity/lib/fetch";
 import {
@@ -41,7 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!data) return {};
 
+  // A range that isn't browsable has no products to index: keep the page out of search.
+  const catalog = await getCatalog();
+
   return {
+    robots: catalog.isBrowsable(data) ? undefined : { index: false, follow: true },
     title: data.label ?? "Products",
     description: data.description ?? undefined,
     // The canonical, unfiltered landing page for this category — distinct
@@ -65,13 +70,14 @@ export default async function CategoryPage({ params }: Props) {
 
   if (!active) notFound();
 
-  // Hidden or not-yet-ready categories send the visitor to the RFQ. A
-  // temporary (307) redirect, so nothing caches it for after launch (CI-71).
   const catalog = await getCatalog();
-
-  if (!catalog.isBrowsable(active)) redirect(catalog.hrefFor(active));
-
   const cat = active;
+  const ready = catalog.isBrowsable(cat);
+
+  // Medical ranges have no quote list: they use the Medical enquiry form.
+  // A temporary (307) redirect, so nothing caches it for after launch (CI-71).
+  if (!ready && stegaClean(cat.division ?? "") === "medical") redirect(catalog.hrefFor(cat));
+
   const categories = allCategories.filter((tab) => catalog.isBrowsable(tab));
   const heroSrc = imageUrl(cat.image, { width: 1920, height: 900 });
 
@@ -109,6 +115,27 @@ export default async function CategoryPage({ params }: Props) {
         </div>
       </section>
 
+      {!ready ? (
+        <section className="bg-background py-16">
+          <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
+            <div className="max-w-[56ch] rounded-xl border border-separator bg-surface p-8">
+              <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
+                We&apos;re still listing these online
+              </h2>
+              <p className="mt-3 text-base text-muted">
+                Tell us what you need and we&apos;ll quote it.
+              </p>
+              <div className="mt-6">
+                <AddRangeToQuote
+                  name={stegaClean(cat.label ?? "this range")}
+                  slug={stegaClean(cat.slug ?? "")}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <>
       {/* Category filter tabs */}
       <div className="sticky top-[var(--header-h)] z-30 border-b border-separator bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
@@ -153,6 +180,8 @@ export default async function CategoryPage({ params }: Props) {
           </div>
         </div>
       </section>
+        </>
+      )}
 
       {/* Bottom CTA */}
       <section className="border-t border-separator bg-surface py-16">

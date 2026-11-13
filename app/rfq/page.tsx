@@ -2,13 +2,13 @@ import { stegaClean } from "next-sanity";
 
 import { RfqList } from "@/components/rfq/rfq-list";
 import type { RfqRange } from "@/lib/rfq/types";
-import { loadQuery } from "@/sanity/lib/fetch";
+import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory } from "@/sanity/lib/types";
 
 export default async function RfqPage() {
   // The ranges offered as chips. Cached like the layout's own fetch of the same query.
-  const categories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
+  const categories = await loadCatalogQuery<ProductCategory[]>(CATEGORIES_QUERY);
   const ranges: RfqRange[] = categories.flatMap((category) =>
     category.slug && category.label && category.division
       ? [{ slug: stegaClean(category.slug), name: stegaClean(category.label), division: category.division }]

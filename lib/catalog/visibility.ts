@@ -40,7 +40,7 @@ export async function isCategoryBrowsable(category: CategoryReadiness | null | u
   return browsable(await isCatalogEnabled(), category);
 }
 
-/** The category's product listing when browsable, otherwise `/rfq?category=<slug>`. */
+/** The category's product listing when browsable, otherwise its range page. */
 export async function getCategoryHref(category: CategoryReadiness, listingBase?: string): Promise<string> {
   return categoryHref(await isCatalogEnabled(), category, listingBase);
 }
