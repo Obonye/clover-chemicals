@@ -30,9 +30,9 @@ describe("categoryHref", () => {
   });
 
   it("links to the range page for every other combination", () => {
-    assert.equal(categoryHref(true, notReady), "/products/pool");
-    assert.equal(categoryHref(false, ready), "/products/pool");
-    assert.equal(categoryHref(false, notReady, "/chemical/products"), "/products/pool");
+    assert.equal(categoryHref(true, notReady), "/products?category=pool");
+    assert.equal(categoryHref(false, ready), "/products?category=pool");
+    assert.equal(categoryHref(false, notReady, "/chemical/products"), "/chemical/products?category=pool");
   });
 
   it("sends Medical categories to the Medical enquiry form", () => {
@@ -41,11 +41,11 @@ describe("categoryHref", () => {
     assert.equal(categoryHref(false, medical), "/contact?enquiry=medical&category=lab-equipment");
     assert.equal(categoryHref(true, { ...medical, catalogReady: true }), "/products/lab-equipment");
     assert.equal(rangeHref("lab-equipment", "medical"), "/contact?enquiry=medical&category=lab-equipment");
-    assert.equal(rangeHref("pool", "chemicals"), "/products/pool");
+    assert.equal(rangeHref("pool", "chemicals"), "/products?category=pool");
   });
 
   it("encodes the slug and falls back to /rfq without one", () => {
-    assert.equal(categoryHref(false, { slug: "a b" }), "/products/a%20b");
+    assert.equal(categoryHref(false, { slug: "a b" }), "/products?category=a%20b");
     assert.equal(categoryHref(false, {}), "/products");
   });
 });

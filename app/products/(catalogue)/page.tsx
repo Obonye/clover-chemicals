@@ -4,7 +4,9 @@ import NextLink from "next/link";
 
 import { CategoryDirectory } from "@/components/category-directory";
 import { ProductCatalogue } from "@/components/product-catalogue";
+import { RangeQuotePanel } from "@/components/rfq/range-quote-panel";
 import { getCatalog } from "@/lib/catalog/visibility";
+import { pendingRanges } from "@/lib/catalog/pending";
 import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { ALL_PRODUCTS_QUERY, CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
@@ -35,12 +37,22 @@ export default async function ProductsPage({ searchParams }: Props) {
   const params = await searchParams;
   const catalog = await getCatalog();
   const allCategories = await loadCatalogQuery<ProductCategory[]>(CATEGORIES_QUERY);
+  // Ranges not listed yet: offered as "add to my quote" instead of products.
+  const pending = pendingRanges(allCategories, catalog.isBrowsable);
+  const chosen = pending.find((category) => category.slug === params.category);
 
   // Products hidden, or on but no category is ready yet: just the ranges,
   // each leading to a quote request.
   if (!catalog.enabled || !allCategories.some((category) => catalog.isBrowsable(category))) {
     return (
       <>
+        {chosen && (
+          <section className="bg-background pt-12">
+            <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
+              <RangeQuotePanel name={chosen.label ?? "this range"} slug={chosen.slug ?? ""} />
+            </div>
+          </section>
+        )}
         <CategoryDirectory
           heading="Our product ranges"
           items={allCategories.map((category) => ({ category, href: catalog.hrefFor(category) }))}
@@ -68,6 +80,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         initialOnPromotion={params.promotion === "true"}
         initialQuery={params.q ?? ""}
         initialSort={params.sort ?? "name"}
+        pendingCategories={pending}
         products={products}
       />
       <BottomCta />

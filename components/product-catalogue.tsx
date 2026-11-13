@@ -21,6 +21,7 @@ import {
 
 import { ProductCard } from "@/components/product-card";
 import { ProductSearch } from "@/components/product-search";
+import { RangeQuotePanel } from "@/components/rfq/range-quote-panel";
 import { divisionCssVars, getDivisionBySanityValue } from "@/config/divisions";
 import { paintThemeVars } from "@/lib/theme-vars";
 import type { Division, ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
@@ -69,6 +70,9 @@ type ProductCatalogueProps = {
   lockedDivision?: Division;
   /** Where the URL-sync effect below rewrites to. Defaults to /products. */
   basePath?: string;
+  /** Ranges whose products aren't listed online yet. They show as chips too;
+   *  picking one shows an "add to my quote" panel instead of the grid. */
+  pendingCategories?: ProductCategory[];
 };
 
 export const ProductCatalogue = ({
@@ -81,6 +85,7 @@ export const ProductCatalogue = ({
   initialSort,
   lockedDivision,
   basePath = "/products",
+  pendingCategories = [],
 }: ProductCatalogueProps) => {
   const router = useRouter();
 
@@ -135,10 +140,12 @@ export const ProductCatalogue = ({
 
   // Categories available for the chosen division — narrows the pill row so a
   // division + category combo can never land on a dead zero-result page.
-  const visibleCategories = useMemo(
-    () => (division === "all" ? categories : categories.filter((c) => c.division === division)),
-    [categories, division],
-  );
+  const visibleCategories = useMemo(() => {
+    const all = [...categories, ...pendingCategories];
+
+    return division === "all" ? all : all.filter((c) => c.division === division);
+  }, [categories, pendingCategories, division]);
+  const pendingCategory = pendingCategories.find((c) => c.slug === category);
 
   // If switching division drops the active category out of view, fall back to "All".
   useEffect(() => {
@@ -366,6 +373,12 @@ export const ProductCatalogue = ({
           </div>
 
           {/* Results */}
+          {pendingCategory ? (
+            <RangeQuotePanel
+              name={stegaClean(pendingCategory.label ?? "this range")}
+              slug={stegaClean(pendingCategory.slug ?? "")}
+            />
+          ) : (
           <div>
             <p aria-live="polite" className="mb-6 text-sm text-muted">
               {results.length} product{results.length === 1 ? "" : "s"}
@@ -407,6 +420,7 @@ export const ProductCatalogue = ({
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
     </>

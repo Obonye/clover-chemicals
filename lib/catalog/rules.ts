@@ -21,20 +21,25 @@ export function browsable(catalogEnabled: boolean, category: CategoryReadiness |
 }
 
 /**
- * Where a category's links go while it isn't browsable: its own range page,
- * which shows an "add to my quote" panel instead of products. Medical ranges
- * go to the simple Medical enquiry form with the range named (CI-41).
+ * Where a category's links go while it isn't browsable: the products page
+ * filtered to that range, which shows an "add to my quote" panel instead of
+ * products. Medical ranges go to the simple Medical enquiry form with the
+ * range named (CI-41).
  */
-export function rangeHref(slug: string | null | undefined, division?: string | null): string {
+export function rangeHref(
+  slug: string | null | undefined,
+  division?: string | null,
+  listingBase = "/products",
+): string {
   if (division === "medical") {
     return slug ? `/contact?enquiry=medical&category=${encodeURIComponent(slug)}` : "/contact?enquiry=medical";
   }
 
-  return slug ? `/products/${encodeURIComponent(slug)}` : "/products";
+  return slug ? `${listingBase}?category=${encodeURIComponent(slug)}` : listingBase;
 }
 
 /** Where a category's link goes: its product listing when browsable,
- *  otherwise its range page (or the Medical form). */
+ *  otherwise the products page filtered to it (or the Medical form). */
 export function categoryHref(
   catalogEnabled: boolean,
   category: CategoryReadiness,
@@ -42,5 +47,5 @@ export function categoryHref(
 ): string {
   if (browsable(catalogEnabled, category)) return `${listingBase}/${category.slug ?? ""}`;
 
-  return rangeHref(category.slug, category.division);
+  return rangeHref(category.slug, category.division, listingBase);
 }
