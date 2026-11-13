@@ -1,16 +1,19 @@
 "use client";
 
 import type { RfqSubmitState } from "@/app/rfq/actions";
+import type { Key } from "@heroui/react";
 import type { RfqLineItem, RfqRange } from "@/lib/rfq/types";
 
 import * as React from "react";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import {
+  Autocomplete,
   Button,
   Calendar,
   DateField,
   DatePicker,
   Description,
+  EmptyState,
   FieldError,
   Form,
   Input,
@@ -18,11 +21,13 @@ import {
   ListBox,
   Radio,
   RadioGroup,
+  SearchField,
   Select,
   Tag,
   TagGroup,
   TextArea,
   TextField,
+  useFilter,
 } from "@heroui/react";
 
 import { submitRfq } from "@/app/rfq/actions";
@@ -135,6 +140,7 @@ export const RfqDetailsForm = ({
     if (state.status === "error") errorRef.current?.focus();
   }, [state, onSuccess]);
 
+  const { contains } = useFilter({ sensitivity: "base" });
   const hasProducts = items.length > 0;
   const selectedNames = ranges.filter((range) => selectedRanges.includes(range.slug)).map((range) => range.name);
   // A request is products, ranges, or both.
@@ -200,37 +206,68 @@ export const RfqDetailsForm = ({
       {/* What the buyer needs: ranges are tags on the request, with one shared message. */}
       <div className="flex flex-col gap-5">
         {ranges.length > 0 && (
-          <TagGroup
-            aria-label="Product ranges"
-            selectedKeys={new Set(selectedRanges)}
+          // Searchable multi-select, so it keeps working as the list of ranges grows. The
+          // chosen ranges show as removable tags in the field.
+          <Autocomplete
+            fullWidth
+            placeholder="Search or choose ranges"
             selectionMode="multiple"
-            onSelectionChange={(keys) =>
-              onRangesChange(keys === "all" ? ranges.map((range) => range.slug) : Array.from(keys, String))
-            }
+            value={selectedRanges}
+            variant="secondary"
+            onChange={(keys: Key | Key[] | null) => onRangesChange(Array.isArray(keys) ? keys.map(String) : [])}
           >
             <Label>Product ranges you&apos;re interested in</Label>
-            <TagGroup.List className="mt-2">
-              {ranges.map((range) => (
-                <Tag
-                  key={range.slug}
-                  className="min-h-9 border border-foreground/25 bg-transparent px-3 text-foreground transition-colors data-[hovered=true]:border-foreground/50 data-[selected=true]:border-accent data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
-                  id={range.slug}
-                >
-                  {({ isSelected }) => (
-                    <span className="inline-flex items-center gap-1.5">
-                      {isSelected && (
-                        <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
-                          <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      )}
-                      {range.name}
-                    </span>
-                  )}
-                </Tag>
-              ))}
-            </TagGroup.List>
+            <Autocomplete.Trigger className="min-h-11">
+              <Autocomplete.Value>
+                {({ defaultChildren, isPlaceholder, state }: any) => {
+                  if (isPlaceholder || state.selectedItems.length === 0) return defaultChildren;
+
+                  return (
+                    <TagGroup
+                      aria-label="Chosen product ranges"
+                      size="sm"
+                      onRemove={(removed: Set<Key>) =>
+                        onRangesChange(selectedRanges.filter((slug) => !removed.has(slug)))
+                      }
+                    >
+                      <TagGroup.List>
+                        {selectedRanges.map((slug) => {
+                          const range = ranges.find((item) => item.slug === slug);
+
+                          return range ? (
+                            <Tag key={range.slug} id={range.slug}>
+                              {range.name}
+                            </Tag>
+                          ) : null;
+                        })}
+                      </TagGroup.List>
+                    </TagGroup>
+                  );
+                }}
+              </Autocomplete.Value>
+              <Autocomplete.Indicator />
+            </Autocomplete.Trigger>
             <Description>Pick any that apply{hasProducts ? "" : ", then tell us what you need"}.</Description>
-          </TagGroup>
+            <Autocomplete.Popover>
+              <Autocomplete.Filter filter={contains}>
+                <SearchField autoFocus aria-label="Search product ranges" name="range-search" variant="secondary">
+                  <SearchField.Group>
+                    <SearchField.SearchIcon />
+                    <SearchField.Input placeholder="Search ranges…" />
+                    <SearchField.ClearButton />
+                  </SearchField.Group>
+                </SearchField>
+                <ListBox renderEmptyState={() => <EmptyState>No ranges match</EmptyState>}>
+                  {ranges.map((range) => (
+                    <ListBox.Item key={range.slug} id={range.slug} textValue={range.name}>
+                      {range.name}
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+                  ))}
+                </ListBox>
+              </Autocomplete.Filter>
+            </Autocomplete.Popover>
+          </Autocomplete>
         )}
 
         <TextField fullWidth isRequired={!hasProducts} name="message" variant="secondary">
