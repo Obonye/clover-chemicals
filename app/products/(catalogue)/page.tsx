@@ -49,7 +49,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         {chosen && (
           <section className="bg-background pt-12">
             <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-              <RangeQuotePanel name={chosen.label ?? "this range"} slug={chosen.slug ?? ""} />
+              <RangeQuotePanel description={chosen.description} name={chosen.label ?? "this range"} slug={chosen.slug ?? ""} />
             </div>
           </section>
         )}

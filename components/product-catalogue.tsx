@@ -375,6 +375,7 @@ export const ProductCatalogue = ({
           {/* Results */}
           {pendingCategory ? (
             <RangeQuotePanel
+              description={pendingCategory.description ? stegaClean(pendingCategory.description) : null}
               name={stegaClean(pendingCategory.label ?? "this range")}
               slug={stegaClean(pendingCategory.slug ?? "")}
             />
