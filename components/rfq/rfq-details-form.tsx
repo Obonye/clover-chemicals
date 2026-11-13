@@ -211,8 +211,21 @@ export const RfqDetailsForm = ({
             <Label>Product ranges you&apos;re interested in</Label>
             <TagGroup.List className="mt-2">
               {ranges.map((range) => (
-                <Tag key={range.slug} id={range.slug}>
-                  {range.name}
+                <Tag
+                  key={range.slug}
+                  className="min-h-9 border border-foreground/25 bg-transparent px-3 text-foreground transition-colors data-[hovered=true]:border-foreground/50 data-[selected=true]:border-accent data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+                  id={range.slug}
+                >
+                  {({ isSelected }) => (
+                    <span className="inline-flex items-center gap-1.5">
+                      {isSelected && (
+                        <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                          <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                      {range.name}
+                    </span>
+                  )}
                 </Tag>
               ))}
             </TagGroup.List>
