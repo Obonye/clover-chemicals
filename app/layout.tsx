@@ -14,7 +14,7 @@ import { DivisionThemeScope } from "@/components/division-theme-scope";
 import { Footer } from "@/components/footer";
 import { QuickLinksBar } from "@/components/quick-links-bar";
 import { DisableDraftMode } from "@/components/disable-draft-mode";
-import { loadQuery } from "@/sanity/lib/fetch";
+import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { SanityLive } from "@/sanity/lib/live";
 import { CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory } from "@/sanity/lib/types";
@@ -59,7 +59,7 @@ export default async function RootLayout({
   // same live Sanity fetch — cached like a static page and only refetched
   // when <SanityLive /> below sees a publish, so this doesn't add fetch
   // latency to every page load.
-  const categories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
+  const categories = await loadCatalogQuery<ProductCategory[]>(CATEGORIES_QUERY);
 
   return (
     <html suppressHydrationWarning lang="en">

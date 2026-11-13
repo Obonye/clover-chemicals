@@ -10,7 +10,7 @@ import { ProductCard } from "@/components/product-card";
 import { AddToRfq } from "@/components/rfq/add-to-rfq";
 import { divisionCssVars, getDivisionBySanityValue } from "@/config/divisions";
 import { getCatalog } from "@/lib/catalog/visibility";
-import { loadQuery } from "@/sanity/lib/fetch";
+import { loadCatalogQuery, loadQuery } from "@/sanity/lib/fetch";
 import { imageUrl } from "@/sanity/lib/image";
 import { documentDownloadHref, documentLabel, formatFileSize, packLabel } from "@/sanity/lib/format";
 import { CATEGORY_QUERY, PRODUCT_QUERY, PRODUCT_SLUGS_QUERY } from "@/sanity/lib/queries";
@@ -86,7 +86,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category, product: productSlug } = await params;
-  const product = await loadQuery<ProductDetail | null>(PRODUCT_QUERY, {
+  const product = await loadCatalogQuery<ProductDetail | null>(PRODUCT_QUERY, {
     params: { slug: productSlug },
     stega: false,
   });
@@ -109,7 +109,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params }: Props) {
   const { category, product: productSlug } = await params;
 
-  const product = await loadQuery<ProductDetail | null>(PRODUCT_QUERY, {
+  const product = await loadCatalogQuery<ProductDetail | null>(PRODUCT_QUERY, {
     params: { slug: productSlug },
   });
 
@@ -137,7 +137,7 @@ export default async function ProductPage({ params }: Props) {
     : undefined;
 
   const relatedCategory = categorySlug
-    ? await loadQuery<CategoryWithProducts | null>(CATEGORY_QUERY, {
+    ? await loadCatalogQuery<CategoryWithProducts | null>(CATEGORY_QUERY, {
         params: { slug: categorySlug },
       })
     : null;

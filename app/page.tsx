@@ -11,7 +11,7 @@ import { branches } from "@/config/branches";
 import { siteConfig } from "@/config/site";
 import { divisionCssVars, divisions } from "@/config/divisions";
 import { organizationJsonLd } from "@/lib/structured-data";
-import { loadQuery } from "@/sanity/lib/fetch";
+import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory } from "@/sanity/lib/types";
 
@@ -27,7 +27,7 @@ const otherBranches = branches.filter((branch) => branch !== headOffice);
 export default async function Home() {
   const years = new Date().getFullYear() - siteConfig.foundedYear;
   // The ranges each division sells, shown as chips on its card (names only).
-  const categories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
+  const categories = await loadCatalogQuery<ProductCategory[]>(CATEGORIES_QUERY);
 
   return (
     <>

@@ -5,7 +5,7 @@ import NextLink from "next/link";
 import { CategoryDirectory } from "@/components/category-directory";
 import { ProductCatalogue } from "@/components/product-catalogue";
 import { getCatalog } from "@/lib/catalog/visibility";
-import { loadQuery } from "@/sanity/lib/fetch";
+import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { ALL_PRODUCTS_QUERY, CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import type { ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
 
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 export default async function ProductsPage({ searchParams }: Props) {
   const params = await searchParams;
   const catalog = await getCatalog();
-  const allCategories = await loadQuery<ProductCategory[]>(CATEGORIES_QUERY);
+  const allCategories = await loadCatalogQuery<ProductCategory[]>(CATEGORIES_QUERY);
 
   // Products hidden, or on but no category is ready yet: just the ranges,
   // each leading to a quote request.
@@ -52,7 +52,7 @@ export default async function ProductsPage({ searchParams }: Props) {
 
   // Only categories marked ready show their products.
   const categories = allCategories.filter((category) => catalog.isBrowsable(category));
-  const products = (await loadQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY)).filter((product) =>
+  const products = (await loadCatalogQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY)).filter((product) =>
     catalog.isBrowsable(product.category),
   );
 
