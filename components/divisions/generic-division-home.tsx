@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import { ProductCard } from "@/components/product-card";
 import { getBranch } from "@/config/branches";
 import { isCatalogEnabled } from "@/lib/catalog/visibility";
-import { loadQuery } from "@/sanity/lib/fetch";
+import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { ALL_PRODUCTS_QUERY } from "@/sanity/lib/queries";
 import type { ProductWithCategory } from "@/sanity/lib/types";
 import type { DivisionConfig } from "@/config/divisions";
@@ -20,7 +20,7 @@ type GenericDivisionHomeProps = {
 export async function GenericDivisionHome({ division }: GenericDivisionHomeProps) {
   // Rendered per request: the flag decides which product surfaces exist (CI-72).
   const catalogEnabled = await isCatalogEnabled();
-  const allProducts = catalogEnabled ? await loadQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY) : [];
+  const allProducts = catalogEnabled ? await loadCatalogQuery<ProductWithCategory[]>(ALL_PRODUCTS_QUERY) : [];
   const products = allProducts
     .filter((product) => product.category?.division === division.sanityDivision && product.category.catalogReady === true)
     .slice(0, 8);

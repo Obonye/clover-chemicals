@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { browsable, categoryHref, rfqEntryHref } from "./rules.ts";
+import { browsable, categoryHref, rangeHref } from "./rules.ts";
 
 const ready = { slug: "pool", catalogReady: true };
 const notReady = { slug: "pool", catalogReady: false };
@@ -29,10 +29,10 @@ describe("categoryHref", () => {
     assert.equal(categoryHref(true, ready, "/chemical/products"), "/chemical/products/pool");
   });
 
-  it("links to the RFQ entry for every other combination", () => {
-    assert.equal(categoryHref(true, notReady), "/rfq?category=pool");
-    assert.equal(categoryHref(false, ready), "/rfq?category=pool");
-    assert.equal(categoryHref(false, notReady), "/rfq?category=pool");
+  it("links to the range page for every other combination", () => {
+    assert.equal(categoryHref(true, notReady), "/products?category=pool");
+    assert.equal(categoryHref(false, ready), "/products?category=pool");
+    assert.equal(categoryHref(false, notReady, "/chemical/products"), "/chemical/products?category=pool");
   });
 
   it("sends Medical categories to the Medical enquiry form", () => {
@@ -40,12 +40,12 @@ describe("categoryHref", () => {
 
     assert.equal(categoryHref(false, medical), "/contact?enquiry=medical&category=lab-equipment");
     assert.equal(categoryHref(true, { ...medical, catalogReady: true }), "/products/lab-equipment");
-    assert.equal(rfqEntryHref("lab-equipment", "medical"), "/contact?enquiry=medical&category=lab-equipment");
-    assert.equal(rfqEntryHref("pool", "chemicals"), "/rfq?category=pool");
+    assert.equal(rangeHref("lab-equipment", "medical"), "/contact?enquiry=medical&category=lab-equipment");
+    assert.equal(rangeHref("pool", "chemicals"), "/products?category=pool");
   });
 
   it("encodes the slug and falls back to /rfq without one", () => {
-    assert.equal(categoryHref(false, { slug: "a b" }), "/rfq?category=a%20b");
-    assert.equal(categoryHref(false, {}), "/rfq");
+    assert.equal(categoryHref(false, { slug: "a b" }), "/products?category=a%20b");
+    assert.equal(categoryHref(false, {}), "/products");
   });
 });

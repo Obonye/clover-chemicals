@@ -5,6 +5,7 @@ import { branches } from "../../config/branches.ts";
 
 export const RFQ_MAX_ITEMS = 50;
 export const RFQ_MAX_QUANTITY = 10_000;
+export const RFQ_MAX_RANGES = 10;
 
 /** Browser forms send "" for untouched optional inputs; treat that as absent. */
 const optionalText = (max: number) =>
@@ -13,9 +14,7 @@ const optionalText = (max: number) =>
     z.string().trim().max(max).optional(),
   );
 
-/** A specific product, with a pack size and quantity. */
-export const RfqProductLineSchema = z.object({
-  type: z.literal("product"),
+export const RfqLineItemSchema = z.object({
   productId: z.string().min(1),
   slug: z.string().min(1),
   name: z.string().min(1),
@@ -28,32 +27,6 @@ export const RfqProductLineSchema = z.object({
   quantity: z.number().int().min(1).max(RFQ_MAX_QUANTITY),
   note: optionalText(300),
 });
-
-/**
- * A request for a product range, for when there's no product to pick (CI-73).
- * The buyer says in their own words what they need.
- */
-export const RfqCategoryLineSchema = z.object({
-  type: z.literal("category"),
-  categorySlug: z.string().min(1).max(100),
-  /** Display only. The server rebuilds it from Sanity. */
-  categoryName: z.string().min(1).max(160),
-  division: z.enum(["chemicals", "medical"]),
-  /** What the buyer needs. May be empty while they're typing; sending requires it. */
-  details: z.string().max(1000),
-  quantity: z.number().int().min(1).max(RFQ_MAX_QUANTITY).optional(),
-  /** Free text, e.g. "25 L drums". */
-  packSize: optionalText(100),
-});
-
-/** Carts saved before category lines existed have no `type`: they're products. */
-const withLegacyType = (value: unknown) =>
-  value && typeof value === "object" && !("type" in value) ? { ...value, type: "product" } : value;
-
-export const RfqLineItemSchema = z.preprocess(
-  withLegacyType,
-  z.discriminatedUnion("type", [RfqProductLineSchema, RfqCategoryLineSchema]),
-);
 
 /** Botswana (+267 / local) and international numbers. */
 const PHONE_PATTERN = /^\+?[0-9][0-9 ()-]{5,18}[0-9]$/;
@@ -105,33 +78,32 @@ export const RfqContactSchema = z.object({
   }
 });
 
-export const RfqSubmissionSchema = z.object({
-  items: z
-    .array(RfqLineItemSchema)
-    .min(1)
-    .max(RFQ_MAX_ITEMS)
-    .superRefine((items, ctx) => {
-      items.forEach((line, index) => {
-        if (line.type === "category" && line.details.trim() === "") {
-          ctx.addIssue({
-            code: "custom",
-            path: [index, "details"],
-            message: `Tell us what you need for ${line.categoryName}`,
-          });
-        }
-      });
-    }),
-  contact: RfqContactSchema,
-  /** Honeypot. Real users never see it, so it must stay empty. */
-  website: z.string().max(0),
-});
+/** A product range the buyer is interested in: its Sanity slug. The server re-checks it. */
+export const RfqRangeSlugSchema = z.string().regex(/^[a-z0-9-]{1,100}$/);
 
-/** Two lines are the same line when product and pack size match, or when
- *  they're the same category. */
+export const RfqSubmissionSchema = z
+  .object({
+    /** Products from the cart (empty while the catalogue is hidden). */
+    items: z.array(RfqLineItemSchema).max(RFQ_MAX_ITEMS),
+    /** Ranges the buyer picked on the form: tags on the request, not cart lines. */
+    ranges: z.array(RfqRangeSlugSchema).max(RFQ_MAX_RANGES),
+    contact: RfqContactSchema,
+    /** Honeypot. Real users never see it, so it must stay empty. */
+    website: z.string().max(0),
+  })
+  .superRefine((submission, ctx) => {
+    if (submission.items.length === 0 && submission.ranges.length === 0) {
+      ctx.addIssue({ code: "custom", path: ["items"], message: "Add a product or choose a product range" });
+    }
+    // With no products to describe the request, the message is what we quote from.
+    if (submission.items.length === 0 && (submission.contact.message ?? "").length < 3) {
+      ctx.addIssue({ code: "custom", path: ["contact", "message"], message: "Tell us what you need" });
+    }
+  });
+
+/** Two lines are the same line when product and pack size match. */
 export function rfqLineKey(
-  line: { type?: "product" | "category"; productId?: string; packSizeKey?: string | null; categorySlug?: string },
+  line: Pick<z.infer<typeof RfqLineItemSchema>, "productId" | "packSizeKey">,
 ): string {
-  if (line.type === "category") return `category::${line.categorySlug}`;
-
   return `${line.productId}::${line.packSizeKey ?? ""}`;
 }

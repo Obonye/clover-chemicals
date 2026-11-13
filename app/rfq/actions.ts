@@ -1,9 +1,9 @@
 "use server";
 
-import type { RfqCategoryLine, RfqContact, RfqLineItem, RfqProductLine } from "@/lib/rfq/types";
+import type { RfqContact, RfqLineItem, RfqRange } from "@/lib/rfq/types";
 
 import { client } from "@/sanity/lib/client";
-import { RFQ_CATEGORIES_QUERY, RFQ_CATEGORY_QUERY } from "@/sanity/lib/queries";
+import { RFQ_CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import { clientIp } from "@/lib/client-ip";
 import { sendRfqEmails } from "@/lib/rfq/email";
 import { lookupRfqProducts } from "@/lib/rfq/lookup";
@@ -58,42 +58,45 @@ function parseItems(raw: FormDataEntryValue | null): unknown {
   }
 }
 
+function parseRanges(raw: FormDataEntryValue | null): unknown {
+  if (typeof raw !== "string") return [];
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
+}
+
 /**
- * Re-checks product-range lines against Sanity (CI-75): the name and
- * division come from the published category, never from the payload.
- * A range that no longer exists is dropped and reported.
+ * Re-checks the ranges the buyer picked against Sanity (CI-75): name and
+ * division come from the published category, never from the payload. A range
+ * that no longer exists is dropped and reported.
  */
-async function rebuildCategoriesFromSanity(items: RfqCategoryLine[]) {
-  if (items.length === 0) return { lines: [] as RfqLineItem[], dropped: [] as string[] };
+async function resolveRanges(slugs: string[]) {
+  const unique = Array.from(new Set(slugs));
+
+  if (unique.length === 0) return { ranges: [] as RfqRange[], dropped: [] as string[] };
 
   const found = await client.fetch<{ slug: string | null; label: string | null; division: string | null }[]>(
     RFQ_CATEGORIES_QUERY,
-    { slugs: Array.from(new Set(items.map((line) => line.categorySlug))) },
+    { slugs: unique },
     { perspective: "published", stega: false, cache: "no-store" },
   );
   const bySlug = new Map(found.map((category) => [category.slug, category]));
-  const lines: RfqLineItem[] = [];
+  const ranges: RfqRange[] = [];
   const dropped: string[] = [];
 
-  for (const line of items) {
-    const category = bySlug.get(line.categorySlug);
+  for (const slug of unique) {
+    const category = bySlug.get(slug);
 
-    if (
-      !category?.label ||
-      (category.division !== "chemicals" && category.division !== "medical")
-    ) {
-      dropped.push(line.categoryName);
+    if (!category?.label || (category.division !== "chemicals" && category.division !== "medical")) {
+      dropped.push(slug);
       continue;
     }
-    lines.push({
-      ...line,
-      categoryName: category.label,
-      division: category.division,
-      details: line.details.trim(),
-    });
+    ranges.push({ slug, name: category.label, division: category.division });
   }
 
-  return { lines, dropped };
+  return { ranges, dropped };
 }
 
 /**
@@ -102,8 +105,7 @@ async function rebuildCategoriesFromSanity(items: RfqCategoryLine[]) {
  * product is gone, unavailable, or whose pack size no longer exists are
  * dropped and reported back.
  */
-async function rebuildFromSanity(allItems: RfqLineItem[]) {
-  const items = allItems.filter((line): line is RfqProductLine => line.type === "product");
+async function rebuildFromSanity(items: RfqLineItem[]) {
   const snapshots = await lookupRfqProducts(items.map((line) => line.productId));
   const byId = new Map(snapshots.map((product) => [product._id, product]));
   const lines: RfqLineItem[] = [];
@@ -128,38 +130,6 @@ async function rebuildFromSanity(allItems: RfqLineItem[]) {
   return { lines, dropped };
 }
 
-export type RfqCategoryEntry = {
-  slug: string;
-  name: string;
-  division: "chemicals" | "medical";
-};
-
-const CATEGORY_SLUG = /^[a-z0-9-]{1,100}$/;
-
-/**
- * Resolves a `?category=` link from the RFQ page against Sanity (CI-74).
- * The raw query value is never trusted: only a slug that exists comes back,
- * with its name and division taken from Sanity. Anything else is null.
- */
-export async function resolveRfqCategory(slug: string): Promise<RfqCategoryEntry | null> {
-  if (typeof slug !== "string" || !CATEGORY_SLUG.test(slug)) return null;
-
-  try {
-    const category = await client.fetch<{
-      slug: string | null;
-      label: string | null;
-      division: string | null;
-    } | null>(RFQ_CATEGORY_QUERY, { slug }, { perspective: "published", stega: false, cache: "no-store" });
-
-    if (!category?.slug || !category.label) return null;
-    if (category.division !== "chemicals" && category.division !== "medical") return null;
-
-    return { slug: category.slug, name: category.label, division: category.division };
-  } catch {
-    return null;
-  }
-}
-
 export async function submitRfq(
   _prev: RfqSubmitState,
   formData: FormData,
@@ -176,6 +146,7 @@ export async function submitRfq(
 
   const parsed = RfqSubmissionSchema.safeParse({
     items: parseItems(formData.get("items")),
+    ranges: parseRanges(formData.get("ranges")),
     contact,
     website: "",
   });
@@ -187,8 +158,8 @@ export async function submitRfq(
     for (const issue of parsed.error.issues) {
       const [scope, field] = issue.path;
 
-      if (scope === "items" && issue.path[2] === "details") {
-        // A product range with nothing written for it: say which one.
+      if (scope === "items" && issue.code === "custom") {
+        // An empty request: nothing to quote.
         return { status: "error", message: issue.message };
       }
       if (scope === "contact" && typeof field === "string") {
@@ -225,27 +196,30 @@ export async function submitRfq(
     };
   }
 
-  let rebuilt: { lines: RfqLineItem[]; dropped: string[] };
+  let rebuilt: { lines: RfqLineItem[]; ranges: RfqRange[]; dropped: string[] };
 
   try {
-    const items = parsed.data.items;
-    const [products, ranges] = await Promise.all([
-      rebuildFromSanity(items),
-      rebuildCategoriesFromSanity(items.filter((line): line is RfqCategoryLine => line.type === "category")),
+    const [products, resolved] = await Promise.all([
+      rebuildFromSanity(parsed.data.items),
+      resolveRanges(parsed.data.ranges),
     ]);
 
-    rebuilt = { lines: [...products.lines, ...ranges.lines], dropped: [...products.dropped, ...ranges.dropped] };
+    rebuilt = {
+      lines: products.lines,
+      ranges: resolved.ranges,
+      dropped: [...products.dropped, ...resolved.dropped],
+    };
   } catch {
     return {
       status: "error",
-      message: "We couldn't check your list against our catalogue just now. Please try again in a moment.",
+      message: "We couldn't check your request against our catalogue just now. Please try again in a moment.",
     };
   }
 
-  if (rebuilt.lines.length === 0) {
+  if (rebuilt.lines.length === 0 && rebuilt.ranges.length === 0) {
     return {
       status: "error",
-      message: "None of the items in your list can be quoted right now. Please review your list and try again.",
+      message: "None of the items in your request can be quoted right now. Please review it and try again.",
     };
   }
 
@@ -256,6 +230,7 @@ export async function submitRfq(
       reference,
       contact: parsed.data.contact,
       items: rebuilt.lines,
+      ranges: rebuilt.ranges,
       submittedAt: new Date(),
     });
   } catch {

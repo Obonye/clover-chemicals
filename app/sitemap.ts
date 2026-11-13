@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/config/site";
 import { divisions } from "@/config/divisions";
 import { getCatalog } from "@/lib/catalog/visibility";
-import { loadQuery } from "@/sanity/lib/fetch";
+import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { CATEGORY_SLUGS_QUERY, PRODUCT_SLUGS_QUERY } from "@/sanity/lib/queries";
 
 // Per request, because which product pages exist depends on the catalogue
@@ -16,11 +16,11 @@ export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const catalog = await getCatalog();
   const [categorySlugs, productSlugs] = await Promise.all([
-    loadQuery<{ slug: string | null; catalogReady: boolean | null }[]>(CATEGORY_SLUGS_QUERY, {
+    loadCatalogQuery<{ slug: string | null; catalogReady: boolean | null }[]>(CATEGORY_SLUGS_QUERY, {
       perspective: "published",
       stega: false,
     }),
-    loadQuery<{ category: string | null; product: string | null; categoryReady: boolean | null }[]>(PRODUCT_SLUGS_QUERY, {
+    loadCatalogQuery<{ category: string | null; product: string | null; categoryReady: boolean | null }[]>(PRODUCT_SLUGS_QUERY, {
       perspective: "published",
       stega: false,
     }),

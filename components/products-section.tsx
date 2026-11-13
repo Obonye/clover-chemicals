@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import NextLink from "next/link";
 
-import { rfqEntryHref } from "@/lib/catalog/rules";
+import { rangeHref } from "@/lib/catalog/rules";
 import { categoryHref } from "@/sanity/lib/format";
 import { imageUrl } from "@/sanity/lib/image";
 import type { ProductCategory } from "@/sanity/lib/types";
@@ -23,7 +23,7 @@ type ProductsSectionProps = {
 
 export const ProductsSection = ({ categories, categoryLinks, showViewAll }: ProductsSectionProps) => {
   const linkFor = (cat: ProductCategory) =>
-    categoryLinks[cat._id] ? categoryHref(cat.slug) : rfqEntryHref(cat.slug, cat.division);
+    categoryLinks[cat._id] ? categoryHref(cat.slug) : rangeHref(cat.slug, cat.division);
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 

@@ -7,7 +7,7 @@ import { stegaClean } from "next-sanity";
 
 import { ProductCard } from "@/components/product-card";
 import { getCatalog } from "@/lib/catalog/visibility";
-import { loadQuery } from "@/sanity/lib/fetch";
+import { loadCatalogQuery, loadQuery } from "@/sanity/lib/fetch";
 import {
   CATEGORIES_QUERY,
   CATEGORY_QUERY,
@@ -34,7 +34,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
-  const data = await loadQuery<CategoryWithProducts | null>(CATEGORY_QUERY, {
+  const data = await loadCatalogQuery<CategoryWithProducts | null>(CATEGORY_QUERY, {
     params: { slug: category },
     stega: false,
   });
@@ -57,15 +57,16 @@ export default async function CategoryPage({ params }: Props) {
   const { category } = await params;
 
   const [active, allCategories] = await Promise.all([
-    loadQuery<CategoryWithProducts | null>(CATEGORY_QUERY, {
+    loadCatalogQuery<CategoryWithProducts | null>(CATEGORY_QUERY, {
       params: { slug: category },
     }),
-    loadQuery<ProductCategory[]>(CATEGORIES_QUERY),
+    loadCatalogQuery<ProductCategory[]>(CATEGORIES_QUERY),
   ]);
 
   if (!active) notFound();
 
-  // Hidden or not-yet-ready categories send the visitor to the RFQ. A
+  // Hidden or not-yet-ready ranges go to the products page filtered to them,
+  // which offers to add the range to a quote (Medical: its enquiry form). A
   // temporary (307) redirect, so nothing caches it for after launch (CI-71).
   const catalog = await getCatalog();
 
