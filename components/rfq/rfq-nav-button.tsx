@@ -31,7 +31,7 @@ const Badge = ({ count, inverse = false, className }: BadgeProps) => (
   <span
     aria-hidden="true"
     className={clsx(
-      "inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 font-mono text-xs font-bold leading-none tabular-nums",
+      "inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-bold leading-none tabular-nums",
       inverse ? "bg-accent-foreground text-accent" : "bg-accent text-accent-foreground",
       className,
     )}

@@ -96,7 +96,7 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
               )}
             </p>
             {line.grade && (
-              <p className="mt-0.5 truncate font-mono text-xs uppercase tracking-wider text-muted">{line.grade}</p>
+              <p className="mt-0.5 truncate text-xs uppercase tracking-wider text-muted">{line.grade}</p>
             )}
           </div>
         </div>
@@ -118,7 +118,7 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
             onChange={(pack) => updateItem(key, { packSizeKey: pack._key, packLabel: packLabel(pack) })}
           />
         ) : (
-          <span className="flex h-11 items-center font-mono text-xs text-muted md:h-9">{packText ?? "—"}</span>
+          <span className="flex h-11 items-center text-xs text-muted md:h-9">{packText ?? "—"}</span>
         )}
       </td>
 
@@ -132,7 +132,7 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
             onChange={(quantity) => updateItem(key, { quantity })}
           />
         ) : (
-          <span className="flex h-11 items-center font-mono text-sm text-muted md:h-9">{line.quantity}</span>
+          <span className="flex h-11 items-center text-sm text-muted tabular-nums md:h-9">{line.quantity}</span>
         )}
       </td>
 

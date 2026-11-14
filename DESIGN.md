@@ -28,10 +28,6 @@ typography:
   body:
     fontFamily: Inter
     usage: all running text, buttons, form fields
-  mono:
-    fontFamily: Space Mono
-    weights: [400, 700]
-    usage: eyebrows, labels, badges, chips, product codes and specs
   small-text-floor: 12px
 rounded:
   card: 1rem        # rounded-2xl: cards, panels, option cards
@@ -53,7 +49,7 @@ The tone is confident and practical: **Corporate Modern**, built for buyers who 
 
 **Naming**
 - The group is always **Clover Industries**. Divisions are **Clover Chemicals** and **Clover Medical**. Do not use "Clover Chemical Industries".
-- Division heroes carry the line "A Division of Clover Industries".
+- Division heroes carry the line "A Division of Clover Industries" as their only eyebrow, in the division accent. Do not repeat company facts (founding year, ownership, certifications) in division hero eyebrows; they live on About.
 - Tagline: "Lift as you rise."
 
 ## One system, many divisions
@@ -69,23 +65,24 @@ Never give a division its own typeface, radius or component style. If a division
 
 Colours are HeroUI semantic tokens (`styles/globals.css`); use the tokens (`text-foreground`, `text-muted`, `bg-surface`, `border-separator`, `text-accent`), not raw colours.
 
+- **Brand tokens:** each division colour has a `--chemical*` / `--medical*` token in `styles/globals.css` (used by `text-medical` / `bg-medical` for components that must stay Medical blue on any route). The matching values in `config/divisions.ts` are written out literally, because `var()` references there failed to resolve; keep the two in sync. `ogAccent` is a hex for generated social images.
 - **Accent** changes with the route. Group pages (home, About, Contact, Locations, RFQ, shared product routes): black on light, white on dark. Chemical: Clover Green. Medical: blue `#0074a8`.
 - **Neutrals:** a warm light-grey background with white surfaces; near-black foreground; muted grey for secondary text. A dark theme exists (`.dark`) but light is the default.
 - **Specials** (yellow) is reserved for promotional tags and banners.
 - Black alpha scrims over photography (hero shading) are acceptable and are not palette colours.
 
-**Open:** the group front door is almost entirely black and white; where the Clover Green appears at group level is decided in CI-89.
+**Group stays neutral on purpose.** The group is black and white so that it sits above the divisions; colour belongs to the divisions (Chemical green, Medical blue, and any future division). Do not add a group colour (CI-89 closed as intended).
 
 ## Typography
 
-One font system for the whole site (configured in `config/fonts.ts`):
+Two fonts for the whole site (configured in `config/fonts.ts`). Space Mono was dropped as a third face (CI-82):
 
 1. **Archivo (display)**: every `h1`-`h3` uses `font-display`. Weights 700-900 are loaded; hero titles use 800. Headlines use tight tracking.
 2. **Inter (body)**: all running text, buttons and form fields.
-3. **Space Mono (mono)**: eyebrows, labels, badges, chips, product codes and spec data.
+Labels, eyebrows, badges, chips and product codes are Inter, not a third face: uppercase with wide tracking and weight 600 for labels, `tabular-nums` for quantities and spec values.
 
 Rules:
-- **Eyebrow:** use the shared `eyebrow()` primitive (`components/primitives.ts`): mono, 12px, medium, uppercase, wide tracking, accent colour (`onDark` tone over photos).
+- **Eyebrow:** use the shared `eyebrow()` primitive (`components/primitives.ts`): Inter, 12px, semibold, uppercase, wide tracking, accent colour (`onDark` tone over photos).
 - **Minimum size 12px** for any text. No `text-[10px]` or `text-[11px]`.
 - Headings use weights the font actually loads (bold or heavier for Archivo).
 
@@ -125,7 +122,7 @@ One radius scale, applied by role (not by division):
 - **Tags, badges, chips, pills:** `rounded-full`.
 - Tiny decorative squares (bullets) may stay `rounded-sm`.
 
-**Open:** Medical's pill-shaped buttons (`rounded-full`) predate this rule; CI-91 decides whether to bring them to `rounded-lg`.
+**Exception:** Medical's hero button is pill-shaped (`rounded-full`). This is deliberate and approved (CI-91); leave it.
 
 ## Components
 
@@ -137,7 +134,7 @@ One radius scale, applied by role (not by division):
 - White surface, 1px `separator` border, `rounded-2xl`, no shadow by default. Division cards on the group home use photography with a dark gradient.
 
 ### Product cards and tags
-- Mono 12px tags as `rounded-full` chips. "Specials" uses the specials colour.
+- 12px uppercase Inter tags as `rounded-full` chips. "Specials" uses the specials colour.
 
 ### Forms
 - Always-visible labels. The contact and RFQ forms are being brought onto one field system with sentence-case labels and accessible placeholder contrast (CI-85).
@@ -151,4 +148,4 @@ One radius scale, applied by role (not by division):
 
 ## Open items
 
-Tracked under the brand epic CI-82: group identity (CI-89), Chemical (CI-90), Medical (CI-91).
+None. Brand epic CI-82 is complete once its tickets are closed.

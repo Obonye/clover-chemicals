@@ -60,11 +60,11 @@ export const SpecialsBanner = async () => {
           {/* Content */}
           <div className="flex flex-col justify-center p-8 lg:p-12">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="inline-block w-fit rounded-full bg-specials px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-specials-foreground">
+              <span className="inline-block w-fit rounded-full bg-specials px-2.5 py-1 text-xs font-semibold uppercase tracking-widest text-specials-foreground">
                 Current Specials
               </span>
               {validUntil && (
-                <span className="font-mono text-xs uppercase tracking-widest text-muted">
+                <span className="text-xs uppercase tracking-widest text-muted">
                   Valid until {validUntil}
                 </span>
               )}

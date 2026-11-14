@@ -7,7 +7,7 @@ import { VisualEditing } from "next-sanity/visual-editing";
 import { Providers } from "./providers";
 
 import { siteConfig, SITE_URL } from "@/config/site";
-import { fontDisplay, fontMono, fontSans } from "@/config/fonts";
+import { fontDisplay, fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import { UtilityBar } from "@/components/utility-bar";
 import { DivisionThemeScope } from "@/components/division-theme-scope";
@@ -69,7 +69,6 @@ export default async function RootLayout({
           "min-h-screen text-foreground bg-background font-sans antialiased",
           fontSans.variable,
           fontDisplay.variable,
-          fontMono.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>

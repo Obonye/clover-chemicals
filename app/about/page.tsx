@@ -134,10 +134,10 @@ export default function AboutPage() {
                 className="px-6 py-14 lg:px-10"
                 style={i < stats.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.08)" } : undefined}
               >
-                <p className="mb-2 font-mono text-5xl font-bold tabular-nums text-white">
+                <p className="mb-2 text-5xl font-bold tabular-nums text-white">
                   {stat.value}
                 </p>
-                <p className="font-mono text-xs uppercase tracking-widest text-white/40">
+                <p className="text-xs uppercase tracking-widest text-white/40">
                   {stat.label}
                 </p>
               </div>
@@ -155,7 +155,7 @@ export default function AboutPage() {
           >
             We don&apos;t just supply. We supply certainty.
           </p>
-          <p className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-accent-foreground/70">
+          <p className="mt-6 text-xs uppercase tracking-[0.2em] text-accent-foreground/70">
             — {siteConfig.name}, Est. {siteConfig.foundedYear}
           </p>
         </div>
@@ -219,7 +219,7 @@ export default function AboutPage() {
                 key={item.year}
                 className="flex flex-col gap-3 border-t border-separator py-10 lg:grid lg:grid-cols-[220px_1fr] lg:items-start lg:gap-20"
               >
-                <p className="font-mono text-3xl font-bold tabular-nums text-accent lg:text-5xl">
+                <p className="text-3xl font-bold tabular-nums text-accent lg:text-5xl">
                   {item.year}
                 </p>
                 <p className="text-base leading-relaxed text-muted lg:pt-3" style={{ maxWidth: "52ch" }}>
@@ -243,7 +243,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 gap-px bg-separator sm:grid-cols-2">
             {pillars.map((pillar) => (
               <div key={pillar.heading} className="bg-background p-8 lg:p-10">
-                <p className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+                <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-accent">
                   {pillar.index}
                 </p>
                 <h3 className="mb-3 font-display text-xl font-bold tracking-tight text-foreground">

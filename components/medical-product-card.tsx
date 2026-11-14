@@ -32,7 +32,7 @@ export const MedicalProductCard = ({ product, tag }: MedicalProductCardProps) =>
       </p>
 
       <div className="mb-4 border-t border-white/15 pt-3">
-        <p className="font-mono text-xs uppercase tracking-widest text-white/40">
+        <p className="text-xs uppercase tracking-widest text-white/40">
           {product.grade}
         </p>
       </div>

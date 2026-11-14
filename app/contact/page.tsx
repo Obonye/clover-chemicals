@@ -16,7 +16,7 @@ const fieldClass =
   "w-full max-w-full min-w-0 rounded-lg border border-separator bg-surface px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 outline-none transition-colors focus:border-accent";
 
 const labelClass =
-  "mb-2 block font-mono text-xs font-medium uppercase tracking-widest text-muted";
+  "mb-2 block text-xs font-medium uppercase tracking-widest text-muted";
 
 const errorClass = "mt-1.5 text-xs text-danger";
 
@@ -81,7 +81,7 @@ function ContactContent() {
             <div>
               {state.status === "success" && dismissed !== state ? (
                 <div className="flex flex-col items-start gap-4 py-8">
-                  <span className="font-mono text-xs uppercase tracking-widest text-accent">
+                  <span className="text-xs uppercase tracking-widest text-accent">
                     Message Sent
                   </span>
                   <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
@@ -93,7 +93,7 @@ function ContactContent() {
                     Your reference is <strong className="text-foreground">{state.reference}</strong>.
                   </p>
                   <button
-                    className="mt-4 font-mono text-xs uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
+                    className="mt-4 text-xs uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
                     type="button"
                     onClick={() => setDismissed(state)}
                   >
@@ -246,7 +246,7 @@ function ContactContent() {
             {/* Contact details sidebar */}
             <aside className="flex flex-col gap-10">
               <div>
-                <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-muted">
+                <p className="mb-5 text-xs uppercase tracking-[0.25em] text-muted">
                   Our Offices
                 </p>
                 <address className="flex flex-col gap-5 not-italic">
@@ -298,7 +298,7 @@ function ContactContent() {
               </div>
 
               <div className="border-t border-separator pt-10">
-                <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-muted">
+                <p className="mb-5 text-xs uppercase tracking-[0.25em] text-muted">
                   Browse by Category
                 </p>
                 <ul className="flex flex-col">

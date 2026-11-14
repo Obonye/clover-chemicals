@@ -73,7 +73,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
                 Products
               </h2>
               <NextLink
-                className="hidden shrink-0 font-mono text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75 sm:block"
+                className="hidden shrink-0 text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75 sm:block"
                 href={`/${division.slug}/products`}
               >
                 View all →
@@ -97,7 +97,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
             <div>
-              <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-muted">
+              <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-muted">
                 Contacts
               </p>
               <ul className="flex flex-col gap-3">
@@ -115,7 +115,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
               </ul>
             </div>
             <div>
-              <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-muted">
+              <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-muted">
                 Branches
               </p>
               <ul className="flex flex-col gap-2">

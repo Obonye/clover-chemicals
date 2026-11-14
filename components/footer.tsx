@@ -76,7 +76,7 @@ export const Footer = ({ categories }: FooterProps) => {
               Manufacturer and distributor of chemicals, equipment, and total
               solutions for Botswana industry, since {siteConfig.foundedYear}.
             </p>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            <p className="text-xs uppercase tracking-[0.2em] text-muted">
               Est. {siteConfig.foundedYear}
             </p>
           </div>

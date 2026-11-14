@@ -35,7 +35,7 @@ export const subtitle = tv({
  * so each division's pages pick up their own colour. Use "onDark" over photos.
  */
 export const eyebrow = tv({
-  base: "mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em]",
+  base: "mb-3 text-xs font-semibold uppercase tracking-[0.2em]",
   variants: {
     tone: {
       accent: "text-accent",

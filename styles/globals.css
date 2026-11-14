@@ -82,6 +82,12 @@ body {
      instead of the visitor's OS preference. */
   color-scheme: light;
   /* Theme Colors (Light Mode) */
+  /* Division brand colours (--chemical*, --medical*) are the single source
+     for each division's colour: config/divisions.ts points a division's
+     accent at them, and components that must stay in the division's colour
+     on any route use bg-medical / text-medical. Change a brand colour here
+     only (the hex ogAccent in config/divisions.ts is for next/og, which
+     cannot read CSS variables). */
   --accent: oklch(0.62 0.19 127.1031);
   --accent-foreground: oklch(15% 0.0300 144.21);
   --background: oklch(0.9564 0.0025 48.72);
@@ -97,8 +103,11 @@ body {
   --focus: oklch(67.31% 0.1625 144.21);
   --foreground: oklch(0.1543 0 0);
   --heading: var(--foreground);
+  --chemical: oklch(0.62 0.19 127.1031);
+  --chemical-foreground: oklch(15% 0.0300 144.21);
   --medical: #0074a8;
   --medical-foreground: #ffffff;
+  --medical-heading: #343434;
   --muted: oklch(55.17% 0.0030 144.21);
   --overlay: oklch(100.00% 0.0004 144.21);
   --overlay-foreground: oklch(21.03% 0.0015 144.21);
@@ -144,8 +153,11 @@ body {
   --focus: oklch(67.31% 0.1625 144.21);
   --foreground: oklch(99.11% 0.0015 144.21);
   --heading: var(--foreground);
+  --chemical: oklch(0.62 0.19 127.1031);
+  --chemical-foreground: oklch(15% 0.0300 144.21);
   --medical: #0074a8;
   --medical-foreground: #ffffff;
+  --medical-heading: #343434;
   --muted: oklch(70.50% 0.0030 144.21);
   --overlay: oklch(21.03% 0.0030 144.21);
   --overlay-foreground: oklch(99.11% 0.0015 144.21);

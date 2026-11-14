@@ -48,7 +48,7 @@ export default function NewsPage() {
             </div>
             <div className="flex flex-col justify-between bg-background p-8 lg:p-10">
               <div>
-                <p className="mb-4 font-mono text-xs font-medium uppercase tracking-widest text-accent">
+                <p className="mb-4 text-xs font-medium uppercase tracking-widest text-accent">
                   {featured.category}
                 </p>
                 <h2 className="mb-4 font-display text-2xl font-extrabold leading-snug tracking-tight text-foreground">
@@ -60,9 +60,9 @@ export default function NewsPage() {
               </div>
               <div className="mt-8 flex items-center justify-between border-t border-separator pt-6">
                 <div className="flex items-center gap-4">
-                  <span className="font-mono text-xs text-muted">{featured.date}</span>
-                  <span className="font-mono text-xs text-foreground/25">·</span>
-                  <span className="font-mono text-xs text-muted">{featured.readTime}</span>
+                  <span className="text-xs text-muted">{featured.date}</span>
+                  <span className="text-xs text-foreground/25">·</span>
+                  <span className="text-xs text-muted">{featured.readTime}</span>
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@ export default function NewsPage() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-6">
-                  <p className="mb-3 font-mono text-xs font-medium uppercase tracking-widest text-accent">
+                  <p className="mb-3 text-xs font-medium uppercase tracking-widest text-accent">
                     {article.category}
                   </p>
                   <h3 className="mb-3 font-display text-base font-bold leading-snug tracking-tight text-foreground">
@@ -93,9 +93,9 @@ export default function NewsPage() {
                   </p>
                   <div className="flex items-center justify-between border-t border-separator pt-4">
                     <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs text-muted">{article.date}</span>
-                      <span className="font-mono text-xs text-foreground/25">·</span>
-                      <span className="font-mono text-xs text-muted">{article.readTime}</span>
+                      <span className="text-xs text-muted">{article.date}</span>
+                      <span className="text-xs text-foreground/25">·</span>
+                      <span className="text-xs text-muted">{article.readTime}</span>
                     </div>
                   </div>
                 </div>

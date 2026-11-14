@@ -48,7 +48,7 @@ export default function LocationsPage() {
                       {branch.name}
                     </h2>
                     {branch.isHeadOffice && (
-                      <span className="rounded-full bg-accent-soft px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-accent-soft-foreground">
+                      <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold uppercase tracking-widest text-accent-soft-foreground">
                         Head Office
                       </span>
                     )}
@@ -62,7 +62,7 @@ export default function LocationsPage() {
                         {servedDivisions.map((d) => (
                           <span
                             key={d.slug}
-                            className="rounded-full border border-separator px-2.5 py-1 font-mono text-xs text-muted"
+                            className="rounded-full border border-separator px-2.5 py-1 text-xs text-muted"
                           >
                             {d.shortName}
                           </span>
@@ -89,7 +89,7 @@ export default function LocationsPage() {
 
                   <div className="flex flex-wrap gap-3">
                     <a
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-accent px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-accent px-4 py-2 text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
                       href={mapUrl(branch.address)}
                       rel="noopener noreferrer"
                       target="_blank"
@@ -97,7 +97,7 @@ export default function LocationsPage() {
                       Get Directions
                     </a>
                     <NextLink
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-separator px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-muted transition-colors hover:text-foreground"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-separator px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted transition-colors hover:text-foreground"
                       href="/contact"
                     >
                       Send an Enquiry

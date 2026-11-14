@@ -151,7 +151,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
               {/* Index number */}
               <span
                 aria-hidden="true"
-                className="absolute left-6 top-6 font-mono text-xs font-medium tabular-nums lg:text-sm"
+                className="absolute left-6 top-6 text-xs font-medium tabular-nums lg:text-sm"
                 style={{
                   color: isHovered ? "var(--accent)" : "rgba(255,255,255,0.55)",
                   transition: `color 300ms ${EASE}`,
@@ -277,7 +277,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
                 <div className="relative flex items-baseline gap-6">
                   <span
                     aria-hidden="true"
-                    className="w-8 shrink-0 font-mono text-xs font-medium tabular-nums"
+                    className="w-8 shrink-0 text-xs font-medium tabular-nums"
                     style={{
                       color: isHovered ? "var(--accent)" : "var(--muted)",
                       transition: `color 300ms ${EASE}`,

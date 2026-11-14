@@ -50,7 +50,7 @@ export const CtaBanner = ({ tint = CLOVER_GREEN, showBrowse = true }: CtaBannerP
 
           {/* Headline + subtext */}
           <div>
-            <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/60">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-white/60">
               Work With Us
             </p>
             <h2 className="font-display text-3xl font-extrabold tracking-tight text-white" style={{ maxWidth: "22ch" }}>

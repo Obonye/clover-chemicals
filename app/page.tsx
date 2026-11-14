@@ -57,7 +57,7 @@ export default async function Home() {
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-10 pt-[var(--header-h)] sm:pb-16 lg:px-12 lg:pb-20">
           {/* Always over a dark photo: the group accent is black in light
               mode, so this uses a light tint instead. */}
-          <p className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/80">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-white/80">
             Est. {siteConfig.foundedYear} · {years}+ Years · 100% Citizen-Owned · EDD Certified
           </p>
           {/* The headline sets this block's width, so the buttons end exactly
@@ -101,7 +101,7 @@ export default async function Home() {
       {/* Divisions */}
       <section className="border-b border-separator bg-background py-20 lg:py-24">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Our Divisions
           </p>
           <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground">
@@ -194,7 +194,7 @@ export default async function Home() {
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <div className="flex flex-col items-center gap-10 text-center">
             <div className="min-w-0">
-              <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-accent">
                 Who We Are
               </p>
               <p className="mx-auto text-xl font-medium leading-relaxed text-foreground lg:text-3xl lg:leading-snug" style={{ maxWidth: "58ch" }}>
@@ -238,7 +238,7 @@ export default async function Home() {
         </div>
 
         <div className="relative mx-auto max-w-[1280px] px-6 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-accent">
             At a Glance
           </p>
           <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground">
@@ -263,7 +263,7 @@ export default async function Home() {
                   key={division.slug}
                   className="flex min-h-56 flex-col justify-between rounded-2xl border border-foreground/15 bg-surface p-6 shadow-sm lg:p-8"
                 >
-                  <dt className="font-mono text-xs uppercase tracking-widest text-muted">{division.name}</dt>
+                  <dt className="text-xs uppercase tracking-widest text-muted">{division.name}</dt>
                   <dd>
                     {rangeCount > 0 ? (
                       <>
@@ -294,12 +294,12 @@ export default async function Home() {
             {/* Locations: tall */}
             <div className="flex min-h-56 flex-col justify-between gap-8 rounded-2xl border border-foreground/15 bg-surface p-6 shadow-sm sm:col-span-2 lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:p-8">
               <div>
-                <dt className="mb-3 font-mono text-xs uppercase tracking-widest text-muted">Head Office</dt>
+                <dt className="mb-3 text-xs uppercase tracking-widest text-muted">Head Office</dt>
                 <dd className="text-lg font-semibold leading-snug text-foreground">{headOffice.address}</dd>
               </div>
               {otherBranches.length > 0 && (
                 <div className="border-t border-separator pt-6">
-                  <dt className="mb-3 font-mono text-xs uppercase tracking-widest text-muted">Also At</dt>
+                  <dt className="mb-3 text-xs uppercase tracking-widest text-muted">Also At</dt>
                   <dd className="flex flex-col gap-3 text-lg font-semibold leading-snug text-foreground">
                     {otherBranches.map((branch) => (
                       <span key={branch.slug}>{branch.address}</span>
@@ -311,7 +311,7 @@ export default async function Home() {
 
             {/* Contact: wide, filled */}
             <div className="flex min-h-56 flex-col justify-between gap-8 rounded-2xl bg-accent p-6 text-accent-foreground sm:col-span-2 lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:p-8">
-              <dt className="font-mono text-xs uppercase tracking-widest opacity-70">Reach us</dt>
+              <dt className="text-xs uppercase tracking-widest opacity-70">Reach us</dt>
               <dd>
                 <a
                   className="block font-display text-2xl font-extrabold leading-tight tracking-tight underline-offset-4 hover:underline lg:text-3xl"

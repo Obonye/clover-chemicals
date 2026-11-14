@@ -12,7 +12,7 @@ export const PartnersStrip = () => {
     <div className="border-y border-separator bg-background py-10">
 
       {/* Centered label */}
-      <p className="mb-6 text-center font-mono text-xs font-semibold uppercase tracking-[0.25em] text-accent">
+      <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.25em] text-accent">
         Trusted Partners
       </p>
 

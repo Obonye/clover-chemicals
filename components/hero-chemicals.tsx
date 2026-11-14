@@ -1,16 +1,12 @@
 import Image from "next/image";
 import NextLink from "next/link";
 
-import { siteConfig } from "@/config/site";
-
 type HeroChemicalsProps = {
   /** Show "Browse Products". Off while the catalogue is hidden (CI-72). */
   showBrowse?: boolean;
 };
 
 export const HeroChemicals = ({ showBrowse = true }: HeroChemicalsProps) => {
-  const years = new Date().getFullYear() - siteConfig.foundedYear;
-
   return (
     <section className="relative -mt-[var(--navbar-h)] flex min-h-screen items-center">
       {/* Background image */}
@@ -29,11 +25,8 @@ export const HeroChemicals = ({ showBrowse = true }: HeroChemicalsProps) => {
       {/* Content */}
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
-            A Division of Clover Industries
-          </p>
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-            {years}+ Years · 100% Citizen-Owned
+            A Division of Clover Industries
           </p>
 
           <h1 className="mb-6 font-display text-5xl font-extrabold leading-none tracking-normal text-white">

@@ -37,7 +37,7 @@ export const QuantityStepper = ({ id, value, onChange, label, compact, className
   >
     <NumberField.Group className={compact ? "h-11 md:h-9" : "h-11"}>
       <NumberField.DecrementButton className="h-full" />
-      <NumberField.Input className="min-w-10 text-center font-mono" />
+      <NumberField.Input className="min-w-10 text-center tabular-nums" />
       <NumberField.IncrementButton className="h-full" />
     </NumberField.Group>
   </NumberField>

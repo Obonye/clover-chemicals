@@ -57,7 +57,7 @@ export const ChemicalCapabilities = () => {
 
           {/* Right: standards and certificates */}
           <div className="flex flex-col justify-center">
-            <p className="mb-6 font-mono text-xs uppercase tracking-[0.25em] text-foreground/35">
+            <p className="mb-6 text-xs uppercase tracking-[0.25em] text-foreground/35">
               Standards &amp; certificates
             </p>
             <dl>
@@ -69,7 +69,7 @@ export const ChemicalCapabilities = () => {
                   <dt className="shrink-0 text-xs font-medium uppercase tracking-widest text-foreground/45">
                     {row.label}
                   </dt>
-                  <dd className="text-right font-mono text-base font-medium text-foreground">{row.value}</dd>
+                  <dd className="text-right text-base font-medium text-foreground">{row.value}</dd>
                 </div>
               ))}
             </dl>

@@ -426,7 +426,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                   )
                 ) : (
                   <>
-                    <p className="mt-2 font-mono text-xs font-medium uppercase tracking-widest text-muted">
+                    <p className="mt-2 text-xs font-medium uppercase tracking-widest text-muted">
                       Divisions
                     </p>
                     {divisions.map((d) => (
@@ -455,7 +455,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
 
                 {division && (
                   <>
-                    <p className="mt-2 font-mono text-xs font-medium uppercase tracking-widest text-muted">
+                    <p className="mt-2 text-xs font-medium uppercase tracking-widest text-muted">
                       Switch Division
                     </p>
                     {divisions

@@ -93,7 +93,7 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
 
     return (
       <NextLink
-        className={`inline-flex ${controlHeight} w-full items-center justify-center rounded-lg bg-accent px-4 font-mono font-semibold uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
+        className={`inline-flex ${controlHeight} w-full items-center justify-center rounded-lg bg-accent px-4 font-semibold uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
         href={medicalHref}
       >
         Request a quote
@@ -108,7 +108,7 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
           fullWidth
           isDisabled
           aria-describedby={`${idPrefix}-unavailable`}
-          className={`${controlHeight} font-mono text-xs uppercase tracking-wider`}
+          className={`${controlHeight} text-xs uppercase tracking-wider`}
           variant="outline"
         >
           Add to RFQ
@@ -148,7 +148,7 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
         {/* A real link so the CTA still works before hydration or with JS
             off; once hydrated, the click adds to the RFQ instead. */}
         <NextLink
-          className={`inline-flex ${controlHeight} flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-4 font-mono font-semibold uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
+          className={`inline-flex ${controlHeight} flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-4 font-semibold uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
           href={fallbackHref}
           role={canAdd ? "button" : undefined}
           onClick={handleAdd}
@@ -161,7 +161,7 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
         </NextLink>
         {status === "added" && (
           <NextLink
-            className="shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-accent underline-offset-2 hover:underline"
+            className="shrink-0 text-xs font-semibold uppercase tracking-wider text-accent underline-offset-2 hover:underline"
             href="/rfq"
           >
             View RFQ

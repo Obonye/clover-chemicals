@@ -36,7 +36,7 @@ export const MedicalWhyPartner = () => {
             <div key={pillar.heading}>
               <p
                 aria-hidden="true"
-                className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-medical"
+                className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-medical"
               >
                 {String(i + 1).padStart(2, "0")}
               </p>

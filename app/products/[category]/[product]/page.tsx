@@ -53,9 +53,9 @@ const DocumentsSection = ({ documents }: { documents: ProductDocument[] }) => (
                   <span className="block font-semibold text-foreground group-hover:text-accent">
                     {documentLabel(doc)}
                   </span>
-                  <span className="block font-mono text-xs text-muted">{meta.join(" · ")}</span>
+                  <span className="block text-xs text-muted">{meta.join(" · ")}</span>
                 </span>
-                <span className="font-mono text-xs font-semibold uppercase tracking-wider text-accent">
+                <span className="text-xs font-semibold uppercase tracking-wider text-accent">
                   Download
                 </span>
               </a>
@@ -177,7 +177,7 @@ export default async function ProductPage({ params }: Props) {
       {/* Breadcrumb */}
       <div className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 pt-[var(--header-h)] pb-4 lg:px-12">
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted">
+          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-widest text-muted">
             <NextLink className="transition-colors hover:text-foreground" href="/products">
               Products
             </NextLink>
@@ -205,7 +205,7 @@ export default async function ProductPage({ params }: Props) {
             {/* Image */}
             <div className="relative aspect-square overflow-hidden rounded-2xl bg-surface-secondary">
               {product.isOnPromotion && (
-                <span className="absolute left-4 top-4 z-10 rounded-full bg-specials px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-specials-foreground">
+                <span className="absolute left-4 top-4 z-10 rounded-full bg-specials px-2.5 py-1 text-xs font-semibold uppercase tracking-widest text-specials-foreground">
                   On Promotion
                 </span>
               )}
@@ -224,7 +224,7 @@ export default async function ProductPage({ params }: Props) {
             {/* Details */}
             <div className="flex flex-col">
               {product.tag && (
-                <span className="mb-3 inline-block w-fit rounded-full bg-accent-soft px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-accent-soft-foreground">
+                <span className="mb-3 inline-block w-fit rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold uppercase tracking-widest text-accent-soft-foreground">
                   {product.tag}
                 </span>
               )}
@@ -234,12 +234,12 @@ export default async function ProductPage({ params }: Props) {
               </h1>
 
               <div className="mb-6 flex flex-wrap items-center gap-3">
-                <p className="font-mono text-xs uppercase tracking-widest text-muted">
+                <p className="text-xs uppercase tracking-widest text-muted">
                   {product.grade}
                 </p>
                 {product.available !== null && (
                   <span
-                    className={`font-mono text-xs font-semibold uppercase tracking-widest ${
+                    className={`text-xs font-semibold uppercase tracking-widest ${
                       product.available ? "text-accent" : "text-muted"
                     }`}
                   >
@@ -252,14 +252,14 @@ export default async function ProductPage({ params }: Props) {
 
               {packSizes.length > 0 && (
                 <div className="mb-8">
-                  <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-muted">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted">
                     Pack Sizes
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {packSizes.map((size) => (
                       <span
                         key={size._key}
-                        className="rounded-full border border-separator px-3 py-1.5 font-mono text-sm text-foreground"
+                        className="rounded-full border border-separator px-3 py-1.5 text-sm text-foreground"
                       >
                         {packLabel(size)}
                       </span>

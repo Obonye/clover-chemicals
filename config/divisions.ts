@@ -57,9 +57,9 @@ export const divisions: DivisionConfig[] = [
     shortName: "Chemical",
     tagline: "Chemicals, equipment & PPE for industry, agriculture, and the lab.",
     image: "/clover-chemicals.jpg",
-    // The same Clover Green as the :root defaults in styles/globals.css,
-    // set explicitly so Chemical keeps it on shared routes too (product
-    // pages, the catalogue preview), where the group theme now applies.
+    // Clover Green (keep in sync with --chemical in styles/globals.css), set
+    // explicitly so Chemical keeps it on shared routes too (product pages,
+    // the catalogue preview), where the group theme now applies.
     theme: {
       accent: "oklch(0.62 0.19 127.1031)",
       accentForeground: "oklch(15% 0.0300 144.21)",
@@ -78,8 +78,11 @@ export const divisions: DivisionConfig[] = [
     browseLabel: "Explore Product Lines",
     quoteHref: "/contact?enquiry=medical",
     theme: {
+      // Medical blue and heading grey (keep in sync with the --medical*
+      // tokens in styles/globals.css).
       accent: "#0074a8",
       accentForeground: "#ffffff",
+      ogAccent: "#0074a8",
       heading: "#343434",
       navTextStyle: "dark",
     },
