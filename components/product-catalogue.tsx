@@ -21,7 +21,7 @@ import {
 
 import { ProductCard } from "@/components/product-card";
 import { ProductSearch } from "@/components/product-search";
-import { RangeQuotePanel } from "@/components/rfq/range-quote-panel";
+import { RangeQuoteModal, type QuoteRange } from "@/components/rfq/range-quote-modal";
 import { divisionCssVars, getDivisionBySanityValue } from "@/config/divisions";
 import { paintThemeVars } from "@/lib/theme-vars";
 import type { Division, ProductCategory, ProductWithCategory } from "@/sanity/lib/types";
@@ -95,7 +95,16 @@ export const ProductCatalogue = ({
   const router = useRouter();
 
   const [query, setQuery] = useState(initialQuery);
-  const [category, setCategory] = useState(initialCategory || "all");
+  const toQuoteRange = (c: ProductCategory | undefined): QuoteRange | null =>
+    c?.slug ? { slug: stegaClean(c.slug), name: stegaClean(c.label ?? "this range") } : null;
+  // A range that isn't listed yet isn't a filter: picking it (or arriving with
+  // it in the URL) opens the quote modal and leaves the grid as it was.
+  const [quoteRange, setQuoteRange] = useState<QuoteRange | null>(() =>
+    toQuoteRange(pendingCategories.find((c) => c.slug === initialCategory)),
+  );
+  const [category, setCategory] = useState(() =>
+    pendingCategories.some((c) => c.slug === initialCategory) ? "all" : initialCategory || "all",
+  );
   const [division, setDivision] = useState<DivisionFilter>(() => {
     if (lockedDivision) return lockedDivision;
 
@@ -150,7 +159,6 @@ export const ProductCatalogue = ({
 
     return division === "all" ? all : all.filter((c) => c.division === division);
   }, [categories, pendingCategories, division]);
-  const pendingCategory = pendingCategories.find((c) => c.slug === category);
 
   // If switching division drops the active category out of view, fall back to "All".
   useEffect(() => {
@@ -213,7 +221,15 @@ export const ProductCatalogue = ({
   }
 
   function handleCategoryChange(keys: Selection) {
-    setCategory(firstKey<string>(keys, "all"));
+    const key = firstKey<string>(keys, "all");
+    const pending = pendingCategories.find((c) => c.slug === key);
+
+    if (pending) {
+      setQuoteRange(toQuoteRange(pending));
+
+      return;
+    }
+    setCategory(key);
   }
 
   const renderDivisionToggle = (fullWidth = false) => (
@@ -378,13 +394,6 @@ export const ProductCatalogue = ({
           </div>
 
           {/* Results */}
-          {pendingCategory ? (
-            <RangeQuotePanel
-              description={pendingCategory.description ? stegaClean(pendingCategory.description) : null}
-              name={stegaClean(pendingCategory.label ?? "this range")}
-              slug={stegaClean(pendingCategory.slug ?? "")}
-            />
-          ) : (
           <div>
             <p aria-live="polite" className="mb-6 text-sm text-muted">
               {results.length} product{results.length === 1 ? "" : "s"}
@@ -426,9 +435,10 @@ export const ProductCatalogue = ({
               </div>
             )}
           </div>
-          )}
         </div>
       </div>
+
+      <RangeQuoteModal range={quoteRange} onClose={() => setQuoteRange(null)} />
     </>
   );
 };

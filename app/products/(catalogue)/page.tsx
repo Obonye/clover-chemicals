@@ -4,7 +4,7 @@ import NextLink from "next/link";
 
 import { CategoryDirectory } from "@/components/category-directory";
 import { ProductCatalogue } from "@/components/product-catalogue";
-import { RangeQuotePanel } from "@/components/rfq/range-quote-panel";
+import { RangeQuoteFromUrl } from "@/components/rfq/range-quote-modal";
 import { getCatalog } from "@/lib/catalog/visibility";
 import { pendingRanges } from "@/lib/catalog/pending";
 import { loadCatalogQuery } from "@/sanity/lib/fetch";
@@ -47,15 +47,22 @@ export default async function ProductsPage({ searchParams }: Props) {
     return (
       <>
         {chosen && (
-          <section className="bg-background pt-12">
-            <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-              <RangeQuotePanel description={chosen.description} name={chosen.label ?? "this range"} slug={chosen.slug ?? ""} />
-            </div>
-          </section>
+          <RangeQuoteFromUrl
+            basePath="/products"
+            range={{ slug: chosen.slug ?? "", name: chosen.label ?? "this range" }}
+          />
         )}
         <CategoryDirectory
           heading="Our product ranges"
-          items={allCategories.map((category) => ({ category, href: catalog.hrefFor(category) }))}
+          items={allCategories.map((category) => {
+            const range = pending.find((item) => item._id === category._id);
+
+            return {
+              category,
+              href: catalog.hrefFor(category),
+              range: range?.slug ? { slug: range.slug, name: range.label ?? "this range" } : null,
+            };
+          })}
         />
         <BottomCta />
       </>
