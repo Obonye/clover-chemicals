@@ -9,14 +9,14 @@ export const ProductCardSkeleton = () => (
     <Skeleton className="h-44 w-full shrink-0 rounded-none" />
 
     <div className="flex flex-1 flex-col gap-3 p-5">
-      <Skeleton className="h-3 w-16 rounded" />
-      <Skeleton className="h-4 w-3/4 rounded" />
-      <Skeleton className="h-3 w-full rounded" />
-      <Skeleton className="h-3 w-2/3 rounded" />
+      <Skeleton className="h-3 w-16 rounded-lg" />
+      <Skeleton className="h-4 w-3/4 rounded-lg" />
+      <Skeleton className="h-3 w-full rounded-lg" />
+      <Skeleton className="h-3 w-2/3 rounded-lg" />
 
       <div className="mt-1 flex items-center justify-between border-t border-separator pt-4">
-        <Skeleton className="h-7 w-20 rounded" />
-        <Skeleton className="h-4 w-20 rounded" />
+        <Skeleton className="h-7 w-20 rounded-lg" />
+        <Skeleton className="h-4 w-20 rounded-lg" />
       </div>
     </div>
   </div>

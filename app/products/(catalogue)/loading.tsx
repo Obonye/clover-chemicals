@@ -9,7 +9,7 @@ export default function ProductsLoading() {
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <div className="flex items-center gap-3 py-4 lg:hidden">
             <Skeleton className="h-11 flex-1 rounded-lg" />
-            <Skeleton className="h-9 w-24 rounded" />
+            <Skeleton className="h-9 w-24 rounded-lg" />
           </div>
           <div className="flex gap-3 overflow-x-auto py-6">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -24,11 +24,11 @@ export default function ProductsLoading() {
         <div className="mx-auto max-w-[1280px] px-6 py-8 lg:px-12">
           <div className="mb-6 hidden items-center gap-4 lg:flex">
             <Skeleton className="h-11 flex-1 rounded-lg" />
-            <Skeleton className="h-9 w-48 rounded" />
-            <Skeleton className="h-9 w-48 rounded" />
+            <Skeleton className="h-9 w-48 rounded-lg" />
+            <Skeleton className="h-9 w-48 rounded-lg" />
           </div>
 
-          <Skeleton className="mb-6 h-4 w-20 rounded" />
+          <Skeleton className="mb-6 h-4 w-20 rounded-lg" />
 
           <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (

@@ -19,7 +19,7 @@ export const MedicalProductCard = ({ product, tag }: MedicalProductCardProps) =>
     />
     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/5" />
 
-    <span className="absolute top-4 left-4 w-fit rounded-full bg-medical px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-medical-foreground">
+    <span className="absolute top-4 left-4 w-fit rounded-full bg-medical px-3 py-1 text-xs font-semibold uppercase tracking-widest text-medical-foreground">
       {tag}
     </span>
 
@@ -32,7 +32,7 @@ export const MedicalProductCard = ({ product, tag }: MedicalProductCardProps) =>
       </p>
 
       <div className="mb-4 border-t border-white/15 pt-3">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-white/40">
+        <p className="text-xs uppercase tracking-widest text-white/40">
           {product.grade}
         </p>
       </div>

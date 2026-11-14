@@ -13,7 +13,6 @@ import type { ProductCategory } from "@/sanity/lib/types";
 
 const companyLinks = [
   { label: "About Us",   href: "/about"     },
-  { label: "News",       href: "/news"      },
   { label: "Contact Us", href: "/contact"   },
   { label: "Locations",  href: "/locations" },
 ];
@@ -66,10 +65,10 @@ export const Footer = ({ categories }: FooterProps) => {
               <img alt={siteConfig.name} className="h-9 w-9" src="/clover-logo.svg" />
               <div className="flex flex-col leading-none">
                 <span className="text-sm font-bold tracking-tight text-foreground">
-                  CLOVER
+                  CLOVER INDUSTRIES
                 </span>
-                <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
-                  Industries
+                <span className="text-xs font-medium uppercase tracking-[0.12em] text-muted">
+                  {division ? division.shortName : "Lift as you rise"}
                 </span>
               </div>
             </NextLink>
@@ -77,7 +76,7 @@ export const Footer = ({ categories }: FooterProps) => {
               Manufacturer and distributor of chemicals, equipment, and total
               solutions for Botswana industry, since {siteConfig.foundedYear}.
             </p>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            <p className="text-xs uppercase tracking-[0.2em] text-muted">
               Est. {siteConfig.foundedYear}
             </p>
           </div>

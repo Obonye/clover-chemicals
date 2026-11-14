@@ -56,7 +56,7 @@ const ClearList = ({ count }: { count: number }) => {
     return (
       <Button
         ref={triggerRef}
-        className="h-11 font-mono text-xs uppercase tracking-wider text-muted hover:text-danger"
+        className="h-11 text-xs uppercase tracking-wider text-muted hover:text-danger"
         variant="ghost"
         onPress={() => setConfirming(true)}
       >
@@ -223,7 +223,7 @@ export const RfqList = ({ ranges }: RfqListProps) => {
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-separator pt-4">
           <NextLink
-            className="min-h-11 content-center font-mono text-xs font-semibold uppercase tracking-wider text-foreground underline-offset-2 hover:text-accent hover:underline"
+            className="min-h-11 content-center text-xs font-semibold uppercase tracking-wider text-foreground underline-offset-2 hover:text-accent hover:underline"
             href="/products"
           >
             ← Add more products
@@ -240,20 +240,20 @@ export const RfqList = ({ ranges }: RfqListProps) => {
           <dl className="mb-4 flex flex-col gap-2 text-sm">
             <div className="flex justify-between gap-4">
               <dt className="text-muted">Items</dt>
-              <dd className="font-mono font-semibold text-foreground" aria-live="polite">
+              <dd className="font-semibold text-foreground" aria-live="polite">
                 {productLines.length}
               </dd>
             </div>
             {selectedRanges.length > 0 && (
               <div className="flex justify-between gap-4">
                 <dt className="text-muted">Ranges</dt>
-                <dd className="font-mono font-semibold text-foreground">{selectedRanges.length}</dd>
+                <dd className="font-semibold text-foreground">{selectedRanges.length}</dd>
               </div>
             )}
             {flagged > 0 && (
               <div className="flex justify-between gap-4">
                 <dt className="text-muted">Need attention</dt>
-                <dd className="font-mono font-semibold text-warning">{flagged}</dd>
+                <dd className="font-semibold text-warning">{flagged}</dd>
               </div>
             )}
           </dl>

@@ -93,15 +93,15 @@ export default async function CategoryPage({ params }: Props) {
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-12 pt-[var(--header-h)] lg:px-12">
           <NextLink
-            className="mb-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-white/50 transition-colors hover:text-white/80"
+            className="mb-6 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50 transition-colors hover:text-white/80"
             href="/products"
           >
             ← All Products
           </NextLink>
-          <p className="mb-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Product Range
           </p>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
+          <h1 className="font-display text-4xl font-extrabold tracking-tight text-white">
             {cat.label}
           </h1>
           <p className="mt-3 text-base text-white/70" style={{ maxWidth: "52ch" }}>
@@ -120,7 +120,7 @@ export default async function CategoryPage({ params }: Props) {
               return (
                 <NextLink
                   key={tab._id}
-                  className={`shrink-0 border-b-2 px-4 py-4 font-mono text-sm font-medium uppercase tracking-wider transition-colors ${
+                  className={`shrink-0 border-b-2 px-4 py-4 text-sm font-medium uppercase tracking-wider transition-colors ${
                     isActive
                       ? "border-accent text-accent"
                       : "border-transparent text-muted hover:text-foreground"
@@ -138,7 +138,7 @@ export default async function CategoryPage({ params }: Props) {
       {/* Product grid */}
       <section className="bg-background py-16">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-          <p className="mb-8 font-mono text-xs uppercase tracking-widest text-muted">
+          <p className="mb-8 text-xs uppercase tracking-widest text-muted">
             {cat.products.length} products
           </p>
 
@@ -169,7 +169,7 @@ export default async function CategoryPage({ params }: Props) {
               </p>
             </div>
             <NextLink
-              className="shrink-0 rounded bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+              className="shrink-0 rounded-lg bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
               href="/contact"
             >
               Contact Us

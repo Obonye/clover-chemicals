@@ -75,14 +75,14 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
     <tr
       className={clsx(
         "table__row md:align-middle",
-        "max-md:grid max-md:grid-cols-[minmax(0,1fr)_auto] max-md:gap-2 max-md:rounded-xl max-md:border max-md:border-separator max-md:bg-surface max-md:p-3",
+        "max-md:grid max-md:grid-cols-[minmax(0,1fr)_auto] max-md:gap-2 max-md:rounded-2xl max-md:border max-md:border-separator max-md:bg-surface max-md:p-3",
         problem && "md:[&>td]:bg-warning-soft/40 max-md:border-warning/40 max-md:bg-warning-soft/40",
       )}
       data-rfq-line={key}
     >
       <td className={clsx(cell, "max-md:col-start-1 max-md:row-start-1")}>
         <div className="flex min-w-0 items-center gap-2.5">
-          <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md bg-surface-secondary">
+          <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-surface-secondary">
             {src && <Image fill alt="" className="object-cover" sizes="36px" src={src} />}
           </div>
           <div className="min-w-0">
@@ -96,7 +96,7 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
               )}
             </p>
             {line.grade && (
-              <p className="mt-0.5 truncate font-mono text-[10px] uppercase tracking-wider text-muted">{line.grade}</p>
+              <p className="mt-0.5 truncate text-xs uppercase tracking-wider text-muted">{line.grade}</p>
             )}
           </div>
         </div>
@@ -118,7 +118,7 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
             onChange={(pack) => updateItem(key, { packSizeKey: pack._key, packLabel: packLabel(pack) })}
           />
         ) : (
-          <span className="flex h-11 items-center font-mono text-xs text-muted md:h-9">{packText ?? "—"}</span>
+          <span className="flex h-11 items-center text-xs text-muted md:h-9">{packText ?? "—"}</span>
         )}
       </td>
 
@@ -132,7 +132,7 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
             onChange={(quantity) => updateItem(key, { quantity })}
           />
         ) : (
-          <span className="flex h-11 items-center font-mono text-sm text-muted md:h-9">{line.quantity}</span>
+          <span className="flex h-11 items-center text-sm text-muted tabular-nums md:h-9">{line.quantity}</span>
         )}
       </td>
 

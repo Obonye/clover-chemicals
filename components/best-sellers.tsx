@@ -19,7 +19,7 @@ export const BestSellers = async () => {
         {/* Section header */}
         <div className="mb-12 flex items-end justify-between">
           <div>
-            <h2 className="font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
+            <h2 className="font-display text-4xl font-extrabold tracking-tight text-foreground">
               Popular.
             </h2>
           </div>

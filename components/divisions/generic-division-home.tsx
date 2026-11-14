@@ -39,7 +39,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
         />
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-[var(--header-h)] lg:px-12">
-          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-white lg:text-5xl" style={{ maxWidth: "20ch" }}>
+          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-white" style={{ maxWidth: "20ch" }}>
             {division.name}
           </h1>
           <p className="max-w-xl text-lg leading-relaxed text-white/75">
@@ -48,14 +48,14 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
           <div className="mt-8 flex flex-wrap gap-4">
             {catalogEnabled && (
               <NextLink
-                className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
                 href={`/${division.slug}/products`}
               >
                 Browse Products
               </NextLink>
             )}
             <NextLink
-              className="rounded border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
+              className="rounded-lg border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
               href="/contact"
             >
               Get a Quote
@@ -69,11 +69,11 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
         <section className="border-b border-separator bg-background py-20">
           <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
             <div className="mb-12 flex items-center justify-between">
-              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground">
                 Products
               </h2>
               <NextLink
-                className="hidden shrink-0 font-mono text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75 sm:block"
+                className="hidden shrink-0 text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75 sm:block"
                 href={`/${division.slug}/products`}
               >
                 View all →
@@ -97,7 +97,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
             <div>
-              <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-muted">
+              <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-muted">
                 Contacts
               </p>
               <ul className="flex flex-col gap-3">
@@ -115,7 +115,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
               </ul>
             </div>
             <div>
-              <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-muted">
+              <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-muted">
                 Branches
               </p>
               <ul className="flex flex-col gap-2">

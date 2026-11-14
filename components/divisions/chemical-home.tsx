@@ -1,7 +1,7 @@
 import { ProductsSection } from "@/components/products-section";
 import { PartnersStrip } from "@/components/partners-strip";
 import { HeroChemicals } from "@/components/hero-chemicals";
-import { HeritageSection } from "@/components/heritage-section";
+import { ChemicalCapabilities } from "@/components/chemical-capabilities";
 import { CtaBanner } from "@/components/cta-banner";
 import { BestSellers } from "@/components/best-sellers";
 import { SpecialsBanner } from "@/components/specials-banner";
@@ -33,7 +33,7 @@ export async function ChemicalHome() {
 
       {catalog.enabled && <SpecialsBanner />}
 
-      <HeritageSection />
+      <ChemicalCapabilities />
       <CtaBanner showBrowse={catalog.enabled} />
     </>
   );

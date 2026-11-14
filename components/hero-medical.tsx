@@ -30,7 +30,7 @@ export const HeroMedical = ({ showBrowse = true }: HeroMedicalProps) => {
         </p>
 
         <h1
-          className="mx-auto mb-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-heading lg:text-5xl"
+          className="mx-auto mb-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-heading"
           style={{ maxWidth: "20ch" }}
         >
           Welcome to Clover Medical.

@@ -17,10 +17,10 @@ export const MedicalServices = () => {
   return (
     <section className="bg-surface py-16 lg:py-20">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-        <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-medical">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-medical">
           Beyond the Sale
         </p>
-        <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-heading lg:mb-16 lg:text-4xl">
+        <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-heading lg:mb-16">
           After-sales support.
         </h2>
 
@@ -29,11 +29,11 @@ export const MedicalServices = () => {
             <div key={pillar.heading}>
               <p
                 aria-hidden="true"
-                className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-medical"
+                className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-medical"
               >
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mb-3 text-lg font-semibold tracking-tight text-heading">
+              <h3 className="mb-3 font-display text-lg font-bold tracking-tight text-heading">
                 {pillar.heading}
               </h3>
               <p className="text-sm leading-relaxed text-muted" style={{ maxWidth: "38ch" }}>

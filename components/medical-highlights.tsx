@@ -50,7 +50,7 @@ export const MedicalHighlights = () => {
 
         {/* Feature card — precision (arc bottom, shortest) */}
         <div className="relative flex h-56 flex-col justify-between overflow-hidden rounded-2xl bg-[#17171d] p-6 sm:h-52 sm:w-[15%] lg:h-64">
-          <h3 className="max-w-[14ch] text-lg font-semibold leading-snug text-white">
+          <h3 className="max-w-[14ch] font-display text-lg font-bold leading-snug text-white">
             Precision &amp; Compliance
           </h3>
           <ShieldCheckIcon className="ml-auto h-16 w-16 text-white/15" />
@@ -58,7 +58,7 @@ export const MedicalHighlights = () => {
 
         {/* Feature card — support, medium */}
         <div className="relative flex h-56 flex-col justify-between overflow-hidden rounded-2xl bg-[#17171d] p-6 sm:h-60 sm:w-[15%] lg:h-80">
-          <h3 className="max-w-[14ch] text-lg font-semibold leading-snug text-white">
+          <h3 className="max-w-[14ch] font-display text-lg font-bold leading-snug text-white">
             Rapid After-Sales Support
           </h3>
           <WrenchIcon className="ml-auto h-16 w-16 text-white/15" />

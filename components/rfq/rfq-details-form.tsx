@@ -89,7 +89,7 @@ const FULFILMENT_OPTIONS: { value: Fulfilment; label: string; description: strin
 // attributes live on the Radio root (React Aria's element), not on
 // Radio.Content, so the root is the `group` everything here keys off.
 const radioCardClass =
-  "flex h-full w-full items-start gap-3 rounded-xl border border-separator bg-surface px-4 py-3.5 transition-colors group-data-[hovered=true]:border-accent/40 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[selected=true]:border-accent group-data-[selected=true]:bg-accent-soft";
+  "flex h-full w-full items-start gap-3 rounded-2xl border border-separator bg-surface px-4 py-3.5 transition-colors group-data-[hovered=true]:border-accent/40 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[selected=true]:border-accent group-data-[selected=true]:bg-accent-soft";
 const radioControlClass =
   "mt-0.5 size-5 shrink-0 rounded-full border border-border bg-default shadow-none group-data-[selected=true]:border-transparent group-data-[selected=true]:bg-accent";
 const radioIndicatorClass =

@@ -62,8 +62,8 @@ export const RangeQuoteModal = ({ range, onClose }: RangeQuoteModalProps) => {
 
             <div className="flex flex-col gap-4 p-6 pt-2 sm:p-8 sm:pt-2">
               <Modal.Header>
-                <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">{shown?.name}</p>
-                <Modal.Heading className="font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">{shown?.name}</p>
+                <Modal.Heading className="font-display text-2xl font-extrabold tracking-tight text-foreground">
                   We&apos;re still listing these products online
                 </Modal.Heading>
               </Modal.Header>

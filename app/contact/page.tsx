@@ -6,16 +6,17 @@ import { useSearchParams } from "next/navigation";
 
 import { submitContact, type ContactField } from "./actions";
 
+import { eyebrow } from "@/components/primitives";
 import { branchesInDisplayOrder } from "@/config/branches";
 import { enquiryTypeIds, enquiryTypes, type EnquiryTypeId } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
 import { categories } from "@/lib/products";
 
 const fieldClass =
-  "w-full max-w-full min-w-0 rounded border border-separator bg-surface px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 outline-none transition-colors focus:border-accent";
+  "w-full max-w-full min-w-0 rounded-lg border border-separator bg-surface px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 outline-none transition-colors focus:border-accent";
 
 const labelClass =
-  "mb-2 block font-mono text-xs font-medium uppercase tracking-widest text-muted";
+  "mb-2 block text-xs font-medium uppercase tracking-widest text-muted";
 
 const errorClass = "mt-1.5 text-xs text-danger";
 
@@ -58,10 +59,10 @@ function ContactContent() {
       {/* Page header */}
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-16 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             Get in Touch
           </p>
-          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
+          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground">
             Contact Us
           </h1>
           <p className="text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
@@ -80,7 +81,7 @@ function ContactContent() {
             <div>
               {state.status === "success" && dismissed !== state ? (
                 <div className="flex flex-col items-start gap-4 py-8">
-                  <span className="font-mono text-xs uppercase tracking-widest text-accent">
+                  <span className="text-xs uppercase tracking-widest text-accent">
                     Message Sent
                   </span>
                   <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
@@ -92,7 +93,7 @@ function ContactContent() {
                     Your reference is <strong className="text-foreground">{state.reference}</strong>.
                   </p>
                   <button
-                    className="mt-4 font-mono text-xs uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
+                    className="mt-4 text-xs uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
                     type="button"
                     onClick={() => setDismissed(state)}
                   >
@@ -104,7 +105,7 @@ function ContactContent() {
                   {state.status === "error" && (
                     <p
                       ref={errorRef}
-                      className="rounded bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
+                      className="rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
                       role="alert"
                       tabIndex={-1}
                     >
@@ -228,7 +229,7 @@ function ContactContent() {
 
                   <div>
                     <button
-                      className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90 disabled:opacity-50"
+                      className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90 disabled:opacity-50"
                       disabled={pending}
                       type="submit"
                     >
@@ -245,7 +246,7 @@ function ContactContent() {
             {/* Contact details sidebar */}
             <aside className="flex flex-col gap-10">
               <div>
-                <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-muted">
+                <p className="mb-5 text-xs uppercase tracking-[0.25em] text-muted">
                   Our Offices
                 </p>
                 <address className="flex flex-col gap-5 not-italic">
@@ -297,7 +298,7 @@ function ContactContent() {
               </div>
 
               <div className="border-t border-separator pt-10">
-                <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-muted">
+                <p className="mb-5 text-xs uppercase tracking-[0.25em] text-muted">
                   Browse by Category
                 </p>
                 <ul className="flex flex-col">

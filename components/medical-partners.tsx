@@ -62,7 +62,7 @@ export const MedicalPartners = () => {
       />
 
       {/* Centered label */}
-      <p className="mb-6 text-center font-mono text-xs font-semibold uppercase tracking-[0.25em] text-medical">
+      <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.25em] text-medical">
         Brands We Work With
       </p>
 

@@ -50,10 +50,10 @@ export const CtaBanner = ({ tint = CLOVER_GREEN, showBrowse = true }: CtaBannerP
 
           {/* Headline + subtext */}
           <div>
-            <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/60">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-white/60">
               Work With Us
             </p>
-            <h2 className="font-display text-3xl font-extrabold tracking-tight text-white lg:text-4xl" style={{ maxWidth: "22ch" }}>
+            <h2 className="font-display text-3xl font-extrabold tracking-tight text-white" style={{ maxWidth: "22ch" }}>
               Ready to source with confidence?
             </h2>
             <p className="mt-3 text-base leading-relaxed text-white/70" style={{ maxWidth: "48ch" }}>
@@ -65,7 +65,7 @@ export const CtaBanner = ({ tint = CLOVER_GREEN, showBrowse = true }: CtaBannerP
           {/* Actions */}
           <div className="flex flex-wrap gap-3">
             <NextLink
-              className="inline-flex items-center justify-center rounded border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
+              className="inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
               href="/contact"
             >
               Request a Quote

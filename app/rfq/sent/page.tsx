@@ -40,8 +40,8 @@ export default async function RfqSentPage({ searchParams }: SentPageProps) {
     <>
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 pb-5 pt-8 lg:px-12">
-          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-accent">Request sent</p>
-          <h1 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent">Request sent</p>
+          <h1 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-foreground">
             Thank you. We&apos;ll be in touch with your quotation.
           </h1>
         </div>
@@ -50,7 +50,7 @@ export default async function RfqSentPage({ searchParams }: SentPageProps) {
       <section className="bg-background py-8 lg:py-12">
         <div className="mx-auto flex max-w-[1280px] flex-col items-start gap-6 px-6 lg:px-12">
           <p className="max-w-[60ch] text-base leading-relaxed text-muted">
-            Your reference is <span className="font-mono font-semibold text-foreground">{reference}</span>. Please
+            Your reference is <span className="font-semibold text-foreground">{reference}</span>. Please
             quote it if you contact us about this request.
           </p>
 
@@ -83,7 +83,7 @@ export default async function RfqSentPage({ searchParams }: SentPageProps) {
             {catalogEnabled && divisions.map((division) => (
               <NextLink
                 key={division.slug}
-                className="inline-flex min-h-11 items-center rounded bg-accent px-5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="inline-flex min-h-11 items-center rounded-lg bg-accent px-5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
                 href={`/${division.slug}/products`}
               >
                 Browse {division.name}

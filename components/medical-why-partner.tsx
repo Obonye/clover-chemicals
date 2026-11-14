@@ -27,7 +27,7 @@ export const MedicalWhyPartner = () => {
       />
 
       <div className="relative mx-auto max-w-[1280px] px-6 lg:px-12">
-        <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-white lg:mb-16 lg:text-4xl">
+        <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-white lg:mb-16">
           Why partner with Clover Medical?
         </h2>
 
@@ -36,11 +36,11 @@ export const MedicalWhyPartner = () => {
             <div key={pillar.heading}>
               <p
                 aria-hidden="true"
-                className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-medical"
+                className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-medical"
               >
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mb-3 text-lg font-semibold tracking-tight text-white">
+              <h3 className="mb-3 font-display text-lg font-bold tracking-tight text-white">
                 {pillar.heading}
               </h3>
               <p className="text-sm leading-relaxed text-white/60" style={{ maxWidth: "38ch" }}>

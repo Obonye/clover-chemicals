@@ -33,7 +33,7 @@ export async function MedicalHome() {
       <section className="bg-surface">
         <div className="mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-6 px-6 py-16 lg:flex-row lg:items-center lg:px-12">
           <div>
-            <h2 className="mb-2 font-display text-2xl font-extrabold tracking-tight text-heading lg:text-3xl">
+            <h2 className="mb-2 font-display text-2xl font-extrabold tracking-tight text-heading">
               Talk to our medical equipment team.
             </h2>
             <p className="max-w-md text-sm leading-relaxed text-muted">
@@ -42,7 +42,7 @@ export async function MedicalHome() {
             </p>
           </div>
           <NextLink
-            className="inline-flex w-fit items-center gap-1.5 rounded bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
+            className="inline-flex w-fit items-center gap-1.5 rounded-lg bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
             href="/contact?enquiry=medical"
           >
             Contact Us

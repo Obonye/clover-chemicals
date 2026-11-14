@@ -345,7 +345,7 @@ export const ProductCatalogue = ({
               <Drawer.Body className="flex flex-col gap-6">
                 {!lockedDivision && (
                   <div className="flex flex-col gap-2">
-                    <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
+                    <span className="text-xs font-medium uppercase tracking-widest text-muted">
                       Division
                     </span>
                     {renderDivisionToggle(true)}
@@ -353,7 +353,7 @@ export const ProductCatalogue = ({
                 )}
 
                 <div className="flex flex-col gap-2">
-                  <span className="font-mono text-xs font-medium uppercase tracking-widest text-muted">
+                  <span className="text-xs font-medium uppercase tracking-widest text-muted">
                     Sort by
                   </span>
                   <div className="w-full">{sortSelect}</div>
@@ -418,7 +418,7 @@ export const ProductCatalogue = ({
                 <div className="flex items-center gap-6">
                   {hasActiveFilters && (
                     <button
-                      className="font-mono text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
+                      className="text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
                       type="button"
                       onClick={clearFilters}
                     >
@@ -426,7 +426,7 @@ export const ProductCatalogue = ({
                     </button>
                   )}
                   <NextLink
-                    className="font-mono text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
+                    className="text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
                     href="/contact"
                   >
                     Contact Us →

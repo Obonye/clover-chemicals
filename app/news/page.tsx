@@ -1,6 +1,6 @@
 import Image from "next/image";
-import NextLink from "next/link";
 
+import { eyebrow } from "@/components/primitives";
 import { articles } from "@/lib/news";
 
 const [featured, ...rest] = articles;
@@ -18,15 +18,15 @@ export default function NewsPage() {
       {/* Page header */}
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-16 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             Latest Updates
           </p>
-          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
+          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground">
             News
           </h1>
           <p className="text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
             Company announcements, industry developments, and product updates
-            from Clover Chemical Industries.
+            from Clover Industries.
           </p>
         </div>
       </section>
@@ -48,10 +48,10 @@ export default function NewsPage() {
             </div>
             <div className="flex flex-col justify-between bg-background p-8 lg:p-10">
               <div>
-                <p className="mb-4 font-mono text-xs font-medium uppercase tracking-widest text-accent">
+                <p className="mb-4 text-xs font-medium uppercase tracking-widest text-accent">
                   {featured.category}
                 </p>
-                <h2 className="mb-4 font-display text-2xl font-extrabold leading-snug tracking-tight text-foreground lg:text-3xl">
+                <h2 className="mb-4 font-display text-2xl font-extrabold leading-snug tracking-tight text-foreground">
                   {featured.title}
                 </h2>
                 <p className="text-sm leading-relaxed text-muted">
@@ -60,16 +60,10 @@ export default function NewsPage() {
               </div>
               <div className="mt-8 flex items-center justify-between border-t border-separator pt-6">
                 <div className="flex items-center gap-4">
-                  <span className="font-mono text-xs text-muted">{featured.date}</span>
-                  <span className="font-mono text-xs text-foreground/25">·</span>
-                  <span className="font-mono text-xs text-muted">{featured.readTime}</span>
+                  <span className="text-xs text-muted">{featured.date}</span>
+                  <span className="text-xs text-foreground/25">·</span>
+                  <span className="text-xs text-muted">{featured.readTime}</span>
                 </div>
-                <NextLink
-                  className="font-mono text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
-                  href={`/news/${featured.slug}`}
-                >
-                  Read more →
-                </NextLink>
               </div>
             </div>
           </article>
@@ -88,10 +82,10 @@ export default function NewsPage() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-6">
-                  <p className="mb-3 font-mono text-xs font-medium uppercase tracking-widest text-accent">
+                  <p className="mb-3 text-xs font-medium uppercase tracking-widest text-accent">
                     {article.category}
                   </p>
-                  <h3 className="mb-3 text-base font-bold leading-snug tracking-tight text-foreground">
+                  <h3 className="mb-3 font-display text-base font-bold leading-snug tracking-tight text-foreground">
                     {article.title}
                   </h3>
                   <p className="mb-6 flex-1 text-sm leading-relaxed text-muted">
@@ -99,16 +93,10 @@ export default function NewsPage() {
                   </p>
                   <div className="flex items-center justify-between border-t border-separator pt-4">
                     <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs text-muted">{article.date}</span>
-                      <span className="font-mono text-xs text-foreground/25">·</span>
-                      <span className="font-mono text-xs text-muted">{article.readTime}</span>
+                      <span className="text-xs text-muted">{article.date}</span>
+                      <span className="text-xs text-foreground/25">·</span>
+                      <span className="text-xs text-muted">{article.readTime}</span>
                     </div>
-                    <NextLink
-                      className="font-mono text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
-                      href={`/news/${article.slug}`}
-                    >
-                      Read →
-                    </NextLink>
                   </div>
                 </div>
               </article>

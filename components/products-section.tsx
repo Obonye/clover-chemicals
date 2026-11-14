@@ -57,7 +57,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
         {/* Section header */}
         <div className="mb-12">
           <div className="flex flex-col items-start justify-between gap-4 lg:items-center">
-            <h2 className="font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
+            <h2 className="font-display text-4xl font-extrabold tracking-tight text-foreground">
               Our Product Lines.
             </h2>
             {showViewAll && (
@@ -87,7 +87,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
           return (
             <NextLink
               key={cat._id}
-              className="product-row relative flex flex-col justify-end overflow-hidden rounded"
+              className="product-row relative flex flex-col justify-end overflow-hidden rounded-lg"
               href={linkFor(cat)}
               style={{
                 animationDelay: `${index * 90}ms`,
@@ -151,7 +151,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
               {/* Index number */}
               <span
                 aria-hidden="true"
-                className="absolute left-6 top-6 font-mono text-xs font-medium tabular-nums lg:text-sm"
+                className="absolute left-6 top-6 text-xs font-medium tabular-nums lg:text-sm"
                 style={{
                   color: isHovered ? "var(--accent)" : "rgba(255,255,255,0.55)",
                   transition: `color 300ms ${EASE}`,
@@ -163,7 +163,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
               {/* Vertical label — shown only while this tile is compressed */}
               <h3
                 aria-hidden={!isCompressed}
-                className="pointer-events-none absolute bottom-6 left-6 whitespace-nowrap text-lg font-bold tracking-tight text-white lg:text-xl"
+                className="pointer-events-none absolute bottom-6 left-6 whitespace-nowrap text-lg font-bold tracking-tight text-white"
                 style={{
                   opacity: isCompressed ? 1 : 0,
                   transform: "rotate(180deg)",
@@ -177,7 +177,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
               {/* Label + description + arrow */}
               <div className="relative flex flex-col gap-3 p-6">
                 <h3
-                  className="text-xl font-bold leading-tight tracking-tight text-white lg:text-2xl"
+                  className="text-xl font-bold leading-tight tracking-tight text-white"
                   style={{
                     opacity: isCompressed ? 0 : 1,
                     transition: `opacity 300ms ${EASE}`,
@@ -228,7 +228,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
             return (
               <NextLink
                 key={cat._id}
-                className="product-row relative flex items-center justify-between overflow-hidden rounded px-4"
+                className="product-row relative flex items-center justify-between overflow-hidden rounded-lg px-4"
                 href={linkFor(cat)}
                 style={{
                   animationDelay: `${index * 90}ms`,
@@ -277,7 +277,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
                 <div className="relative flex items-baseline gap-6">
                   <span
                     aria-hidden="true"
-                    className="w-8 shrink-0 font-mono text-xs font-medium tabular-nums"
+                    className="w-8 shrink-0 text-xs font-medium tabular-nums"
                     style={{
                       color: isHovered ? "var(--accent)" : "var(--muted)",
                       transition: `color 300ms ${EASE}`,
@@ -286,7 +286,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <h3
-                    className="text-lg font-bold tracking-tight sm:text-xl"
+                    className="text-lg font-bold tracking-tight"
                     style={{
                       color: isHovered ? "white" : "var(--foreground)",
                       transition: `color 300ms ${EASE}`,

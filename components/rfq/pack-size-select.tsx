@@ -43,14 +43,14 @@ export const PackSizeSelect = ({
       if (pack) onChange(pack);
     }}
   >
-    <Select.Trigger className={clsx("h-11 min-h-11 w-full items-center py-0 font-mono", compact && "md:h-9 md:min-h-9")}>
-      <Select.Value className="truncate whitespace-nowrap font-mono text-xs sm:text-xs" />
+    <Select.Trigger className={clsx("h-11 min-h-11 w-full items-center py-0", compact && "md:h-9 md:min-h-9")}>
+      <Select.Value className="truncate whitespace-nowrap text-xs sm:text-xs" />
       <Select.Indicator />
     </Select.Trigger>
     <Select.Popover>
       <ListBox>
         {packSizes.map((pack) => (
-          <ListBox.Item key={pack._key} className="font-mono text-xs" id={pack._key} textValue={packLabel(pack)}>
+          <ListBox.Item key={pack._key} className="text-xs" id={pack._key} textValue={packLabel(pack)}>
             {packLabel(pack)}
             <ListBox.ItemIndicator />
           </ListBox.Item>
