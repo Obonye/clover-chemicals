@@ -5,14 +5,7 @@ import type { RfqLineItem } from "./types";
 import * as React from "react";
 import { z } from "zod";
 
-import {
-  RFQ_MAX_ITEMS,
-  RFQ_MAX_QUANTITY,
-  RFQ_MAX_RANGES,
-  RfqLineItemSchema,
-  RfqRangeSlugSchema,
-  rfqLineKey,
-} from "./schema";
+import { RFQ_MAX_ITEMS, RFQ_MAX_QUANTITY, RfqLineItemSchema, rfqLineKey } from "./schema";
 
 const STORAGE_KEY = "clover:rfq:v1";
 const EXPIRY_MS = 30 * 24 * 60 * 60 * 1000;
@@ -20,19 +13,12 @@ const EXPIRY_MS = 30 * 24 * 60 * 60 * 1000;
 const StoredSchema = z.object({
   updatedAt: z.number(),
   items: z.array(z.unknown()),
-  /** Slugs of the product ranges the buyer asked about. Absent in older saves. */
-  ranges: z.array(z.unknown()).optional(),
 });
 
 export type AddItemResult = "added" | "merged" | "full";
-export type AddRangeResult = "added" | "exists" | "full";
-
-type StoredRfq = { items: RfqLineItem[]; ranges: string[] };
 
 type RfqContextValue = {
   items: RfqLineItem[];
-  /** Product ranges the buyer asked about (slugs). Tags on the request, not cart lines. */
-  ranges: string[];
   count: number;
   /** False until localStorage has been read on the client. Gate any
    *  count-dependent UI on this to avoid SSR hydration mismatches. */
@@ -41,10 +27,7 @@ type RfqContextValue = {
   addItem: (item: RfqLineItem) => AddItemResult;
   updateItem: (key: string, patch: Partial<RfqLineItem>) => void;
   removeItem: (key: string) => void;
-  addRange: (slug: string) => AddRangeResult;
-  removeRange: (slug: string) => void;
-  setRanges: (slugs: string[]) => void;
-  /** Empties the whole request: products and ranges. */
+  /** Empties the list. */
   clear: () => void;
 };
 
@@ -71,24 +54,11 @@ function foldLines(lines: RfqLineItem[]): RfqLineItem[] {
   return Array.from(byKey.values());
 }
 
-const EMPTY: StoredRfq = { items: [], ranges: [] };
-
-/** Only well-formed, unique slugs, capped: anything else in storage is ignored. */
-function cleanRanges(candidates: unknown[]): string[] {
-  const slugs: string[] = [];
-
-  for (const candidate of candidates) {
-    const parsed = RfqRangeSlugSchema.safeParse(candidate);
-
-    if (parsed.success && !slugs.includes(parsed.data)) slugs.push(parsed.data);
-  }
-
-  return slugs.slice(0, RFQ_MAX_RANGES);
-}
+const EMPTY: RfqLineItem[] = [];
 
 /** Reads and validates the stored request. Returns empty for anything missing,
  *  malformed, expired or unreadable (storage can throw when blocked). */
-export function readRfqStorage(): StoredRfq {
+export function readRfqStorage(): RfqLineItem[] {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
 
@@ -111,25 +81,22 @@ export function readRfqStorage(): StoredRfq {
       if (parsed.success) items.push(parsed.data);
     }
 
-    return {
-      items: foldLines(items).slice(0, RFQ_MAX_ITEMS),
-      ranges: cleanRanges(stored.data.ranges ?? []),
-    };
+    return foldLines(items).slice(0, RFQ_MAX_ITEMS);
   } catch {
     return EMPTY;
   }
 }
 
-function writeRfqStorage({ items, ranges }: StoredRfq) {
+function writeRfqStorage(items: RfqLineItem[]) {
   try {
-    if (items.length === 0 && ranges.length === 0) {
+    if (items.length === 0) {
       window.localStorage.removeItem(STORAGE_KEY);
 
       return;
     }
     window.localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ updatedAt: Date.now(), items, ranges }),
+      JSON.stringify({ updatedAt: Date.now(), items }),
     );
   } catch {
     // Storage blocked or full: the list keeps working in memory for the session.
@@ -138,24 +105,18 @@ function writeRfqStorage({ items, ranges }: StoredRfq) {
 
 export function RfqProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = React.useState<RfqLineItem[]>([]);
-  const [ranges, setRangesState] = React.useState<string[]>([]);
   const [hydrated, setHydrated] = React.useState(false);
   // Mirrors of the state so callbacks read the latest values synchronously
   // (addItem has to report "full" without waiting for a re-render).
   const itemsRef = React.useRef<RfqLineItem[]>([]);
-  const rangesRef = React.useRef<string[]>([]);
 
-  const replace = React.useCallback((next: StoredRfq) => {
-    itemsRef.current = next.items;
-    rangesRef.current = next.ranges;
-    setItems(next.items);
-    setRangesState(next.ranges);
+  const replace = React.useCallback((next: RfqLineItem[]) => {
+    itemsRef.current = next;
+    setItems(next);
   }, []);
 
   const commit = React.useCallback(
-    (nextItems: RfqLineItem[], nextRanges: string[] = rangesRef.current) => {
-      const next = { items: nextItems, ranges: nextRanges };
-
+    (next: RfqLineItem[]) => {
       replace(next);
       writeRfqStorage(next);
     },
@@ -214,50 +175,19 @@ export function RfqProvider({ children }: { children: React.ReactNode }) {
     [commit],
   );
 
-  const addRange = React.useCallback(
-    (slug: string): AddRangeResult => {
-      const current = rangesRef.current;
-
-      if (current.includes(slug)) return "exists";
-      if (current.length >= RFQ_MAX_RANGES) return "full";
-      commit(itemsRef.current, [...current, slug]);
-
-      return "added";
-    },
-    [commit],
-  );
-
-  const removeRange = React.useCallback(
-    (slug: string) => {
-      commit(itemsRef.current, rangesRef.current.filter((existing) => existing !== slug));
-    },
-    [commit],
-  );
-
-  const setRanges = React.useCallback(
-    (slugs: string[]) => {
-      commit(itemsRef.current, cleanRanges(slugs));
-    },
-    [commit],
-  );
-
-  const clear = React.useCallback(() => commit([], []), [commit]);
+  const clear = React.useCallback(() => commit([]), [commit]);
 
   const value = React.useMemo<RfqContextValue>(
     () => ({
       items,
-      ranges,
       count: items.length,
       hydrated,
       addItem,
       updateItem,
       removeItem,
-      addRange,
-      removeRange,
-      setRanges,
       clear,
     }),
-    [items, ranges, hydrated, addItem, updateItem, removeItem, addRange, removeRange, setRanges, clear],
+    [items, hydrated, addItem, updateItem, removeItem, clear],
   );
 
   return <RfqContext.Provider value={value}>{children}</RfqContext.Provider>;

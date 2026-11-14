@@ -10,14 +10,14 @@ import { useRfq } from "@/lib/rfq/store";
 export const rfqAccessibleName = (count: number) =>
   `Request for quote, ${count} item${count === 1 ? "" : "s"}`;
 
-/** Request size once the store has read localStorage, 0 before that — so the
- *  server render and first client render always agree. Counts the chosen
- *  ranges, plus saved products while the catalogue is on (CI-72). */
+/** Saved products once the store has read localStorage, 0 before that — so the
+ *  server render and first client render always agree. Zero while the
+ *  catalogue is off (CI-72). */
 export const useRfqNavCount = () => {
-  const { count, ranges, hydrated } = useRfq();
+  const { count, hydrated } = useRfq();
   const catalogEnabled = useCatalogEnabled();
 
-  return hydrated ? (catalogEnabled ? count : 0) + ranges.length : 0;
+  return hydrated && catalogEnabled ? count : 0;
 };
 
 type BadgeProps = {
@@ -108,7 +108,7 @@ export const RfqCartLink = () => {
   const count = useRfqNavCount();
   const catalogEnabled = useCatalogEnabled();
 
-  // Nothing to collect while the catalogue is off, unless ranges were chosen.
+  // Nothing to collect while the catalogue is off.
   if (!catalogEnabled && count === 0) return null;
 
   return (

@@ -6,8 +6,6 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useRfq } from "@/lib/rfq/store";
-
 /** A product range in plain text (no stega), as stored in the quote. */
 export type QuoteRange = { slug: string; name: string };
 
@@ -20,10 +18,9 @@ type RangeQuoteModalProps = {
 /**
  * Shown when a visitor picks a range whose products aren't listed online yet
  * (or while products are hidden): says so, and offers the quote form with
- * that range already added.
+ * that range preselected.
  */
 export const RangeQuoteModal = ({ range, onClose }: RangeQuoteModalProps) => {
-  const { addRange } = useRfq();
   const router = useRouter();
   // Keep the last range's name while the modal animates closed.
   const lastRange = React.useRef<QuoteRange | null>(range);
@@ -33,9 +30,7 @@ export const RangeQuoteModal = ({ range, onClose }: RangeQuoteModalProps) => {
 
   const proceed = () => {
     if (!shown) return;
-    // "full" still goes on: the form shows the ranges already chosen.
-    addRange(shown.slug);
-    router.push("/rfq");
+    router.push(`/rfq?category=${encodeURIComponent(shown.slug)}`);
   };
 
   return (

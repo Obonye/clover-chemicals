@@ -107,31 +107,31 @@ type RfqListProps = {
 };
 
 export const RfqList = ({ ranges }: RfqListProps) => {
-  const { items, ranges: savedRanges, hydrated, clear, addRange, setRanges } = useRfq();
+  const { items, hydrated, clear } = useRfq();
   const catalog = useCatalogState();
   const catalogEnabled = catalog.enabled;
   const freshness = useRfqFreshness(catalogEnabled);
   const router = useRouter();
   const [sent, setSent] = React.useState(false);
+  const [chosenRanges, setChosenRanges] = React.useState<string[]>([]);
   const entryHandled = React.useRef(false);
 
   // `?category=<slug>` (from a range card) preselects that range once, then the
   // URL is cleaned so a refresh or back/forward can't select it again. Only a
   // slug Sanity actually lists is accepted: anything else is ignored (CI-74).
   React.useEffect(() => {
-    // Wait for the saved request to load, or loading it would overwrite the add.
-    if (!hydrated || entryHandled.current) return;
+    if (entryHandled.current) return;
     entryHandled.current = true;
 
     const slug = new URLSearchParams(window.location.search).get("category");
 
     if (slug === null) return;
     window.history.replaceState(null, "", "/rfq");
-    if (ranges.some((range) => range.slug === slug)) addRange(slug);
-  }, [hydrated, ranges, addRange]);
+    if (ranges.some((range) => range.slug === slug)) setChosenRanges([slug]);
+  }, [ranges]);
 
-  // Ranges are saved with the request; only ones Sanity still lists are shown.
-  const selectedRanges = savedRanges.filter((slug) => ranges.some((range) => range.slug === slug));
+  // Ranges are tags on this form only, not saved with the list.
+  const selectedRanges = chosenRanges.filter((slug) => ranges.some((range) => range.slug === slug));
 
   // The list is cleared only once the server has confirmed the send, then
   // the buyer lands on the confirmation page (CI-24). `sent` keeps the form
@@ -164,7 +164,7 @@ export const RfqList = ({ ranges }: RfqListProps) => {
         ranges={ranges}
         ready={checkDone}
         selectedRanges={selectedRanges}
-        onRangesChange={setRanges}
+        onRangesChange={setChosenRanges}
         onSuccess={handleSent}
       />
     </div>
