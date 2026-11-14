@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Button, Modal } from "@heroui/react";
+import Image from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -45,29 +46,45 @@ export const RangeQuoteModal = ({ range, onClose }: RangeQuoteModalProps) => {
           if (!open) onClose();
         }}
       >
-        <Modal.Container placement="center" size="md">
-          <Modal.Dialog>
-            <Modal.CloseTrigger />
-            <Modal.Header>
-              <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">{shown?.name}</p>
-              <Modal.Heading className="font-display text-2xl font-extrabold tracking-tight text-foreground">
-                We&apos;re still listing these products online
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
-              <p className="text-base leading-relaxed text-muted">
-                You can still request anything from this range through our quote form. Tell us what you need and
-                we&apos;ll reply with a quotation, usually within one business day.
-              </p>
-            </Modal.Body>
-            <Modal.Footer className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-              <Button slot="close" variant="tertiary">
-                Keep browsing
-              </Button>
-              <Button variant="primary" onPress={proceed}>
-                Continue to quote form
-              </Button>
-            </Modal.Footer>
+        <Modal.Container placement="center" size="lg">
+          {/* Full-bleed photo; a dark gradient rises behind the text so it reads
+              in light and dark themes alike. */}
+          <Modal.Dialog className="relative min-h-[30rem] justify-end overflow-hidden bg-black p-0 text-white">
+            <Image
+              alt=""
+              className="object-cover object-center"
+              fill
+              sizes="(min-width: 640px) 32rem, 100vw"
+              src="/quote-modal-warehouse.png"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-linear-to-t from-black via-black/75 to-black/10"
+            />
+            <Modal.CloseTrigger className="z-20 bg-black/40 text-white hover:bg-black/60" />
+
+            <div className="relative z-10 flex flex-col gap-4 p-6 pt-24 sm:p-8 sm:pt-32">
+              <Modal.Header>
+                <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/70">{shown?.name}</p>
+                <Modal.Heading className="font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                  We&apos;re still listing these products online
+                </Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                <p className="text-base leading-relaxed text-white/80">
+                  You can still request anything from this range through our quote form. Tell us what you need and
+                  we&apos;ll reply with a quotation, usually within one business day.
+                </p>
+              </Modal.Body>
+              <Modal.Footer className="mt-2 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <Button className="bg-white/10 text-white hover:bg-white/20" slot="close" variant="tertiary">
+                  Keep browsing
+                </Button>
+                <Button className="bg-white text-black hover:bg-white/90" variant="primary" onPress={proceed}>
+                  Continue to quote form
+                </Button>
+              </Modal.Footer>
+            </div>
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>
