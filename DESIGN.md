@@ -1,204 +1,138 @@
 ---
-name: Clover Industrial Nexus
+name: Clover Industries
+description: Design system for Clover Industries (the group) and its divisions, Clover Chemicals and Clover Medical. One shared type, shape and layout system; divisions differ by accent colour, imagery and naming.
 colors:
-  surface: '#f8f9fa'
-  surface-dim: '#d9dadb'
-  surface-bright: '#f8f9fa'
-  surface-container-lowest: '#ffffff'
-  surface-container-low: '#f3f4f5'
-  surface-container: '#edeeef'
-  surface-container-high: '#e7e8e9'
-  surface-container-highest: '#e1e3e4'
-  on-surface: '#191c1d'
-  on-surface-variant: '#3f4a3c'
-  inverse-surface: '#2e3132'
-  inverse-on-surface: '#f0f1f2'
-  outline: '#6f7a6b'
-  outline-variant: '#becab9'
-  surface-tint: '#006e1c'
-  primary: '#006e1c'
-  on-primary: '#ffffff'
-  primary-container: '#4caf50'
-  on-primary-container: '#003c0b'
-  inverse-primary: '#78dc77'
-  secondary: '#4e6073'
-  on-secondary: '#ffffff'
-  secondary-container: '#cfe2f9'
-  on-secondary-container: '#526478'
-  tertiary: '#5f5e5e'
-  on-tertiary: '#ffffff'
-  tertiary-container: '#9c9b9b'
-  on-tertiary-container: '#333333'
-  error: '#ba1a1a'
-  on-error: '#ffffff'
-  error-container: '#ffdad6'
-  on-error-container: '#93000a'
-  primary-fixed: '#94f990'
-  primary-fixed-dim: '#78dc77'
-  on-primary-fixed: '#002204'
-  on-primary-fixed-variant: '#005313'
-  secondary-fixed: '#d1e4fb'
-  secondary-fixed-dim: '#b5c8df'
-  on-secondary-fixed: '#091d2e'
-  on-secondary-fixed-variant: '#36485b'
-  tertiary-fixed: '#e4e2e1'
-  tertiary-fixed-dim: '#c8c6c6'
-  on-tertiary-fixed: '#1b1c1c'
-  on-tertiary-fixed-variant: '#474747'
-  background: '#f8f9fa'
-  on-background: '#191c1d'
-  surface-variant: '#e1e3e4'
-  clover-green: '#4CAF50'
-  deep-slate: '#2C3E50'
-  charcoal: '#333333'
-  industrial-gray: '#F8F9FA'
-  border-gray: '#D1D5DB'
+  # Light theme is the default. Source of truth: styles/globals.css.
+  background: 'oklch(0.9564 0.0025 48.72)'
+  surface: 'oklch(100% 0.0008 144.21)'
+  surface-secondary: 'oklch(95.24% 0.0012 144.21)'
+  surface-tertiary: 'oklch(93.73% 0.0012 144.21)'
+  foreground: 'oklch(0.1543 0 0)'
+  muted: 'oklch(55.17% 0.003 144.21)'
+  separator: 'oklch(92% 0.0015 144.21)'
+  danger: 'oklch(65.32% 0.2335 12.59)'
+  success: 'oklch(73.29% 0.1941 137.66)'
+  warning: 'oklch(78.19% 0.159 59.18)'
+  specials: 'oklch(78% 0.17 92)'
+  specials-foreground: 'oklch(20% 0.02 90)'
+  # Accent is set per route (config/divisions.ts):
+  accent-group: 'black in light mode, white in dark mode'
+  accent-chemical: 'oklch(0.62 0.19 127.1031)'   # Clover Green
+  accent-medical: '#0074a8'
+  dark-background: 'oklch(0.1448 0 0)'
 typography:
-  headline-xl:
-    fontFamily: Hanken Grotesk
-    fontSize: 48px
-    fontWeight: '700'
-    lineHeight: 56px
-    letterSpacing: -0.02em
-  headline-lg:
-    fontFamily: Hanken Grotesk
-    fontSize: 32px
-    fontWeight: '600'
-    lineHeight: 40px
-  headline-lg-mobile:
-    fontFamily: Hanken Grotesk
-    fontSize: 28px
-    fontWeight: '600'
-    lineHeight: 36px
-  headline-md:
-    fontFamily: Hanken Grotesk
-    fontSize: 24px
-    fontWeight: '600'
-    lineHeight: 32px
-  body-lg:
+  display:
+    fontFamily: Archivo
+    weights: [700, 800, 900]
+    usage: every h1-h3 (class font-display); hero titles at 800
+  body:
     fontFamily: Inter
-    fontSize: 18px
-    fontWeight: '400'
-    lineHeight: 28px
-  body-md:
-    fontFamily: Inter
-    fontSize: 16px
-    fontWeight: '400'
-    lineHeight: 24px
-  body-sm:
-    fontFamily: Inter
-    fontSize: 14px
-    fontWeight: '400'
-    lineHeight: 20px
-  label-technical:
-    fontFamily: JetBrains Mono
-    fontSize: 12px
-    fontWeight: '500'
-    lineHeight: 16px
-    letterSpacing: 0.05em
-  button-text:
-    fontFamily: Inter
-    fontSize: 14px
-    fontWeight: '600'
-    lineHeight: 20px
+    usage: all running text, buttons, form fields
+  mono:
+    fontFamily: Space Mono
+    weights: [400, 700]
+    usage: eyebrows, labels, badges, chips, product codes and specs
+  small-text-floor: 12px
 rounded:
-  sm: 0.125rem
-  DEFAULT: 0.25rem
-  md: 0.375rem
-  lg: 0.5rem
-  xl: 0.75rem
-  full: 9999px
+  card: 1rem        # rounded-2xl: cards, panels, option cards
+  control: 0.5rem   # rounded-lg: buttons, inputs, thumbnails
+  chip: 9999px      # rounded-full: tags, badges, pills
 spacing:
   base: 8px
-  gutter-desktop: 24px
-  margin-desktop: 64px
-  gutter-mobile: 16px
-  margin-mobile: 20px
   container-max: 1280px
+  page-padding: 24px (48px from lg)
+  utility-bar-height: 3rem
+  navbar-height: 4rem
 ---
 
 ## Brand & Style
 
-The design system is engineered for **Clover Chemical Industries** to project an image of absolute technical authority, heritage, and industrial precision. It avoids "consumer-retail fluff" in favor of a **Corporate Modern** aesthetic that leans into structural rigors and high-end B2B professionalism.
+Clover Industries is a **branded house**: a group (Clover Industries) with divisions (Clover Chemicals, Clover Medical) that share one identity. Botswana's citizen-owned chemicals, equipment and healthcare supplier since 1980, serving industry, agriculture, healthcare and the laboratory.
 
-The personality is:
-- **Authoritative:** 37 years of legacy distilled into a confident, no-nonsense interface.
-- **Precise:** Every element is aligned to a strict grid, mirroring the chemical accuracy of the product line.
-- **Organized:** Content-heavy technical specs are prioritized through a clear, functional hierarchy.
+The tone is confident and practical: **Corporate Modern**, built for buyers who want specifications, availability and a fast quote. Photography is real (warehouses, shelves, teams); copy is outcome-led ("Botswana's total solutions partner, division by division").
 
-The visual style utilizes **Modern Minimalism** with industrial touches. It prioritizes clarity over decoration, using ample white space to frame dense technical data and high-contrast typography to ensure legibility across industrial environments.
+**Naming**
+- The group is always **Clover Industries**. Divisions are **Clover Chemicals** and **Clover Medical**. Do not use "Clover Chemical Industries".
+- Division heroes carry the line "A Division of Clover Industries".
+- Tagline: "Lift as you rise."
+
+## One system, many divisions
+
+The type, shape, spacing and component rules below are **identical across the group and every division**. A division is recognised by:
+- its **accent colour** (set per route through `config/divisions.ts`),
+- its **hero imagery and copy**,
+- its **name in the lockup subline**.
+
+Never give a division its own typeface, radius or component style. If a division needs more differentiation, extend this document first.
 
 ## Colors
 
-The palette is anchored by **Clover Green**, a vibrant yet professional primary color that denotes growth, safety, and chemical innovation. This is balanced by a triad of industrial grays and slates that provide the "weight" necessary for a B2B infrastructure.
+Colours are HeroUI semantic tokens (`styles/globals.css`); use the tokens (`text-foreground`, `text-muted`, `bg-surface`, `border-separator`, `text-accent`), not raw colours.
 
-- **Primary (Clover Green):** Used for primary actions, branding, and status indicators.
-- **Secondary (Deep Slate):** The color of authority. Used for navigation bars, headers, and hero backgrounds to provide strong contrast.
-- **Tertiary (Charcoal):** Used for primary body text and high-level headings to ensure maximum readability.
-- **Neutral (Industrial Gray):** Used for section backgrounds and table headers to separate data without adding visual clutter.
+- **Accent** changes with the route. Group pages (home, About, Contact, Locations, RFQ, shared product routes): black on light, white on dark. Chemical: Clover Green. Medical: blue `#0074a8`.
+- **Neutrals:** a warm light-grey background with white surfaces; near-black foreground; muted grey for secondary text. A dark theme exists (`.dark`) but light is the default.
+- **Specials** (yellow) is reserved for promotional tags and banners.
+- Black alpha scrims over photography (hero shading) are acceptable and are not palette colours.
+
+**Open:** the group front door is almost entirely black and white; where the Clover Green appears at group level is decided in CI-89.
 
 ## Typography
 
-This design system uses a triple-font approach to handle corporate, technical, and data-heavy content.
+One font system for the whole site (configured in `config/fonts.ts`):
 
-1.  **Hanken Grotesk (Headlines):** A sharp, contemporary grotesque that feels engineered and modern. Used for page titles and major sections to project a forward-thinking industrial image.
-2.  **Inter (Body):** Selected for its exceptional legibility in dense spec sheets and company descriptions. Its neutral character ensures that the content remains the hero.
-3.  **JetBrains Mono (Technical Labels):** Used sparingly for product codes, technical specs, and certifications. The monospaced nature signals precision and data accuracy.
+1. **Archivo (display)**: every `h1`-`h3` uses `font-display`. Weights 700-900 are loaded; hero titles use 800. Headlines use tight tracking.
+2. **Inter (body)**: all running text, buttons and form fields.
+3. **Space Mono (mono)**: eyebrows, labels, badges, chips, product codes and spec data.
 
-Headlines should use tight letter-spacing for a more impactful, "locked-in" look.
+Rules:
+- **Eyebrow:** use the shared `eyebrow()` primitive (`components/primitives.ts`): mono, 12px, medium, uppercase, wide tracking, accent colour (`onDark` tone over photos).
+- **Minimum size 12px** for any text. No `text-[10px]` or `text-[11px]`.
+- Headings use weights the font actually loads (bold or heavier for Archivo).
+
+**Open:** a fluid type scale using `clamp()` is tracked in CI-81.
 
 ## Layout & Spacing
 
-The design system employs a **Fixed Grid** model for desktop to ensure a controlled, premium presentation of information. 
-
-- **Grid:** 12-column structure with 24px gutters.
-- **Rhythm:** An 8px base unit drives all vertical spacing. This "Industrial Rhythm" ensures that components like tables and input fields align perfectly across various templates.
-- **Breakpoints:**
-  - **Desktop (1280px+):** Full 12-column grid with 64px margins.
-  - **Tablet (768px - 1279px):** 8-column grid with 32px margins.
-  - **Mobile (Up to 767px):** 4-column fluid grid with 20px margins.
-
-Technical content sections (like chemical tables) should utilize a "Comfortable" density, meaning generous padding (24px+) within containers to prevent information overload.
+- 8px base unit. Content sits in a **1280px** container with 24px side padding (48px from `lg`).
+- **Fixed chrome:** a 3rem utility bar above a 4rem navbar, both fixed. Page content offsets by `--header-h`; full-bleed heroes pull up under the transparent navbar with `-mt-[var(--navbar-h)]`. Change the heights only in `styles/globals.css`.
+- Generous padding in data-heavy sections; avoid dense tables on mobile.
 
 ## Elevation & Depth
 
-To maintain an authoritative and "flat-industrial" feel, the system avoids heavy drop shadows and decorative blurs. Instead, hierarchy is established through **Tonal Layers** and **Low-Contrast Outlines**.
-
-- **Surface Levels:** 
-  - Level 0 (Background): #F8F9FA (Industrial Gray)
-  - Level 1 (Cards/Content Blocks): #FFFFFF
-  - Level 2 (Interactive/Overlay): White with a very subtle 1px border (#D1D5DB).
-- **Outlines:** Use 1px solid borders in `border-gray` for cards, tables, and input fields. This mimics the structured look of technical blueprints.
-- **Interaction Depth:** On hover, elements may use a minimal, crisp shadow (4px blur, 10% opacity) to signify clickability without losing the professional "flat" aesthetic.
+Flat. Hierarchy comes from tonal surfaces (background, white surface, secondary surface) and 1px `separator` borders. Shadows are used sparingly (hero buttons, hover states).
 
 ## Shapes
 
-The design system adopts a **Soft (Level 1)** roundedness approach. While traditional industrial design is often sharp, a subtle 4px (0.25rem) radius on buttons and cards softens the UI just enough to feel modern and accessible while retaining a sense of rigid stability.
+One radius scale, applied by role (not by division):
+- **Cards, panels, option cards:** `rounded-2xl`.
+- **Buttons, inputs, thumbnails:** `rounded-lg`.
+- **Tags, badges, chips, pills:** `rounded-full`.
+- Tiny decorative squares (bullets) may stay `rounded-sm`.
 
-- **Standard Radius:** 4px (Base elements, buttons, inputs).
-- **Large Radius:** 8px (Cards, section containers).
-- **Checkboxes/Radio:** 2px or sharp corners to emphasize technical precision.
+**Open:** Medical's pill-shaped buttons (`rounded-full`) predate this rule; CI-91 decides whether to bring them to `rounded-lg`.
 
 ## Components
 
 ### Buttons
-- **Primary:** Solid `clover-green` with white text. Uppercase typography for an authoritative tone. 4px corner radius.
-- **Secondary:** Solid `deep-slate` or ghost style with a 2px `clover-green` border. 
-- **Sizes:** Large (56px height) for CTA, Medium (40px) for standard forms.
-
-### Technical Tables
-- **Header:** `industrial-gray` background with `label-technical` (JetBrains Mono) text.
-- **Rows:** Alternating "Zebra" stripes for readability in dense chemical spec sheets.
-- **Borders:** 1px horizontal dividers only, using `border-gray`.
-
-### Input Fields
-- **Style:** 1px solid `border-gray` with a subtle focus state using a 2px `clover-green` inner border.
-- **Labels:** Always visible above the field in `body-sm` bold.
+- Primary: solid accent, uppercase on heroes, `rounded-lg`. Secondary: 2px outline in white (on photos) or `separator`.
+- Large (about 56px) for hero CTAs, 40-48px elsewhere; touch targets at least 44px.
 
 ### Cards
-- **Construction:** White background, 1px `border-gray` outline, 8px corner radius. No shadow by default.
-- **Usage:** Used to categorize product divisions (Agro, Medical, Lab).
+- White surface, 1px `separator` border, `rounded-2xl`, no shadow by default. Division cards on the group home use photography with a dark gradient.
+
+### Product cards and tags
+- Mono 12px tags as `rounded-full` chips. "Specials" uses the specials colour.
+
+### Forms
+- Always-visible labels. The contact and RFQ forms are being brought onto one field system with sentence-case labels and accessible placeholder contrast (CI-85).
+
+### Navigation
+- Lockup everywhere: logo, "CLOVER INDUSTRIES", and a subline ("Lift as you rise" on group pages, the division name on a division). The Products menu is scoped to the current division.
+- Request for quote (RFQ) is the primary conversion path; the navbar shows a count badge.
 
 ### Icons
-- **Style:** 2px stroke weight, geometric, and functional. 
-- **Note:** Use text-based arrows (e.g., `→`) or simple chevrons to maintain the clean, "catalogue" feel of the system.
+- Simple, geometric, 2px stroke. Text arrows (`→`) are fine for links.
+
+## Open items
+
+Tracked under the brand epic CI-82: group identity (CI-89), Chemical (CI-90), Medical (CI-91), shared rules (CI-92), responsive type (CI-81).
