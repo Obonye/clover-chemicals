@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import { CategoryDirectory } from "@/components/category-directory";
 import { ProductCatalogue } from "@/components/product-catalogue";
-import { RangeQuotePanel } from "@/components/rfq/range-quote-panel";
+import { RangeQuoteFromUrl } from "@/components/rfq/range-quote-modal";
 import { getDivision } from "@/config/divisions";
 import { getCatalog } from "@/lib/catalog/visibility";
 import { pendingRanges } from "@/lib/catalog/pending";
@@ -60,15 +60,22 @@ export default async function DivisionProductsPage({ params, searchParams }: Pro
     return (
       <>
         {chosen && (
-          <section className="bg-background pt-12">
-            <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-              <RangeQuotePanel description={chosen.description} name={chosen.label ?? "this range"} slug={chosen.slug ?? ""} />
-            </div>
-          </section>
+          <RangeQuoteFromUrl
+            basePath={listingBase}
+            range={{ slug: chosen.slug ?? "", name: chosen.label ?? "this range" }}
+          />
         )}
         <CategoryDirectory
           heading={`${division.name} product ranges`}
-          items={divisionCategories.map((category) => ({ category, href: catalog.hrefFor(category, listingBase) }))}
+          items={divisionCategories.map((category) => {
+            const range = pending.find((item) => item._id === category._id);
+
+            return {
+              category,
+              href: catalog.hrefFor(category, listingBase),
+              range: range?.slug ? { slug: range.slug, name: range.label ?? "this range" } : null,
+            };
+          })}
         />
       </>
     );

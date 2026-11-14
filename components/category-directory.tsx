@@ -1,6 +1,6 @@
 import Image from "next/image";
-import NextLink from "next/link";
 
+import { RangeCardLink, type QuoteRange } from "@/components/rfq/range-quote-modal";
 import { imageUrl } from "@/sanity/lib/image";
 import type { ProductCategory } from "@/sanity/lib/types";
 
@@ -8,6 +8,8 @@ export type CategoryDirectoryItem = {
   category: ProductCategory;
   /** Where the card goes: the listing when browsable, otherwise the RFQ. */
   href: string;
+  /** Set when the range isn't listed yet: the card opens the quote modal. */
+  range?: QuoteRange | null;
 };
 
 type CategoryDirectoryProps = {
@@ -30,12 +32,16 @@ export const CategoryDirectory = ({ heading, items }: CategoryDirectoryProps) =>
       </p>
 
       <ul className="mt-10 grid grid-cols-1 gap-px bg-separator sm:grid-cols-2 lg:grid-cols-3">
-        {items.map(({ category, href }) => {
+        {items.map(({ category, href, range }) => {
           const src = imageUrl(category.image, { width: 800, height: 520 });
 
           return (
             <li key={category._id} className="bg-background">
-              <NextLink className="group relative flex min-h-[260px] flex-col justify-end overflow-hidden p-6" href={href}>
+              <RangeCardLink
+                className="group relative flex min-h-[260px] flex-col justify-end overflow-hidden p-6"
+                href={href}
+                range={range}
+              >
                 {src && (
                   <Image
                     alt=""
@@ -55,7 +61,7 @@ export const CategoryDirectory = ({ heading, items }: CategoryDirectoryProps) =>
                     Request a quote →
                   </span>
                 </div>
-              </NextLink>
+              </RangeCardLink>
             </li>
           );
         })}
