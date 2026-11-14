@@ -34,7 +34,6 @@ export const siteConfig = {
   sameAs: [] as string[],
   navItems: [
     { label: "About Us", href: "/about" },
-    { label: "News", href: "/news" },
     { label: "Contact Us", href: "/contact" },
   ],
   navMenuItems: [
@@ -49,7 +48,6 @@ export const siteConfig = {
   footerItems: [
     { label: "Products", href: "/products" },
     { label: "About Us", href: "/about" },
-    { label: "News", href: "/news" },
     { label: "Contact Us", href: "/contact" },
   ],
 };

@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/news",
   },
+  // Placeholder stories and no article pages yet (CI-13). Keep it out of the
+  // index and the nav until real articles exist (CI-83).
+  robots: { index: false, follow: false },
 };
 
 export default function NewsLayout({

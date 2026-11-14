@@ -13,7 +13,6 @@ import type { ProductCategory } from "@/sanity/lib/types";
 
 const companyLinks = [
   { label: "About Us",   href: "/about"     },
-  { label: "News",       href: "/news"      },
   { label: "Contact Us", href: "/contact"   },
   { label: "Locations",  href: "/locations" },
 ];

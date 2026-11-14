@@ -1,5 +1,4 @@
 import Image from "next/image";
-import NextLink from "next/link";
 
 import { articles } from "@/lib/news";
 
@@ -64,12 +63,6 @@ export default function NewsPage() {
                   <span className="font-mono text-xs text-foreground/25">·</span>
                   <span className="font-mono text-xs text-muted">{featured.readTime}</span>
                 </div>
-                <NextLink
-                  className="font-mono text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
-                  href={`/news/${featured.slug}`}
-                >
-                  Read more →
-                </NextLink>
               </div>
             </div>
           </article>
@@ -103,12 +96,6 @@ export default function NewsPage() {
                       <span className="font-mono text-xs text-foreground/25">·</span>
                       <span className="font-mono text-xs text-muted">{article.readTime}</span>
                     </div>
-                    <NextLink
-                      className="font-mono text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
-                      href={`/news/${article.slug}`}
-                    >
-                      Read →
-                    </NextLink>
                   </div>
                 </div>
               </article>
