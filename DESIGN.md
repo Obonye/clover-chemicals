@@ -89,7 +89,23 @@ Rules:
 - **Minimum size 12px** for any text. No `text-[10px]` or `text-[11px]`.
 - Headings use weights the font actually loads (bold or heavier for Archivo).
 
-**Open:** a fluid type scale using `clamp()` is tracked in CI-81.
+**Fluid scale (CI-81):** the `text-*` sizes are defined once in `styles/globals.css` as `clamp()` tokens that grow smoothly from a 320px to a 1280px viewport, so one class replaces the old `text-3xl lg:text-4xl` pairs. All bounds are in rem, so browser zoom and font-size settings are respected.
+
+| Step | Min → max |
+|---|---|
+| `text-xs` | 12px (fixed floor) |
+| `text-sm` | 14 → 15px |
+| `text-base` | 16 → 17px |
+| `text-lg` | 18 → 20px |
+| `text-xl` | 20 → 24px |
+| `text-2xl` | 24 → 30px |
+| `text-3xl` | 30 → 36px |
+| `text-4xl` | 36 → 48px |
+| `text-5xl` | 44 → 60px |
+| `text-6xl` | 52 → 72px |
+| `text-hero` | 36 → 72px (page-opening `h1` only) |
+
+Do not add `sm:`/`lg:` font-size overrides for these steps; pick the step that fits both ends.
 
 ## Layout & Spacing
 
@@ -135,4 +151,4 @@ One radius scale, applied by role (not by division):
 
 ## Open items
 
-Tracked under the brand epic CI-82: group identity (CI-89), Chemical (CI-90), Medical (CI-91), shared rules (CI-92), responsive type (CI-81).
+Tracked under the brand epic CI-82: group identity (CI-89), Chemical (CI-90), Medical (CI-91).

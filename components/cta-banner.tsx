@@ -53,7 +53,7 @@ export const CtaBanner = ({ tint = CLOVER_GREEN, showBrowse = true }: CtaBannerP
             <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/60">
               Work With Us
             </p>
-            <h2 className="font-display text-3xl font-extrabold tracking-tight text-white lg:text-4xl" style={{ maxWidth: "22ch" }}>
+            <h2 className="font-display text-3xl font-extrabold tracking-tight text-white" style={{ maxWidth: "22ch" }}>
               Ready to source with confidence?
             </h2>
             <p className="mt-3 text-base leading-relaxed text-white/70" style={{ maxWidth: "48ch" }}>

@@ -229,7 +229,7 @@ export default async function ProductPage({ params }: Props) {
                 </span>
               )}
 
-              <h1 className="mb-2 font-display text-3xl font-extrabold tracking-tight text-heading lg:text-4xl">
+              <h1 className="mb-2 font-display text-3xl font-extrabold tracking-tight text-heading">
                 {product.name}
               </h1>
 

@@ -66,7 +66,7 @@ export default async function Home() {
           {/* One line per row from lg up, so this block's width is the longest
               line's real width and the buttons end exactly under it. Below lg
               the headline wraps on its own. */}
-          <h1 className="max-w-[18ch] font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:max-w-none lg:text-7xl">
+          <h1 className="max-w-[18ch] font-display text-hero font-extrabold tracking-tight text-white lg:max-w-none">
             <span className="lg:block">Botswana&apos;s total</span>{" "}
             <span className="lg:block">solutions partner,</span>{" "}
             <span className="lg:block">division by division.</span>
@@ -104,7 +104,7 @@ export default async function Home() {
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Our Divisions
           </p>
-          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground">
             One group, built to circle the customer.
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">
@@ -139,7 +139,7 @@ export default async function Home() {
                   />
                   <div className="relative z-10 flex flex-col">
                     <div className="mb-5">
-                      <h3 className="font-display text-3xl font-extrabold tracking-tight text-white lg:text-4xl">
+                      <h3 className="font-display text-3xl font-extrabold tracking-tight text-white">
                         {division.name}
                       </h3>
                       <p className="mt-3 text-base leading-relaxed text-white/85" style={{ maxWidth: "42ch" }}>
@@ -241,41 +241,58 @@ export default async function Home() {
           <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             At a Glance
           </p>
-          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground">
             Rooted in Botswana since {siteConfig.foundedYear}.
           </h2>
 
           {/*
-            Desktop: a 4 x 2 bento with every cell filled.
-              [Established] [   Registered   ] [Locations]
-              [Established] [Vision] [Mission] [Locations]
-            Established and Locations run the full height; Registered is two
-            wide. Below lg the tiles stack in one or two columns.
+            Desktop: a 3 x 2 bento. Facts that are not already said by the hero,
+            the divisions above or the About page (CI-82): how big each range is,
+            where we are, and how to reach us.
+              [Chemicals] [Medical] [Locations]
+              [     Contact       ] [Locations]
           */}
-          <dl className="grid grid-cols-1 gap-4 sm:grid-flow-dense sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[repeat(2,minmax(15rem,auto))] lg:gap-5">
-            {/* Established: tall */}
-            <div className="flex min-h-56 flex-col justify-between rounded-2xl border border-foreground/15 bg-surface p-6 shadow-sm lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:p-8">
-              <dt className="font-mono text-xs uppercase tracking-widest text-muted">Established</dt>
-              <dd>
-                <span className="block font-display text-6xl font-extrabold leading-none tracking-tight text-foreground lg:text-7xl">
-                  {siteConfig.foundedYear}
-                </span>
-                <span className="mt-4 block text-base font-medium text-muted">
-                  {years}+ years serving Botswana
-                </span>
-              </dd>
-            </div>
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-[repeat(2,minmax(15rem,auto))] lg:gap-5">
+            {divisions.map((division) => {
+              const rangeCount = categories.filter(
+                (category) => category.division === division.sanityDivision && category.label,
+              ).length;
 
-            {/* Registered: wide, filled */}
-            <div className="flex min-h-56 flex-col justify-between rounded-2xl bg-accent p-6 text-accent-foreground sm:col-span-2 lg:col-span-2 lg:col-start-2 lg:row-start-1 lg:p-8">
-              <dt className="font-mono text-xs uppercase tracking-widest opacity-70">Registered</dt>
-              <dd className="font-display text-2xl font-extrabold leading-tight tracking-tight lg:text-4xl" style={{ maxWidth: "26ch" }}>
-                100% citizen-owned and registered under the Economic Diversification Drive (EDD)
-              </dd>
-            </div>
+              return (
+                <div
+                  key={division.slug}
+                  className="flex min-h-56 flex-col justify-between rounded-2xl border border-foreground/15 bg-surface p-6 shadow-sm lg:p-8"
+                >
+                  <dt className="font-mono text-xs uppercase tracking-widest text-muted">{division.name}</dt>
+                  <dd>
+                    {rangeCount > 0 ? (
+                      <>
+                        <span className="block font-display text-6xl font-extrabold leading-none tracking-tight text-foreground">
+                          {rangeCount}
+                        </span>
+                        <span className="mt-4 block text-base font-medium text-muted">
+                          product {rangeCount === 1 ? "range" : "ranges"}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="block text-xl font-semibold leading-snug text-foreground">
+                        {division.tagline}
+                      </span>
+                    )}
+                    <NextLink
+                      className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-foreground transition-[gap] duration-200 hover:gap-3"
+                      href={`/${division.slug}`}
+                    >
+                      Explore {division.shortName}
+                      <span aria-hidden="true">→</span>
+                    </NextLink>
+                  </dd>
+                </div>
+              );
+            })}
 
             {/* Locations: tall */}
-            <div className="flex min-h-56 flex-col justify-between gap-8 rounded-2xl border border-foreground/15 bg-surface p-6 shadow-sm lg:col-start-4 lg:row-span-2 lg:row-start-1 lg:p-8">
+            <div className="flex min-h-56 flex-col justify-between gap-8 rounded-2xl border border-foreground/15 bg-surface p-6 shadow-sm sm:col-span-2 lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:p-8">
               <div>
                 <dt className="mb-3 font-mono text-xs uppercase tracking-widest text-muted">Head Office</dt>
                 <dd className="text-lg font-semibold leading-snug text-foreground">{headOffice.address}</dd>
@@ -292,19 +309,23 @@ export default async function Home() {
               )}
             </div>
 
-            {/* Vision */}
-            <div className="flex min-h-56 flex-col justify-between rounded-2xl border border-foreground/15 bg-surface p-6 shadow-sm lg:col-start-2 lg:row-start-2 lg:p-8">
-              <dt className="font-mono text-xs uppercase tracking-widest text-muted">Vision</dt>
-              <dd className="text-xl font-semibold leading-snug text-foreground">
-                To become a one-stop total solutions provider.
-              </dd>
-            </div>
-
-            {/* Mission */}
-            <div className="flex min-h-56 flex-col justify-between rounded-2xl border border-foreground/15 bg-surface p-6 shadow-sm lg:col-start-3 lg:row-start-2 lg:p-8">
-              <dt className="font-mono text-xs uppercase tracking-widest text-muted">Mission</dt>
-              <dd className="text-xl font-semibold leading-snug text-foreground">
-                To provide quality, state-of-the-art, affordable total solutions through excellent customer service.
+            {/* Contact: wide, filled */}
+            <div className="flex min-h-56 flex-col justify-between gap-8 rounded-2xl bg-accent p-6 text-accent-foreground sm:col-span-2 lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:p-8">
+              <dt className="font-mono text-xs uppercase tracking-widest opacity-70">Reach us</dt>
+              <dd>
+                <a
+                  className="block font-display text-2xl font-extrabold leading-tight tracking-tight underline-offset-4 hover:underline lg:text-3xl"
+                  href={`tel:${siteConfig.contact.phone.replace(/s/g, "")}`}
+                >
+                  {siteConfig.contact.phone}
+                </a>
+                <a
+                  className="mt-2 block text-lg font-medium underline-offset-4 hover:underline"
+                  href={`mailto:${siteConfig.contact.email}`}
+                >
+                  {siteConfig.contact.email}
+                </a>
+                <span className="mt-4 block text-base opacity-80">{siteConfig.contact.hours}</span>
               </dd>
             </div>
           </dl>

@@ -101,7 +101,7 @@ export default async function CategoryPage({ params }: Props) {
           <p className="mb-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
             Product Range
           </p>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
+          <h1 className="font-display text-4xl font-extrabold tracking-tight text-white">
             {cat.label}
           </h1>
           <p className="mt-3 text-base text-white/70" style={{ maxWidth: "52ch" }}>

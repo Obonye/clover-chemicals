@@ -41,7 +41,7 @@ export default async function RfqSentPage({ searchParams }: SentPageProps) {
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 pb-5 pt-8 lg:px-12">
           <p className="font-mono text-xs font-semibold uppercase tracking-widest text-accent">Request sent</p>
-          <h1 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
+          <h1 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-foreground">
             Thank you. We&apos;ll be in touch with your quotation.
           </h1>
         </div>

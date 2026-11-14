@@ -27,7 +27,7 @@ export const MedicalWhyPartner = () => {
       />
 
       <div className="relative mx-auto max-w-[1280px] px-6 lg:px-12">
-        <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-white lg:mb-16 lg:text-4xl">
+        <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-white lg:mb-16">
           Why partner with Clover Medical?
         </h2>
 

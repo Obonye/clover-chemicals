@@ -18,7 +18,7 @@ export default function LocationsPage() {
           <p className={eyebrow()}>
             Find Us
           </p>
-          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
+          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground">
             Our Locations
           </h1>
           <p className="text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>

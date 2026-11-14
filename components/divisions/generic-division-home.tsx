@@ -39,7 +39,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
         />
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-[var(--header-h)] lg:px-12">
-          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-white lg:text-5xl" style={{ maxWidth: "20ch" }}>
+          <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-white" style={{ maxWidth: "20ch" }}>
             {division.name}
           </h1>
           <p className="max-w-xl text-lg leading-relaxed text-white/75">
@@ -69,7 +69,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
         <section className="border-b border-separator bg-background py-20">
           <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
             <div className="mb-12 flex items-center justify-between">
-              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground">
                 Products
               </h2>
               <NextLink

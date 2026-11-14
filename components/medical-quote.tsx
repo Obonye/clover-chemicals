@@ -75,7 +75,7 @@ export const MedicalQuote = () => {
         <svg aria-hidden="true" className="mx-auto mb-6 h-10 w-10 text-medical" fill="currentColor" viewBox="0 0 24 24">
           <path d="M7.5 8C5 8 3 10 3 12.5S5 17 7.5 17c.4 0 .8 0 1.1-.1C8 18.5 6.8 20 5 20.8l.7 1.7C9.6 21 11 17.8 11 14.5V12c0-2.2-1.5-4-3.5-4zM17.5 8C15 8 13 10 13 12.5S15 17 17.5 17c.4 0 .8 0 1.1-.1C18 18.5 16.8 20 15 20.8l.7 1.7C19.6 21 21 17.8 21 14.5V12c0-2.2-1.5-4-3.5-4z" />
         </svg>
-        <p className="font-display text-2xl font-medium leading-[1.35] tracking-tight text-heading md:text-3xl lg:text-4xl">
+        <p className="font-display text-2xl font-medium leading-[1.35] tracking-tight text-heading lg:text-4xl">
           We are dedicated to elevating healthcare delivery, academic
           excellence, and scientific innovation across the nation by
           supplying world-class medical technology, sophisticated

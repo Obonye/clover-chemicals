@@ -25,7 +25,7 @@ type CategoryDirectoryProps = {
 export const CategoryDirectory = ({ heading, items }: CategoryDirectoryProps) => (
   <section className="bg-background py-12 lg:py-16">
     <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-      <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">{heading}</h1>
+      <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground">{heading}</h1>
       <p className="mt-3 text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
         Choose a range and tell us what you need. We quote every request individually and reply within one business
         day.

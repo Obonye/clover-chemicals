@@ -70,7 +70,7 @@ export const SpecialsBanner = async () => {
               )}
             </div>
 
-            <h3 className="mt-4 font-display text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
+            <h3 className="mt-4 font-display text-2xl font-extrabold tracking-tight text-foreground">
               {promotion.headline}
             </h3>
 

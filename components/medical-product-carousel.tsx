@@ -193,7 +193,7 @@ export const MedicalProductCarousel = ({ showViewAll = true }: MedicalProductCar
     <section className="bg-background py-16">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6 lg:mb-16">
-          <h2 className="font-display text-3xl font-extrabold tracking-tight text-heading lg:text-4xl">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-heading">
             A closer look at each line.
           </h2>
           {showViewAll && (

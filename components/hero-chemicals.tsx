@@ -36,7 +36,7 @@ export const HeroChemicals = ({ showBrowse = true }: HeroChemicalsProps) => {
             {years}+ Years · 100% Citizen-Owned
           </p>
 
-          <h1 className="mb-6 font-display text-5xl font-extrabold leading-none tracking-normal text-white lg:text-6xl">
+          <h1 className="mb-6 font-display text-5xl font-extrabold leading-none tracking-normal text-white">
             Botswana&apos;s <span className="text-accent">One Stop</span>{" "}
             Chemical &amp; Equipment Partner.
           </h1>

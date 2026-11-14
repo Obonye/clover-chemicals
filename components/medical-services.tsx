@@ -20,7 +20,7 @@ export const MedicalServices = () => {
         <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-medical">
           Beyond the Sale
         </p>
-        <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-heading lg:mb-16 lg:text-4xl">
+        <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-heading lg:mb-16">
           After-sales support.
         </h2>
 

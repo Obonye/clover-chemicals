@@ -98,7 +98,7 @@ export default function AboutPage() {
           <p className={eyebrow({ tone: "onDark" })}>
             Est. {siteConfig.foundedYear}
           </p>
-          <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "16ch" }}>
+          <h1 className="font-display font-extrabold tracking-tight text-hero text-white" style={{ maxWidth: "16ch" }}>
             {years} years of precision.
           </h1>
         </div>
@@ -107,7 +107,7 @@ export default function AboutPage() {
       {/* Intro */}
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-20 lg:px-12 lg:py-24">
-          <p className="mb-8 text-xl font-medium leading-relaxed text-foreground lg:text-2xl" style={{ maxWidth: "36ch" }}>
+          <p className="mb-8 text-xl font-medium leading-relaxed text-foreground" style={{ maxWidth: "36ch" }}>
             {siteConfig.name} was established in Botswana in{" "}
             {siteConfig.foundedYear} to manufacture and supply chemicals for
             domestic and industrial use. As demand grew, so did our scope.
@@ -134,7 +134,7 @@ export default function AboutPage() {
                 className="px-6 py-14 lg:px-10"
                 style={i < stats.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.08)" } : undefined}
               >
-                <p className="mb-2 font-mono text-5xl font-bold tabular-nums text-white lg:text-6xl">
+                <p className="mb-2 font-mono text-5xl font-bold tabular-nums text-white">
                   {stat.value}
                 </p>
                 <p className="font-mono text-xs uppercase tracking-widest text-white/40">
@@ -167,7 +167,7 @@ export default function AboutPage() {
           <p className={eyebrow()}>
             Vision, Mission &amp; Values
           </p>
-          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground">
             &ldquo;Lift as you rise.&rdquo;
           </h2>
           <div className="mb-16 grid grid-cols-1 gap-10 sm:grid-cols-2">
@@ -210,7 +210,7 @@ export default function AboutPage() {
           <p className={eyebrow()}>
             Our History
           </p>
-          <h2 className="mb-16 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-16 font-display text-3xl font-extrabold tracking-tight text-foreground">
             From a single facility to a total solutions provider.
           </h2>
           <div className="flex flex-col">
@@ -237,7 +237,7 @@ export default function AboutPage() {
           <p className={eyebrow()}>
             What Sets Us Apart
           </p>
-          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground">
             Built on compliance, backed by global brands.
           </h2>
           <div className="grid grid-cols-1 gap-px bg-separator sm:grid-cols-2">
@@ -264,7 +264,7 @@ export default function AboutPage() {
           <p className={eyebrow()}>
             Our Partners
           </p>
-          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+          <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground">
             Trusted agents for the world&apos;s leading manufacturers.
           </h2>
           <div className="grid grid-cols-2 gap-px bg-separator sm:grid-cols-3">
@@ -287,7 +287,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mb-2 font-display text-2xl font-extrabold tracking-tight text-foreground lg:text-3xl">
+              <h2 className="mb-2 font-display text-2xl font-extrabold tracking-tight text-foreground">
                 Ready to work with us?
               </h2>
               <p className="text-base text-muted" style={{ maxWidth: "48ch" }}>
