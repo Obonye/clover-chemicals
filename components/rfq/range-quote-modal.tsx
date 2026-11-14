@@ -47,40 +47,42 @@ export const RangeQuoteModal = ({ range, onClose }: RangeQuoteModalProps) => {
         }}
       >
         <Modal.Container placement="center" size="lg">
-          {/* Full-bleed photo; a dark gradient rises behind the text so it reads
-              in light and dark themes alike. */}
-          <Modal.Dialog className="relative min-h-[30rem] justify-end overflow-hidden bg-black p-0 text-white">
-            <Image
-              alt=""
-              className="object-cover object-center"
-              fill
-              sizes="(min-width: 640px) 32rem, 100vw"
-              src="/quote-modal-warehouse.png"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-linear-to-t from-black via-black/75 to-black/10"
-            />
+          {/* Photo across the top half, fading into the card; text below on the
+              card's own surface. */}
+          <Modal.Dialog className="relative overflow-hidden p-0">
+            <div className="relative h-56 w-full shrink-0 sm:h-64">
+              <Image
+                alt=""
+                className="object-cover object-center"
+                fill
+                sizes="(min-width: 640px) 32rem, 100vw"
+                src="/quote-modal-warehouse.png"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-overlay to-transparent"
+              />
+            </div>
             <Modal.CloseTrigger className="z-20 bg-black/40 text-white hover:bg-black/60" />
 
-            <div className="relative z-10 flex flex-col gap-4 p-6 pt-24 sm:p-8 sm:pt-32">
+            <div className="flex flex-col gap-4 p-6 pt-2 sm:p-8 sm:pt-2">
               <Modal.Header>
-                <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/70">{shown?.name}</p>
-                <Modal.Heading className="font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">{shown?.name}</p>
+                <Modal.Heading className="font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
                   We&apos;re still listing these products online
                 </Modal.Heading>
               </Modal.Header>
               <Modal.Body>
-                <p className="text-base leading-relaxed text-white/80">
+                <p className="text-base leading-relaxed text-muted">
                   You can still request anything from this range through our quote form. Tell us what you need and
                   we&apos;ll reply with a quotation, usually within one business day.
                 </p>
               </Modal.Body>
               <Modal.Footer className="mt-2 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-                <Button className="bg-white/10 text-white hover:bg-white/20" slot="close" variant="tertiary">
+                <Button slot="close" variant="tertiary">
                   Keep browsing
                 </Button>
-                <Button className="bg-white text-black hover:bg-white/90" variant="primary" onPress={proceed}>
+                <Button variant="primary" onPress={proceed}>
                   Continue to quote form
                 </Button>
               </Modal.Footer>
