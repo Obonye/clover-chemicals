@@ -31,7 +31,7 @@ const Badge = ({ count, inverse = false, className }: BadgeProps) => (
   <span
     aria-hidden="true"
     className={clsx(
-      "inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 font-mono text-[11px] font-bold leading-none tabular-nums",
+      "inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 font-mono text-xs font-bold leading-none tabular-nums",
       inverse ? "bg-accent-foreground text-accent" : "bg-accent text-accent-foreground",
       className,
     )}
@@ -62,7 +62,7 @@ export const RfqNavButton = ({ variant, href = "/rfq", className, onNavigate }: 
     return (
       <NextLink
         aria-label={hasItems ? rfqAccessibleName(count) : undefined}
-        className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded bg-accent px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+        className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
         href={href}
         onClick={onNavigate}
       >
@@ -83,7 +83,7 @@ export const RfqNavButton = ({ variant, href = "/rfq", className, onNavigate }: 
   return (
     <NextLink
       className={clsx(
-        "inline-flex items-center whitespace-nowrap rounded px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
+        "inline-flex items-center whitespace-nowrap rounded-lg px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors",
         className,
       )}
       href={href}
@@ -118,7 +118,7 @@ export const RfqCartLink = () => {
       href="/rfq"
     >
       <CartIcon />
-      {count > 0 && <Badge className="absolute right-0 top-1.5 h-4 min-w-4 px-1 text-[10px]" count={count} />}
+      {count > 0 && <Badge className="absolute right-0 top-1.5 h-5 min-w-5 px-1 text-xs" count={count} />}
     </NextLink>
   );
 };

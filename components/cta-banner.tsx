@@ -65,7 +65,7 @@ export const CtaBanner = ({ tint = CLOVER_GREEN, showBrowse = true }: CtaBannerP
           {/* Actions */}
           <div className="flex flex-wrap gap-3">
             <NextLink
-              className="inline-flex items-center justify-center rounded border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
+              className="inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
               href="/contact"
             >
               Request a Quote

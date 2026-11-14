@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { eyebrow } from "@/components/primitives";
 import { articles } from "@/lib/news";
 
 const [featured, ...rest] = articles;
@@ -17,7 +18,7 @@ export default function NewsPage() {
       {/* Page header */}
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-16 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             Latest Updates
           </p>
           <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
@@ -25,7 +26,7 @@ export default function NewsPage() {
           </h1>
           <p className="text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
             Company announcements, industry developments, and product updates
-            from Clover Chemical Industries.
+            from Clover Industries.
           </p>
         </div>
       </section>
@@ -84,7 +85,7 @@ export default function NewsPage() {
                   <p className="mb-3 font-mono text-xs font-medium uppercase tracking-widest text-accent">
                     {article.category}
                   </p>
-                  <h3 className="mb-3 text-base font-bold leading-snug tracking-tight text-foreground">
+                  <h3 className="mb-3 font-display text-base font-bold leading-snug tracking-tight text-foreground">
                     {article.title}
                   </h3>
                   <p className="mb-6 flex-1 text-sm leading-relaxed text-muted">

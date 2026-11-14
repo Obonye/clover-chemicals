@@ -40,7 +40,7 @@ export const MedicalWhyPartner = () => {
               >
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mb-3 text-lg font-semibold tracking-tight text-white">
+              <h3 className="mb-3 font-display text-lg font-bold tracking-tight text-white">
                 {pillar.heading}
               </h3>
               <p className="text-sm leading-relaxed text-white/60" style={{ maxWidth: "38ch" }}>

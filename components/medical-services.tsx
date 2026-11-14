@@ -33,7 +33,7 @@ export const MedicalServices = () => {
               >
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mb-3 text-lg font-semibold tracking-tight text-heading">
+              <h3 className="mb-3 font-display text-lg font-bold tracking-tight text-heading">
                 {pillar.heading}
               </h3>
               <p className="text-sm leading-relaxed text-muted" style={{ maxWidth: "38ch" }}>

@@ -14,9 +14,6 @@ export type DivisionTheme = {
    *  to --foreground regardless (see divisionCssVars). Omit to inherit the
    *  site default. */
   heading?: string;
-  /** A `var(--font-*)` reference to swap in for --font-archivo (the
-   *  --font-display source). Omit to keep the default display font. */
-  displayFont?: string;
   /** Which navbar text treatment reads correctly over this division's hero.
    *  "light" (white text) suits a dark photo hero; "dark" suits a light
    *  hero. Defaults to "light" when omitted. */
@@ -59,7 +56,7 @@ export const divisions: DivisionConfig[] = [
     name: "Clover Chemicals",
     shortName: "Chemical",
     tagline: "Chemicals, equipment & PPE for industry, agriculture, and the lab.",
-    image: "/clover large.jpg",
+    image: "/clover-chemicals.jpg",
     // The same Clover Green as the :root defaults in styles/globals.css,
     // set explicitly so Chemical keeps it on shared routes too (product
     // pages, the catalogue preview), where the group theme now applies.
@@ -77,14 +74,13 @@ export const divisions: DivisionConfig[] = [
     name: "Clover Medical",
     shortName: "Medical",
     tagline: "Advanced medical, life sciences, and laboratory solutions for Botswana's healthcare sector.",
-    image: "/clover medical (2).jpg",
+    image: "/clover-medical.jpg",
     browseLabel: "Explore Product Lines",
     quoteHref: "/contact?enquiry=medical",
     theme: {
       accent: "#0074a8",
       accentForeground: "#ffffff",
       heading: "#343434",
-      displayFont: "var(--font-sora)",
       navTextStyle: "dark",
     },
     contacts: [{ label: "Medical Division", email: "madan.kumar@cloverindustries.co.bw" }],
@@ -150,7 +146,6 @@ export function divisionCssVars(theme?: DivisionTheme): CSSProperties {
   };
 
   if (theme.heading) vars["--heading"] = `light-dark(${theme.heading}, var(--foreground))`;
-  if (theme.displayFont) vars["--font-archivo"] = theme.displayFont;
 
   return vars as CSSProperties;
 }

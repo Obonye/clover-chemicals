@@ -87,7 +87,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
           return (
             <NextLink
               key={cat._id}
-              className="product-row relative flex flex-col justify-end overflow-hidden rounded"
+              className="product-row relative flex flex-col justify-end overflow-hidden rounded-lg"
               href={linkFor(cat)}
               style={{
                 animationDelay: `${index * 90}ms`,
@@ -228,7 +228,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
             return (
               <NextLink
                 key={cat._id}
-                className="product-row relative flex items-center justify-between overflow-hidden rounded px-4"
+                className="product-row relative flex items-center justify-between overflow-hidden rounded-lg px-4"
                 href={linkFor(cat)}
                 style={{
                   animationDelay: `${index * 90}ms`,

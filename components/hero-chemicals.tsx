@@ -15,12 +15,12 @@ export const HeroChemicals = ({ showBrowse = true }: HeroChemicalsProps) => {
     <section className="relative -mt-[var(--navbar-h)] flex min-h-screen items-center">
       {/* Background image */}
       <Image
-        alt="Clover Chemical Industries facility"
+        alt="Clover Chemicals facility"
         className="object-cover object-center"
         fill
         priority
         sizes="100vw"
-        src="/clover large.jpg"
+        src="/clover-chemicals.jpg"
       />
 
       {/* Overlay */}
@@ -29,6 +29,9 @@ export const HeroChemicals = ({ showBrowse = true }: HeroChemicalsProps) => {
       {/* Content */}
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+            A Division of Clover Industries
+          </p>
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             {years}+ Years · 100% Citizen-Owned
           </p>
@@ -46,14 +49,14 @@ export const HeroChemicals = ({ showBrowse = true }: HeroChemicalsProps) => {
           <div className="flex flex-wrap justify-center gap-4">
             {showBrowse && (
               <NextLink
-                className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
                 href="/products"
               >
                 Browse Products
               </NextLink>
             )}
             <NextLink
-              className="rounded border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
+              className="rounded-lg border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
               href="/contact"
             >
               Get a Quote

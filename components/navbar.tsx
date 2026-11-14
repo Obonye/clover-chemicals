@@ -202,7 +202,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
             </span>
             <span
               className={clsx(
-                "text-[10px] font-medium tracking-[0.12em] uppercase transition-colors duration-150",
+                "text-xs font-medium tracking-[0.12em] uppercase transition-colors duration-150",
                 isTransparent ? heroTextMuted : "text-muted",
               )}
             >
@@ -234,7 +234,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
             </button>
 
             {isProductsOpen && (
-              <div className="absolute left-0 top-full mt-2 w-72 rounded border border-separator bg-surface shadow-md">
+              <div className="absolute left-0 top-full mt-2 w-72 rounded-lg border border-separator bg-surface shadow-md">
                 <ul className="py-1">
                   {division ? (
                     <>
@@ -303,7 +303,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
             <button
               aria-label="Toggle theme"
               className={clsx(
-                "rounded p-2 transition-colors",
+                "rounded-lg p-2 transition-colors",
                 isTransparent ? heroControl : "text-muted hover:text-foreground",
               )}
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -318,7 +318,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
           />
           {showBrowse && (
             <NextLink
-              className="whitespace-nowrap rounded bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+              className="whitespace-nowrap rounded-lg bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
               href={browseHref}
             >
               {browseLabel}
@@ -331,7 +331,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
           aria-expanded={isMenuOpen}
           aria-label="Toggle menu"
           className={clsx(
-            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded transition-colors lg:hidden",
+            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg transition-colors lg:hidden",
             isTransparent ? heroControl : "text-muted hover:text-foreground",
           )}
           style={{ touchAction: "manipulation" }}
@@ -489,7 +489,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
               {showBrowse && (
                 <Drawer.Footer className="flex flex-col gap-3">
                   <NextLink
-                    className="block w-full rounded border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
+                    className="block w-full rounded-lg border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
                     href={browseHref}
                     onClick={() => setIsMenuOpen(false)}
                   >

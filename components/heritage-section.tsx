@@ -58,7 +58,7 @@ export const HeritageSection = () => {
 
           {/* Right — specification table */}
           <div className="flex flex-col justify-center">
-            <p className="mb-6 font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/35">
+            <p className="mb-6 font-mono text-xs uppercase tracking-[0.25em] text-foreground/35">
               Company Data
             </p>
             <div>
@@ -88,12 +88,12 @@ export const HeritageSection = () => {
           {pillars.map((pillar, i) => (
             <div key={pillar.heading}>
               <p
-                className="mb-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-accent"
+                className="mb-1 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent"
                 aria-hidden="true"
               >
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mb-3 text-base font-semibold tracking-tight text-foreground">
+              <h3 className="mb-3 font-display text-base font-bold tracking-tight text-foreground">
                 {pillar.heading}
               </h3>
               <p className="text-sm leading-relaxed text-foreground/55" style={{ maxWidth: "38ch" }}>

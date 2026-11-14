@@ -60,7 +60,7 @@ export const QuickLinksBar = () => {
           target={href.startsWith("http") ? "_blank" : undefined}
         >
           {/* Collapsed (but still read by screen readers) until expanded. */}
-          <span className="max-w-0 overflow-hidden whitespace-nowrap text-[11px] font-semibold uppercase tracking-widest opacity-0 transition-[max-width,opacity,padding] duration-200 ease-out motion-reduce:transition-none md:group-hover:max-w-32 md:group-hover:pl-4 md:group-hover:opacity-100 md:group-focus-within:max-w-32 md:group-focus-within:pl-4 md:group-focus-within:opacity-100">
+          <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-semibold uppercase tracking-widest opacity-0 transition-[max-width,opacity,padding] duration-200 ease-out motion-reduce:transition-none md:group-hover:max-w-32 md:group-hover:pl-4 md:group-hover:opacity-100 md:group-focus-within:max-w-32 md:group-focus-within:pl-4 md:group-focus-within:opacity-100">
             {label}
           </span>
           <span className="flex h-9 w-9 shrink-0 items-center justify-center md:h-10 md:w-10">

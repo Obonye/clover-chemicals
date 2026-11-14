@@ -90,9 +90,6 @@ body {
   --radius: 0.25rem;
   --field-radius: 0.25rem;
 
-  /* Font Family */
-  /* Make sure to load Hanken Grotesk font in your app */
-  --font-sans: var(--font-hanken-grotesk);
 }
 
 .dark,

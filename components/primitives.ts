@@ -28,3 +28,21 @@ export const subtitle = tv({
     fullWidth: true,
   },
 });
+
+/**
+ * The mono section/page-header eyebrow shared by every page (CI-92). Size,
+ * weight and tracking are fixed; the colour follows the active theme's accent,
+ * so each division's pages pick up their own colour. Use "onDark" over photos.
+ */
+export const eyebrow = tv({
+  base: "mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em]",
+  variants: {
+    tone: {
+      accent: "text-accent",
+      onDark: "text-white/70",
+    },
+  },
+  defaultVariants: {
+    tone: "accent",
+  },
+});

@@ -2,6 +2,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 
 import { CatalogOnly } from "@/components/catalog-state";
+import { eyebrow } from "@/components/primitives";
 import { siteConfig } from "@/config/site";
 
 const stats = [
@@ -94,7 +95,7 @@ export default function AboutPage() {
         />
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 pb-16 pt-[var(--header-h)] lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/70">
+          <p className={eyebrow({ tone: "onDark" })}>
             Est. {siteConfig.foundedYear}
           </p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-white lg:text-7xl" style={{ maxWidth: "16ch" }}>
@@ -163,7 +164,7 @@ export default function AboutPage() {
       {/* Vision, Mission & Values */}
       <section className="border-b border-separator bg-background py-20">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             Vision, Mission &amp; Values
           </p>
           <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
@@ -191,7 +192,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
             {values.map((value) => (
               <div key={value.heading}>
-                <h3 className="mb-3 text-base font-semibold tracking-tight text-foreground">
+                <h3 className="mb-3 font-display text-base font-bold tracking-tight text-foreground">
                   {value.heading}
                 </h3>
                 <p className="text-sm leading-relaxed text-muted" style={{ maxWidth: "38ch" }}>
@@ -206,7 +207,7 @@ export default function AboutPage() {
       {/* Timeline */}
       <section className="border-b border-separator bg-background py-20">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             Our History
           </p>
           <h2 className="mb-16 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
@@ -233,7 +234,7 @@ export default function AboutPage() {
       {/* Pillars */}
       <section className="border-b border-separator bg-background py-20">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             What Sets Us Apart
           </p>
           <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
@@ -245,7 +246,7 @@ export default function AboutPage() {
                 <p className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
                   {pillar.index}
                 </p>
-                <h3 className="mb-3 text-xl font-bold tracking-tight text-foreground">
+                <h3 className="mb-3 font-display text-xl font-bold tracking-tight text-foreground">
                   {pillar.heading}
                 </h3>
                 <p className="text-sm leading-relaxed text-muted" style={{ maxWidth: "38ch" }}>
@@ -260,7 +261,7 @@ export default function AboutPage() {
       {/* Partners */}
       <section className="border-b border-separator bg-background py-20">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             Our Partners
           </p>
           <h2 className="mb-12 font-display text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
@@ -296,14 +297,14 @@ export default function AboutPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <NextLink
-                className="rounded bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="rounded-lg bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
                 href="/contact"
               >
                 Get in Touch
               </NextLink>
               <CatalogOnly>
                 <NextLink
-                  className="rounded border border-separator px-6 py-3 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:border-foreground/30"
+                  className="rounded-lg border border-separator px-6 py-3 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:border-foreground/30"
                   href="/products"
                 >
                   Browse Products

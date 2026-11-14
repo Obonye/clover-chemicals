@@ -45,7 +45,7 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
         href={detailHref}
       >
         {product.isOnPromotion && (
-          <span className="absolute left-3 top-3 z-10 rounded-sm bg-specials px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-specials-foreground">
+          <span className="absolute left-3 top-3 z-10 rounded-full bg-specials px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-specials-foreground">
             On Promotion
           </span>
         )}
@@ -63,13 +63,13 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
       {/* Content */}
       <div className="flex flex-1 flex-col p-5">
         <NextLink
-          className="mb-2 inline-block w-fit font-mono text-[10px] font-semibold uppercase tracking-wider text-accent transition-colors hover:text-accent/80"
+          className="mb-2 inline-block w-fit font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:text-accent/80"
           href={categoryHref(category.slug)}
         >
           {eyebrow ?? category.label}
         </NextLink>
 
-        <h3 className="mb-1 text-base font-bold leading-snug tracking-tight text-foreground">
+        <h3 className="mb-1 font-display text-base font-bold leading-snug tracking-tight text-foreground">
           <NextLink className="underline-offset-4 hover:underline" href={detailHref}>
             {product.name}
           </NextLink>
@@ -81,7 +81,7 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
 
         {/* Grade + pack sizes */}
         <div className="mb-4 border-t border-separator pt-4">
-          <p className="mb-0.5 font-mono text-[10px] uppercase tracking-widest text-foreground/30">
+          <p className="mb-0.5 font-mono text-xs uppercase tracking-widest text-foreground/30">
             {product.grade}
           </p>
           {packSizes.length > 0 && (
@@ -89,7 +89,7 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
               {packSizes.map((size) => (
                 <span
                   key={size._key}
-                  className="rounded-sm border border-separator px-2.5 py-1 font-mono text-xs text-muted"
+                  className="rounded-full border border-separator px-2.5 py-1 font-mono text-xs text-muted"
                 >
                   {packLabel(size)}
                 </span>
@@ -101,7 +101,7 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
         {quickDoc && (
           <a
             aria-label={`Download the ${documentType(quickDoc) === "sds" ? "Safety Data Sheet" : "spec sheet"} for ${product.name} (PDF)`}
-            className="mb-3 inline-flex w-fit items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-muted transition-colors hover:text-accent"
+            className="mb-3 inline-flex w-fit items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-muted transition-colors hover:text-accent"
             download
             href={documentDownloadHref(quickDoc)}
           >

@@ -14,7 +14,7 @@ export const articles: Article[] = [
     category: "Company News",
     title: "Clover Chemical Expands Operations into Zambia",
     excerpt:
-      "Following sustained growth across our Medical & Laboratory division, Clover Chemical Industries has formalised its investment in Zambia, extending our precision chemical supply network to a second southern African market.",
+      "Following sustained growth across our Medical & Laboratory division, Clover Industries has formalised its investment in Zambia, extending our precision chemical supply network to a second southern African market.",
     date: "12 May 2025",
     readTime: "4 min read",
     image:
@@ -47,7 +47,7 @@ export const articles: Article[] = [
     category: "Products",
     title: "Philips Medical Equipment Now Fully Serviced Locally",
     excerpt:
-      "Clover Chemical Industries has expanded its service capability for Philips Medical imaging and diagnostic equipment, reducing downtime for hospitals and clinics across Botswana.",
+      "Clover Industries has expanded its service capability for Philips Medical imaging and diagnostic equipment, reducing downtime for hospitals and clinics across Botswana.",
     date: "5 Feb 2025",
     readTime: "3 min read",
     image:
@@ -58,7 +58,7 @@ export const articles: Article[] = [
     category: "Company News",
     title: "EDD Certification Renewed for 2025",
     excerpt:
-      "Clover Chemical Industries has successfully renewed its Economic Diversification Drive certification, reinforcing our compliance for government and institutional procurement contracts.",
+      "Clover Industries has successfully renewed its Economic Diversification Drive certification, reinforcing our compliance for government and institutional procurement contracts.",
     date: "20 Jan 2025",
     readTime: "2 min read",
     image:

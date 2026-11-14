@@ -83,7 +83,7 @@ export default async function RfqSentPage({ searchParams }: SentPageProps) {
             {catalogEnabled && divisions.map((division) => (
               <NextLink
                 key={division.slug}
-                className="inline-flex min-h-11 items-center rounded bg-accent px-5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="inline-flex min-h-11 items-center rounded-lg bg-accent px-5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
                 href={`/${division.slug}/products`}
               >
                 Browse {division.name}

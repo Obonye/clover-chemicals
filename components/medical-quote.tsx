@@ -9,7 +9,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // Two mirrored staircase traces, each spanning the full width of the
 // section (viewBox is 0-100 on both axes, stretched to fill — so
-// coordinates are just percentages) with rounded 90° turns.
+// coordinates are just percentages) with rounded-lg 90° turns.
 const PATH_A =
   "M0,2 L32,2 Q35,2 35,5 L35,9 Q35,12 38,12 L62,12 Q65,12 65,15 L65,19 Q65,22 68,22 L100,22";
 const PATH_B =

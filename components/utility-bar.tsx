@@ -211,7 +211,7 @@ export const UtilityBar = () => {
               </button>
 
               {isOpen && (
-                <div className="absolute left-0 top-full mt-2 w-64 rounded border border-white/10 bg-[#111111] shadow-lg">
+                <div className="absolute left-0 top-full mt-2 w-64 rounded-lg border border-white/10 bg-[#111111] shadow-lg">
                   <ul className="py-1">
                     {divisions.map((d) => (
                       <li key={d.slug}>

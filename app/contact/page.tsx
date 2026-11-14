@@ -6,13 +6,14 @@ import { useSearchParams } from "next/navigation";
 
 import { submitContact, type ContactField } from "./actions";
 
+import { eyebrow } from "@/components/primitives";
 import { branchesInDisplayOrder } from "@/config/branches";
 import { enquiryTypeIds, enquiryTypes, type EnquiryTypeId } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
 import { categories } from "@/lib/products";
 
 const fieldClass =
-  "w-full max-w-full min-w-0 rounded border border-separator bg-surface px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 outline-none transition-colors focus:border-accent";
+  "w-full max-w-full min-w-0 rounded-lg border border-separator bg-surface px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 outline-none transition-colors focus:border-accent";
 
 const labelClass =
   "mb-2 block font-mono text-xs font-medium uppercase tracking-widest text-muted";
@@ -58,7 +59,7 @@ function ContactContent() {
       {/* Page header */}
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-16 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             Get in Touch
           </p>
           <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
@@ -104,7 +105,7 @@ function ContactContent() {
                   {state.status === "error" && (
                     <p
                       ref={errorRef}
-                      className="rounded bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
+                      className="rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
                       role="alert"
                       tabIndex={-1}
                     >
@@ -228,7 +229,7 @@ function ContactContent() {
 
                   <div>
                     <button
-                      className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90 disabled:opacity-50"
+                      className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90 disabled:opacity-50"
                       disabled={pending}
                       type="submit"
                     >

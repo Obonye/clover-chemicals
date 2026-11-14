@@ -65,10 +65,10 @@ export const Footer = ({ categories }: FooterProps) => {
               <img alt={siteConfig.name} className="h-9 w-9" src="/clover-logo.svg" />
               <div className="flex flex-col leading-none">
                 <span className="text-sm font-bold tracking-tight text-foreground">
-                  CLOVER
+                  CLOVER INDUSTRIES
                 </span>
-                <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
-                  Industries
+                <span className="text-xs font-medium uppercase tracking-[0.12em] text-muted">
+                  {division ? division.shortName : "Lift as you rise"}
                 </span>
               </div>
             </NextLink>

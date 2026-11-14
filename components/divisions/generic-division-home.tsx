@@ -48,14 +48,14 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
           <div className="mt-8 flex flex-wrap gap-4">
             {catalogEnabled && (
               <NextLink
-                className="rounded bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
                 href={`/${division.slug}/products`}
               >
                 Browse Products
               </NextLink>
             )}
             <NextLink
-              className="rounded border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
+              className="rounded-lg border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
               href="/contact"
             >
               Get a Quote

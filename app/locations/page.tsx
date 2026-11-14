@@ -1,6 +1,7 @@
 import NextLink from "next/link";
 
 import { JsonLd } from "@/components/json-ld";
+import { eyebrow } from "@/components/primitives";
 import { branchesInDisplayOrder, mapUrl } from "@/config/branches";
 import { divisions } from "@/config/divisions";
 import { siteConfig } from "@/config/site";
@@ -14,7 +15,7 @@ export default function LocationsPage() {
       {/* Page header */}
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 py-16 lg:px-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">
+          <p className={eyebrow()}>
             Find Us
           </p>
           <h1 className="mb-4 font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
@@ -47,7 +48,7 @@ export default function LocationsPage() {
                       {branch.name}
                     </h2>
                     {branch.isHeadOffice && (
-                      <span className="rounded-full bg-accent-soft px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-soft-foreground">
+                      <span className="rounded-full bg-accent-soft px-2.5 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-accent-soft-foreground">
                         Head Office
                       </span>
                     )}
@@ -61,7 +62,7 @@ export default function LocationsPage() {
                         {servedDivisions.map((d) => (
                           <span
                             key={d.slug}
-                            className="rounded-sm border border-separator px-2.5 py-1 font-mono text-xs text-muted"
+                            className="rounded-full border border-separator px-2.5 py-1 font-mono text-xs text-muted"
                           >
                             {d.shortName}
                           </span>
@@ -88,7 +89,7 @@ export default function LocationsPage() {
 
                   <div className="flex flex-wrap gap-3">
                     <a
-                      className="inline-flex items-center gap-1.5 rounded border border-accent px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-accent px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
                       href={mapUrl(branch.address)}
                       rel="noopener noreferrer"
                       target="_blank"
@@ -96,7 +97,7 @@ export default function LocationsPage() {
                       Get Directions
                     </a>
                     <NextLink
-                      className="inline-flex items-center gap-1.5 rounded border border-separator px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-muted transition-colors hover:text-foreground"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-separator px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-muted transition-colors hover:text-foreground"
                       href="/contact"
                     >
                       Send an Enquiry

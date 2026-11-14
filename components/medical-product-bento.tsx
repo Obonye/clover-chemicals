@@ -82,7 +82,7 @@ export const MedicalProductBento = () => {
               </div>
 
               <div className="absolute inset-x-0 bottom-0 p-5 lg:p-6">
-                <h3 className="mb-1.5 text-lg font-semibold leading-snug text-white lg:text-xl">
+                <h3 className="mb-1.5 font-display text-lg font-bold leading-snug text-white lg:text-xl">
                   {line.heading}
                 </h3>
                 <p className="max-h-0 max-w-md -translate-y-1 overflow-hidden text-sm leading-snug text-white/70 opacity-0 transition-all duration-300 ease-out group-hover:max-h-24 group-hover:translate-y-0 group-hover:opacity-100">
