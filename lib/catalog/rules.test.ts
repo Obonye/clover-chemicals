@@ -35,12 +35,12 @@ describe("categoryHref", () => {
     assert.equal(categoryHref(false, notReady, "/chemical/products"), "/chemical/products?category=pool");
   });
 
-  it("sends Medical categories to the Medical enquiry form", () => {
+  it("sends Medical categories to the quote form with the range preselected", () => {
     const medical = { slug: "lab-equipment", division: "medical" };
 
-    assert.equal(categoryHref(false, medical), "/contact?enquiry=medical&category=lab-equipment");
+    assert.equal(categoryHref(false, medical), "/rfq?category=lab-equipment");
     assert.equal(categoryHref(true, { ...medical, catalogReady: true }), "/products/lab-equipment");
-    assert.equal(rangeHref("lab-equipment", "medical"), "/contact?enquiry=medical&category=lab-equipment");
+    assert.equal(rangeHref("lab-equipment", "medical"), "/rfq?category=lab-equipment");
     assert.equal(rangeHref("pool", "chemicals"), "/products?category=pool");
   });
 

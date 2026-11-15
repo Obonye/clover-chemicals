@@ -3,10 +3,11 @@
 import { sendContactEmails } from "@/lib/contact/email";
 import { ContactSchema } from "@/lib/contact/schema";
 import { clientIp } from "@/lib/client-ip";
+import { IDENTITY_FIELD_MESSAGES } from "@/lib/forms/identity";
 import { checkRateLimit } from "@/lib/rfq/rate-limit";
 import { createReference } from "@/lib/rfq/reference";
 
-export type ContactField = "name" | "company" | "email" | "phone" | "enquiryType" | "message";
+export type ContactField = "fullName" | "company" | "email" | "phone" | "enquiryType" | "message";
 
 export type ContactSubmitState =
   | { status: "idle" }
@@ -17,11 +18,10 @@ export type ContactSubmitState =
     }
   | { status: "success"; reference: string };
 
-const FIELDS: ContactField[] = ["name", "company", "email", "phone", "enquiryType", "message"];
+const FIELDS: ContactField[] = ["fullName", "company", "email", "phone", "enquiryType", "message"];
 
 const FIELD_MESSAGES: Partial<Record<ContactField, string>> = {
-  name: "Enter your full name",
-  email: "Enter a valid email address",
+  ...IDENTITY_FIELD_MESSAGES,
   enquiryType: "Choose the nature of your enquiry",
   message: "Tell us a little about what you need",
 };

@@ -109,7 +109,7 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
           </a>
         )}
 
-        <AddToRfq division={category.division} product={product} />
+        <AddToRfq categorySlug={category.slug} division={category.division} product={product} />
       </div>
     </article>
   );

@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import { stegaClean } from "next-sanity";
 
 import { RfqList } from "@/components/rfq/rfq-list";
@@ -22,7 +23,13 @@ export default async function RfqPage() {
           <h1 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
             Your RFQ
           </h1>
-          <p className="mt-1 text-sm text-muted">Tell us what you need and we&apos;ll send you a quotation.</p>
+          <p className="mt-1 text-sm text-muted">
+            Tell us what you need and we&apos;ll send you a quotation. Just have a question?{" "}
+            <NextLink className="font-semibold text-foreground underline underline-offset-2 hover:text-accent" href="/contact">
+              Contact us
+            </NextLink>
+            .
+          </p>
         </div>
       </section>
 

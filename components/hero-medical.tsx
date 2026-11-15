@@ -52,9 +52,9 @@ export const HeroMedical = ({ showBrowse = true }: HeroMedicalProps) => {
           )}
           <NextLink
             className="rounded-full border-2 border-separator px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
-            href="/contact?enquiry=medical"
+            href="/rfq"
           >
-            Contact Us
+            Request a Quote
           </NextLink>
         </div>
       </div>

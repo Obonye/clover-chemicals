@@ -26,11 +26,11 @@ export async function sendContactEmails({ reference, message, submittedAt }: Con
     kind: "Message",
     reference,
     receivedAt: formatBotswanaTime(submittedAt),
-    name: message.name,
+    name: message.fullName,
     intro:
       "Thank you for getting in touch. Our team will respond within one business day with specifications, pricing and availability.",
     details: [
-      ["Name", message.name],
+      ["Name", message.fullName],
       ["Company", message.company],
       ["Email", message.email],
       ["Phone", message.phone],
