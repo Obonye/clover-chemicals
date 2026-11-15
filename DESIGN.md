@@ -141,6 +141,7 @@ One radius scale, applied by role (not by division):
 
 ### Navigation
 - Lockup everywhere: logo, "CLOVER INDUSTRIES", and a subline ("Lift as you rise" on group pages, the division name on a division). The Products menu is scoped to the current division.
+- The navbar shows the full desktop nav from 1100px (the `menu:` breakpoint in `styles/globals.css`, CI-86) and the hamburger drawer below it. The drawer follows the same division scoping as the desktop menu.
 - Request for quote (RFQ) is the primary conversion path; the navbar shows a count badge.
 
 ### Icons

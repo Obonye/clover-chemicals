@@ -43,6 +43,11 @@
   --text-6xl: clamp(3.25rem, 2.8333rem + 2.083vw, 4.5rem);
   --text-hero: clamp(2.25rem, 1.5rem + 3.75vw, 4.5rem);
   --text-hero--line-height: 1.05;
+
+  /* Where the navbar switches between the hamburger menu and the full desktop
+     nav (CI-86): `menu:flex`, `menu:hidden`. 1100px, not Tailwind's lg (1024px),
+     so small laptops and landscape tablets get the roomier menu. */
+  --breakpoint-menu: 68.75rem;
 }
 
 html,

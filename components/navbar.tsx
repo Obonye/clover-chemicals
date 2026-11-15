@@ -46,9 +46,9 @@ const ChevronDown = () => (
 );
 
 type NavbarProps = {
-  /** Live Sanity categories — the desktop dropdown scopes these to the
-   *  current division (or lists divisions instead on shared routes); the
-   *  mobile menu still scopes to Chemicals only, pending CI-5. */
+  /** Live Sanity categories — the desktop dropdown and the mobile menu both
+   *  scope these to the current division (or list divisions instead on shared
+   *  routes). */
   categories: ProductCategory[];
 };
 
@@ -212,7 +212,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
         </NextLink>
 
         {/* Desktop nav */}
-        <ul className="hidden items-center gap-8 lg:flex">
+        <ul className="hidden items-center gap-8 menu:flex">
           {/* Scoped to the current division; on shared routes (no division
               in the URL) it lists divisions instead — see `division` above. */}
           {showProductsMenu && (
@@ -298,7 +298,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
         </ul>
 
         {/* Desktop CTA */}
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 menu:flex">
           {mounted && (
             <button
               aria-label="Toggle theme"
@@ -331,7 +331,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
           aria-expanded={isMenuOpen}
           aria-label="Toggle menu"
           className={clsx(
-            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg transition-colors lg:hidden",
+            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg transition-colors menu:hidden",
             isTransparent ? heroControl : "text-muted hover:text-foreground",
           )}
           style={{ touchAction: "manipulation" }}
