@@ -5,6 +5,7 @@ import type { RfqContact, RfqLineItem, RfqRange } from "@/lib/rfq/types";
 import { client } from "@/sanity/lib/client";
 import { RFQ_CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import { clientIp } from "@/lib/client-ip";
+import { IDENTITY_FIELD_MESSAGES } from "@/lib/forms/identity";
 import { sendRfqEmails } from "@/lib/rfq/email";
 import { lookupRfqProducts } from "@/lib/rfq/lookup";
 import { checkRateLimit } from "@/lib/rfq/rate-limit";
@@ -34,8 +35,7 @@ const CONTACT_FIELDS: RfqContactField[] = [
   "fullName",
   "company",
   "email",
-  "mobile",
-  "landline",
+  "phone",
   "fulfilment",
   "branch",
   "deliveryAddress",
@@ -43,11 +43,7 @@ const CONTACT_FIELDS: RfqContactField[] = [
   "message",
 ];
 
-const FIELD_MESSAGES: Partial<Record<RfqContactField, string>> = {
-  fullName: "Enter your full name",
-  company: "Enter your company or organisation",
-  email: "Enter a valid email address",
-};
+const FIELD_MESSAGES: Partial<Record<RfqContactField, string>> = IDENTITY_FIELD_MESSAGES;
 
 function parseItems(raw: FormDataEntryValue | null): unknown {
   if (typeof raw !== "string") return [];
@@ -216,7 +212,11 @@ export async function submitRfq(
     };
   }
 
-  if (rebuilt.lines.length === 0 && rebuilt.ranges.length === 0) {
+  // Only an error when the buyer sent products or ranges and none survived the check;
+  // a message-only request has nothing to drop.
+  const sentSomething = parsed.data.items.length > 0 || parsed.data.ranges.length > 0;
+
+  if (sentSomething && rebuilt.lines.length === 0 && rebuilt.ranges.length === 0) {
     return {
       status: "error",
       message: "None of the items in your request can be quoted right now. Please review it and try again.",

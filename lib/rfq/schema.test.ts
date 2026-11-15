@@ -18,7 +18,7 @@ const contact = {
   fullName: "Test Buyer",
   company: "Test Co",
   email: "buyer@example.com",
-  mobile: "+267 71 234 567",
+  phone: "+267 71 234 567",
   fulfilment: "delivery",
   deliveryAddress: "Plot 1, Gaborone",
 };
@@ -57,11 +57,22 @@ describe("submission", () => {
     assert.equal(submit({ items: [product], ranges: ["agro", "pool"] }).success, true);
   });
 
-  it("rejects an empty request", () => {
-    const result = submit();
+  it("accepts a message on its own, and rejects a request with nothing in it", () => {
+    assert.equal(submit({ contact: { ...contact, message: "Lab consumables, monthly" } }).success, true);
 
-    assert.equal(result.success, false);
-    assert.match(result.error?.issues[0]?.message ?? "", /Add a product or choose a product range/);
+    const empty = submit();
+
+    assert.equal(empty.success, false);
+    assert.deepEqual(empty.error?.issues[0]?.path, ["contact", "message"]);
+  });
+
+  it("needs a phone number, company and the other identity fields", () => {
+    const base = { items: [product] };
+
+    assert.equal(submit({ ...base, contact: { ...contact, phone: "" } }).success, false);
+    assert.equal(submit({ ...base, contact: { ...contact, phone: "call me" } }).success, false);
+    assert.equal(submit({ ...base, contact: { ...contact, company: "" } }).success, false);
+    assert.equal(submit({ ...base, contact: { ...contact, email: "nope" } }).success, false);
   });
 
   it("needs a message when there are ranges but no products", () => {

@@ -269,7 +269,7 @@ export default async function ProductPage({ params }: Props) {
               )}
 
               <div className="flex max-w-md flex-col gap-3">
-                <AddToRfq division={product.category?.division} product={product} size="lg" />
+                <AddToRfq categorySlug={product.category?.slug} division={product.category?.division} product={product} size="lg" />
                 <NextLink
                   className="w-fit text-sm text-muted underline-offset-2 hover:text-foreground hover:underline"
                   href={quoteHref}

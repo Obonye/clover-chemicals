@@ -16,13 +16,11 @@ import {
   EmptyState,
   FieldError,
   Form,
-  Input,
   Label,
   ListBox,
   Radio,
   RadioGroup,
   SearchField,
-  Select,
   Tag,
   TagGroup,
   TextArea,
@@ -31,6 +29,7 @@ import {
 } from "@heroui/react";
 
 import { submitRfq } from "@/app/rfq/actions";
+import { Field, IdentityFields, SelectField } from "@/components/form-fields";
 import { branchesInDisplayOrder } from "@/config/branches";
 import { siteConfig } from "@/config/site";
 import { buildRfqMailto } from "@/lib/rfq/mailto";
@@ -51,31 +50,6 @@ type RfqDetailsFormProps = {
   onSuccess: (result: RfqSubmitSuccess) => void;
 };
 
-const Field = ({
-  name,
-  label,
-  isRequired,
-  type = "text",
-  autoComplete,
-  placeholder,
-  description,
-}: {
-  name: string;
-  label: string;
-  isRequired?: boolean;
-  type?: string;
-  autoComplete?: string;
-  placeholder?: string;
-  description?: string;
-}) => (
-  <TextField fullWidth isRequired={isRequired} name={name} type={type} variant="secondary">
-    <Label>{label}</Label>
-    <Input autoComplete={autoComplete} className="h-11" placeholder={placeholder} />
-    {description && <Description>{description}</Description>}
-    <FieldError />
-  </TextField>
-);
-
 type Fulfilment = (typeof RFQ_FULFILMENT)[number];
 
 const FULFILMENT_OPTIONS: { value: Fulfilment; label: string; description: string }[] = [
@@ -95,26 +69,7 @@ const radioControlClass =
 const radioIndicatorClass =
   "before:rounded-full before:bg-default group-data-[selected=true]:before:scale-50 group-data-[selected=true]:before:bg-accent-foreground";
 
-const BranchSelect = ({ label, placeholder }: { label: string; placeholder: string }) => (
-  <Select fullWidth isRequired name="branch" placeholder={placeholder} variant="secondary">
-    <Label>{label}</Label>
-    <Select.Trigger className="h-11 min-h-11">
-      <Select.Value />
-      <Select.Indicator />
-    </Select.Trigger>
-    <FieldError />
-    <Select.Popover>
-      <ListBox>
-        {branchesInDisplayOrder.map((branch) => (
-          <ListBox.Item key={branch.slug} id={branch.slug} textValue={branch.name}>
-            {branch.name}
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-        ))}
-      </ListBox>
-    </Select.Popover>
-  </Select>
-);
+const BRANCH_OPTIONS = branchesInDisplayOrder.map((branch) => ({ id: branch.slug, label: branch.name }));
 
 export const RfqDetailsForm = ({
   items,
@@ -143,9 +98,9 @@ export const RfqDetailsForm = ({
   const { contains } = useFilter({ sensitivity: "base" });
   const hasProducts = items.length > 0;
   const selectedNames = ranges.filter((range) => selectedRanges.includes(range.slug)).map((range) => range.name);
-  // A request is products, ranges, or both.
-  const hasRequest = hasProducts || selectedRanges.length > 0;
-  const canSend = ready && hasRequest && !pending;
+  // A request is products, ranges, or just a message: with nothing else to go on,
+  // the message field is required, so the form can always be sent once it is valid.
+  const canSend = ready && !pending;
 
   return (
     <Form
@@ -181,7 +136,7 @@ export const RfqDetailsForm = ({
           <p>{state.message}</p>
           {/* No field errors means the request itself failed: keep the list
               usable by offering the same RFQ by email or phone. */}
-          {!state.fieldErrors && hasRequest && (
+          {!state.fieldErrors && (
             <p>
               Your request is still here. You can try again below, or{" "}
               <a className="font-semibold underline underline-offset-2" href={buildRfqMailto(items, selectedNames)}>
@@ -290,27 +245,7 @@ export const RfqDetailsForm = ({
         <input autoComplete="off" id="rfq-website" name="website" tabIndex={-1} type="text" />
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <Field isRequired autoComplete="name" label="Full name" name="fullName" />
-        <Field isRequired autoComplete="organization" label="Company" name="company" />
-        <Field isRequired autoComplete="email" label="Email" name="email" type="email" />
-        <Field
-          autoComplete="tel"
-          description="Preferred. Give a mobile or a landline."
-          label="Mobile"
-          name="mobile"
-          placeholder="+267 71 234 567"
-          type="tel"
-        />
-        <Field
-          autoComplete="tel"
-          description="Optional if you gave a mobile."
-          label="Landline"
-          name="landline"
-          placeholder="+267 391 2345"
-          type="tel"
-        />
-      </div>
+      <IdentityFields />
 
       <RadioGroup
         isRequired
@@ -353,7 +288,7 @@ export const RfqDetailsForm = ({
           />
         )}
         {fulfilment === "collection" && (
-          <BranchSelect label="Collect from" placeholder="Choose a branch" />
+          <SelectField isRequired label="Collect from" name="branch" options={BRANCH_OPTIONS} placeholder="Choose a branch" />
         )}
 
         {/* Submits as YYYY-MM-DD, which the server schema re-checks. */}
@@ -403,9 +338,6 @@ export const RfqDetailsForm = ({
                 : "Send request"}
         </Button>
         {!ready && <span className="text-sm text-muted">Checking your list…</span>}
-        {ready && !hasRequest && (
-          <span className="text-sm text-warning">Pick a product range, or fix the items marked above, to send.</span>
-        )}
       </div>
     </Form>
   );

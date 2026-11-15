@@ -137,7 +137,7 @@ One radius scale, applied by role (not by division):
 - 12px uppercase Inter tags as `rounded-full` chips. "Specials" uses the specials colour.
 
 ### Forms
-- Always-visible labels. The contact and RFQ forms are being brought onto one field system with sentence-case labels and accessible placeholder contrast (CI-85).
+- One system for every form (CI-85): `Field`, `TextAreaField`, `SelectField` and `IdentityFields` in `components/form-fields.tsx` (HeroUI secondary fields, always-visible sentence-case labels, 44px controls). Every form opens with the same identity block, name, company, email and one phone, all required, validated by `identityShape` in `lib/forms/identity.ts`. The contact and RFQ forms both confirm on a page with a reference number (`components/request-sent.tsx`). Quotes, including Medical, go through the RFQ; Contact is for questions. Do not hand-roll inputs.
 
 ### Navigation
 - Lockup everywhere: logo, "CLOVER INDUSTRIES", and a subline ("Lift as you rise" on group pages, the division name on a division). The Products menu is scoped to the current division.

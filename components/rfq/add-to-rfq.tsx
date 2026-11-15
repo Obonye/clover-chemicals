@@ -18,13 +18,15 @@ type AddToRfqProps = {
   /** Sanity division of the product's category. Without one the control
    *  can't build a valid line, so it stays a plain enquiry link. */
   division: Division | null | undefined;
+  /** Slug of the product's category. Medical's quote link preselects it as the range. */
+  categorySlug?: string | null;
   /** "card" for product grids, "lg" for the product detail page. */
   size?: "card" | "lg";
 };
 
 type Status = "idle" | "added" | "full";
 
-export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) => {
+export const AddToRfq = ({ product, division, categorySlug, size = "card" }: AddToRfqProps) => {
   const { addItem, hydrated } = useRfq();
   const idPrefix = React.useId();
 
@@ -87,9 +89,11 @@ export const AddToRfq = ({ product, division, size = "card" }: AddToRfqProps) =>
         : "";
 
   // Medical sales vary by request, so Medical products don't go into the RFQ
-  // list: the buyer sends the simple contact form, routed to Medical (CI-41).
+  // list: the buyer sends the same quote form with the product's range
+  // preselected and describes what they need in the message (CI-41, CI-85).
   if (division && stegaClean(division) === "medical") {
-    const medicalHref = `/contact?enquiry=medical${slug ? `&product=${encodeURIComponent(slug)}` : ""}`;
+    const rangeSlug = categorySlug ? stegaClean(categorySlug) : null;
+    const medicalHref = rangeSlug ? `/rfq?category=${encodeURIComponent(rangeSlug)}` : "/rfq";
 
     return (
       <NextLink
