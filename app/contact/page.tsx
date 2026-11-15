@@ -12,7 +12,6 @@ import { eyebrow } from "@/components/primitives";
 import { branchesInDisplayOrder } from "@/config/branches";
 import { enquiryTypeIds, enquiryTypes, type EnquiryTypeId } from "@/config/enquiry-routing";
 import { siteConfig } from "@/config/site";
-import { categories } from "@/lib/products";
 
 // useSearchParams needs a Suspense boundary so the rest of the page can
 // still be prerendered.
@@ -199,25 +198,6 @@ function ContactContent() {
                     <p className="text-sm text-muted">{siteConfig.contact.hours}</p>
                   </div>
                 </address>
-              </div>
-
-              <div className="border-t border-separator pt-10">
-                <p className="mb-5 text-xs uppercase tracking-[0.25em] text-muted">
-                  Browse by Category
-                </p>
-                <ul className="flex flex-col">
-                  {categories.map((cat) => (
-                    <li key={cat.id} className="border-t border-separator first:border-t-0">
-                      <NextLink
-                        className="flex items-center justify-between py-3 text-sm text-muted transition-colors hover:text-foreground"
-                        href={cat.href}
-                      >
-                        {cat.label}
-                        <span aria-hidden="true" className="text-muted/40">→</span>
-                      </NextLink>
-                    </li>
-                  ))}
-                </ul>
               </div>
             </aside>
 
