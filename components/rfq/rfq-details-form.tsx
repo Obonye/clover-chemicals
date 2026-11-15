@@ -129,7 +129,7 @@ export const RfqDetailsForm = ({
       {state.status === "error" && (
         <div
           ref={errorRef}
-          className="flex flex-col gap-2 rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
+          className="reveal-in flex flex-col gap-2 rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
           role="alert"
           tabIndex={-1}
         >

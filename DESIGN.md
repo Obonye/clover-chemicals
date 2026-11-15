@@ -110,6 +110,15 @@ Do not add `sm:`/`lg:` font-size overrides for these steps; pick the step that f
 - **Fixed chrome:** a 3rem utility bar above a 4rem navbar, both fixed. Page content offsets by `--header-h`; full-bleed heroes pull up under the transparent navbar with `-mt-[var(--navbar-h)]`. Change the heights only in `styles/globals.css`.
 - Generous padding in data-heavy sections; avoid dense tables on mobile.
 
+## Motion
+
+Motion explains state or confirms an action; it is never decoration. The quote request is the one flow that gets authored feedback.
+
+- **Tokens** (`styles/globals.css`): `--ease-out` (`cubic-bezier(0.16, 1, 0.3, 1)`), `--duration-fast` 150ms, `--duration-base` 250ms. Use these, not ad-hoc values.
+- **Toasts** (Sonner, `components/ui/sonner.tsx`) are the site's one feedback surface: adding to or updating the quote request (with a "View" action), removing an item (with "Undo"), copying a reference. Forms keep their inline, focus-managed error messages; do not duplicate those as toasts.
+- **Small cues:** the cart count pops when it goes up after the page settles (`count-tick`), the "Added" check draws itself (`draw-check`), post-action messages fade in (`reveal-in`).
+- **Reduced motion:** every animation above is switched off under `prefers-reduced-motion`. New motion must do the same.
+
 ## Elevation & Depth
 
 Flat. Hierarchy comes from tonal surfaces (background, white surface, secondary surface) and 1px `separator` borders. Shadows are used sparingly (hero buttons, hover states).

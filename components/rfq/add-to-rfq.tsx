@@ -5,7 +5,9 @@ import type { Division, Product } from "@/sanity/lib/types";
 import * as React from "react";
 import { Button } from "@heroui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 import { stegaClean } from "next-sanity";
+import { toast } from "sonner";
 
 import { PackSizeSelect } from "@/components/rfq/pack-size-select";
 import { QuantityStepper } from "@/components/rfq/quantity-stepper";
@@ -24,10 +26,11 @@ type AddToRfqProps = {
   size?: "card" | "lg";
 };
 
-type Status = "idle" | "added" | "full";
+type Status = "idle" | "added";
 
 export const AddToRfq = ({ product, division, categorySlug, size = "card" }: AddToRfqProps) => {
-  const { addItem, hydrated } = useRfq();
+  const { addItem, hydrated, items } = useRfq();
+  const router = useRouter();
   const idPrefix = React.useId();
 
   const packSizes = React.useMemo(
@@ -75,18 +78,35 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
     const result = addItem(line.data);
 
     if (resetTimer.current) clearTimeout(resetTimer.current);
-    setStatus(result === "full" ? "full" : "added");
-    resetTimer.current = setTimeout(() => setStatus("idle"), result === "full" ? 6000 : 3500);
+
+    // One toast per action, replaced (not stacked) when the buyer adds again fast.
+    const toastId = "quote-request";
+    const label = `${name ?? "product"}${selectedPack ? ` (${packLabel(selectedPack)})` : ""}`;
+
+    if (result === "full") {
+      setStatus("idle");
+      toast.warning(`Your quote request already has ${RFQ_MAX_ITEMS} items`, {
+        id: toastId,
+        description: "Send it or remove some before adding more.",
+        action: { label: "View quote request", onClick: () => router.push("/rfq") },
+      });
+
+      return;
+    }
+
+    const count = result === "added" ? items.length + 1 : items.length;
+
+    setStatus("added");
+    resetTimer.current = setTimeout(() => setStatus("idle"), 3500);
+    toast.success(result === "merged" ? `Updated ${label}` : `Added ${quantity} × ${label}`, {
+      id: toastId,
+      description: `${count} ${count === 1 ? "item" : "items"} in your quote request`,
+      action: { label: "View", onClick: () => router.push("/rfq") },
+    });
   };
 
   const lg = size === "lg";
   const controlHeight = lg ? "h-12" : "h-11";
-  const statusMessage =
-    status === "added"
-      ? `Added ${quantity} × ${name ?? "product"}${selectedPack ? ` (${packLabel(selectedPack)})` : ""} to your quote request`
-      : status === "full"
-        ? `Your quote request already has ${RFQ_MAX_ITEMS} items. Send it or remove some before adding more.`
-        : "";
 
   // Medical sales vary by request, so Medical products don't go into the RFQ
   // list: the buyer sends the same quote form with the product's range
@@ -161,7 +181,16 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
             if (event.key === " ") handleAdd(event);
           }}
         >
-          {status === "added" ? "Added ✓" : "Add to RFQ"}
+          {status === "added" ? (
+            <>
+              Added
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                <path className="draw-check" d="M5 12.5l4.5 4.5L19 7.5" pathLength={1} strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </>
+          ) : (
+            "Add to RFQ"
+          )}
         </NextLink>
         {status === "added" && (
           <NextLink
@@ -172,10 +201,6 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
           </NextLink>
         )}
       </div>
-
-      <p aria-live="polite" className={status === "full" ? "text-xs text-danger" : "sr-only"} role="status">
-        {statusMessage}
-      </p>
     </div>
   );
 };

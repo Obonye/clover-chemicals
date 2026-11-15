@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { CopyReference } from "@/components/copy-reference";
 import { eyebrow } from "@/components/primitives";
 
 type RequestSentProps = {
@@ -29,10 +30,13 @@ export const RequestSent = ({ label, heading, reference, nextSteps, children }: 
 
     <section className="bg-background py-8 lg:py-12">
       <div className="mx-auto flex max-w-[1280px] flex-col items-start gap-6 px-6 lg:px-12">
-        <p className="max-w-[60ch] text-base leading-relaxed text-muted">
-          Your reference is <span className="font-semibold text-foreground">{reference}</span>. Please quote it if you
-          contact us about this request.
-        </p>
+        <div className="flex max-w-[60ch] flex-col items-start gap-3">
+          <p className="text-base leading-relaxed text-muted">
+            Your reference is <span className="font-semibold text-foreground">{reference}</span>. Please quote it if
+            you contact us about this request.
+          </p>
+          <CopyReference reference={reference} />
+        </div>
 
         <div className="max-w-[60ch]">
           <h2 className="mb-2 font-display text-lg font-extrabold tracking-tight text-foreground">
