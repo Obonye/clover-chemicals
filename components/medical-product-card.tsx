@@ -12,7 +12,7 @@ export const MedicalProductCard = ({ product, tag }: MedicalProductCardProps) =>
   <article className="group relative flex h-96 flex-col justify-end overflow-hidden rounded-2xl">
     <Image
       alt={product.name}
-      className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+      className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
       fill
       sizes="(min-width: 640px) 320px, 280px"
       src={product.image!}

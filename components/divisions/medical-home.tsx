@@ -42,11 +42,11 @@ export async function MedicalHome() {
             </p>
           </div>
           <NextLink
-            className="inline-flex w-fit items-center gap-1.5 rounded-lg bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
+            className="inline-flex w-fit items-center gap-1.5 rounded-lg bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors press hover:bg-medical/90"
             href="/contact?enquiry=medical"
           >
             Contact Us
-            <span aria-hidden="true">→</span>
+            <span aria-hidden="true" className="arrow-nudge">→</span>
           </NextLink>
         </div>
       </section>

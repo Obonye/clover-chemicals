@@ -44,14 +44,14 @@ export const HeroMedical = ({ showBrowse = true }: HeroMedicalProps) => {
         <div className="flex flex-wrap justify-center gap-4">
           {showBrowse && (
             <NextLink
-              className="rounded-full bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors hover:bg-medical/90"
+              className="rounded-full bg-medical px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-medical-foreground transition-colors press hover:bg-medical/90"
               href="/medical/products"
             >
               Explore Product Lines
             </NextLink>
           )}
           <NextLink
-            className="rounded-full border-2 border-separator px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
+            className="wipe wipe-accent rounded-full border-2 border-separator px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-foreground"
             href="/rfq"
           >
             Request a Quote

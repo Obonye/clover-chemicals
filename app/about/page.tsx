@@ -297,7 +297,7 @@ export default function AboutPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <NextLink
-                className="rounded-lg bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="rounded-lg bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors press hover:bg-accent/90"
                 href="/contact"
               >
                 Get in Touch

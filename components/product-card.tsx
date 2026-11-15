@@ -52,7 +52,7 @@ export const ProductCard = ({ product, category, eyebrow }: ProductCardProps) =>
         {src ? (
           <Image
             alt={product.image?.alt ?? product.name ?? ""}
-            className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
             src={src}

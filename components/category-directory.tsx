@@ -45,7 +45,7 @@ export const CategoryDirectory = ({ heading, items }: CategoryDirectoryProps) =>
                 {src && (
                   <Image
                     alt=""
-                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     src={src}
@@ -58,7 +58,7 @@ export const CategoryDirectory = ({ heading, items }: CategoryDirectoryProps) =>
                     <p className="mt-1 line-clamp-2 text-sm leading-snug text-white/75">{category.description}</p>
                   )}
                   <span className="mt-3 inline-block text-xs font-medium uppercase tracking-widest text-white">
-                    Request a quote →
+                    Request a quote <span aria-hidden="true" className="arrow-nudge">→</span>
                   </span>
                 </div>
               </RangeCardLink>

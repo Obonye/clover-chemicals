@@ -157,7 +157,7 @@ function ContactContent() {
                     <div key={branch.slug}>
                       <p className="mb-1 text-sm font-semibold text-foreground">{branch.name}</p>
                       <NextLink
-                        className="text-sm leading-relaxed text-muted transition-colors hover:text-accent"
+                        className="text-sm leading-relaxed text-muted transition-colors hover:text-accent link-draw"
                         href={`/locations#${branch.slug}`}
                       >
                         {branch.address}
@@ -167,7 +167,7 @@ function ContactContent() {
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">Email</p>
                     <a
-                      className="text-sm text-muted transition-colors hover:text-accent"
+                      className="text-sm text-muted transition-colors hover:text-accent link-draw"
                       href={`mailto:${siteConfig.contact.email}`}
                     >
                       {siteConfig.contact.email}
@@ -176,7 +176,7 @@ function ContactContent() {
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">Phone</p>
                     <a
-                      className="text-sm text-muted transition-colors hover:text-accent"
+                      className="text-sm text-muted transition-colors hover:text-accent link-draw"
                       href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
                     >
                       {siteConfig.contact.phone}
@@ -185,7 +185,7 @@ function ContactContent() {
                   <div>
                     <p className="mb-1 text-sm font-semibold text-foreground">WhatsApp</p>
                     <a
-                      className="text-sm text-muted transition-colors hover:text-accent"
+                      className="text-sm text-muted transition-colors hover:text-accent link-draw"
                       href={`https://wa.me/${siteConfig.contact.whatsapp.replace(/[^\d]/g, "")}`}
                       rel="noopener noreferrer"
                       target="_blank"

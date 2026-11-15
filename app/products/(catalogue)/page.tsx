@@ -110,7 +110,7 @@ function BottomCta() {
             </p>
           </div>
           <NextLink
-            className="shrink-0 rounded-lg bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+            className="shrink-0 rounded-lg bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors press hover:bg-accent/90"
             href="/contact"
           >
             Contact Us

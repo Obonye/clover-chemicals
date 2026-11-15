@@ -117,7 +117,7 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
 
     return (
       <NextLink
-        className={`inline-flex ${controlHeight} w-full items-center justify-center rounded-lg bg-accent px-4 font-semibold uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
+        className={`inline-flex ${controlHeight} w-full items-center justify-center rounded-lg bg-accent px-4 font-semibold uppercase tracking-wider text-accent-foreground transition-colors press hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
         href={medicalHref}
       >
         Request a quote
@@ -172,7 +172,7 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
         {/* A real link so the CTA still works before hydration or with JS
             off; once hydrated, the click adds to the RFQ instead. */}
         <NextLink
-          className={`inline-flex ${controlHeight} flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-4 font-semibold uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
+          className={`inline-flex ${controlHeight} flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-4 font-semibold uppercase tracking-wider text-accent-foreground transition-colors press hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${lg ? "text-sm" : "text-xs"}`}
           href={fallbackHref}
           role={canAdd ? "button" : undefined}
           onClick={handleAdd}
