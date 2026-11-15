@@ -212,7 +212,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
         </NextLink>
 
         {/* Desktop nav */}
-        <ul className="hidden items-center gap-8 menu:flex">
+        <ul className="hidden items-center gap-8 lg:flex">
           {/* Scoped to the current division; on shared routes (no division
               in the URL) it lists divisions instead — see `division` above. */}
           {showProductsMenu && (
@@ -298,7 +298,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
         </ul>
 
         {/* Desktop CTA */}
-        <div className="hidden items-center gap-3 menu:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           {mounted && (
             <button
               aria-label="Toggle theme"
@@ -331,7 +331,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
           aria-expanded={isMenuOpen}
           aria-label="Toggle menu"
           className={clsx(
-            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg transition-colors menu:hidden",
+            "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg transition-colors lg:hidden",
             isTransparent ? heroControl : "text-muted hover:text-foreground",
           )}
           style={{ touchAction: "manipulation" }}
