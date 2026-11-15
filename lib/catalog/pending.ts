@@ -5,7 +5,7 @@ import type { ProductCategory } from "@/sanity/lib/types";
 /**
  * Ranges whose products aren't browsable yet, with plain-text slug and label
  * so they can be matched against `?category=` and stored in the quote.
- * Medical ranges are left out: they use the Medical enquiry form (CI-41).
+ * Medical ranges are left out: they go straight to the quote form (CI-41, CI-85).
  */
 export function pendingRanges(
   categories: ProductCategory[],
