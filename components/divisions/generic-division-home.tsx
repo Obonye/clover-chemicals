@@ -48,7 +48,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
           <div className="mt-8 flex flex-wrap gap-4">
             {catalogEnabled && (
               <NextLink
-                className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors press hover:bg-accent/90"
                 href={`/${division.slug}/products`}
               >
                 Browse Products
@@ -76,7 +76,7 @@ export async function GenericDivisionHome({ division }: GenericDivisionHomeProps
                 className="hidden shrink-0 text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75 sm:block"
                 href={`/${division.slug}/products`}
               >
-                View all →
+                View all <span aria-hidden="true" className="arrow-nudge">→</span>
               </NextLink>
             </div>
             <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-4">

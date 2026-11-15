@@ -429,7 +429,7 @@ export const ProductCatalogue = ({
                     className="text-xs font-medium uppercase tracking-widest text-accent transition-colors hover:text-accent/75"
                     href="/contact"
                   >
-                    Contact Us →
+                    Contact Us <span aria-hidden="true" className="arrow-nudge">→</span>
                   </NextLink>
                 </div>
               </div>

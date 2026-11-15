@@ -121,6 +121,14 @@ Motion explains state or confirms an action; it is never decoration. The quote r
   - **Colour bleed:** `--accent`, `--accent-foreground` and `--focus` are registered `<color>` properties with a 400ms transition, so moving between the group, Chemical and Medical cross-fades the accent. A theme toggle (light/dark) fades the group accent the same way.
   - **Page transitions:** route changes cross-fade the page content only (React `<ViewTransition>`, `experimental.viewTransition` in `next.config.mjs`). The utility bar and navbar carry `view-transition-name`s so they stay put; any new fixed element that must stay visible during a route change needs one too. To switch it off, set the flag to false.
   - **Nav polish:** links underline from the left, dropdowns open from their trigger (`menu-in`), the hamburger turns into an X.
+- **Interaction vocabulary** (shared classes in `styles/globals.css`; use these, do not hand-roll hover effects):
+  - `.wipe` (+ `.wipe-accent`, `.wipe-dark`): ghost button whose fill wipes in from the left on hover or focus, label turning part-way through. Also fires from a parent `.group`, so a whole card can drive its button. Use for every outlined or ghost button.
+  - `.arrow-nudge`: on every `→` glyph; it drifts 3px when its link, button or card is hovered. Arrows are the text glyph `→` (never an SVG chevron), wrapped in `<span aria-hidden="true" className="arrow-nudge">`.
+  - `.press`: on solid buttons; settles to 98% while pressed.
+  - `.link-draw`: a thin underline that grows from the left on hover (footer and sidebar links). Add `w-fit` to block-level links.
+  - Focus: one `:focus-visible` ring in the division accent (`:where`, so components with their own focus style win).
+  - Cards: images zoom to 1.03 on hover, nothing louder. Cards that are not links get no hover effect.
+  - Theme toggle icons turn in (`.icon-swap`); the logo mark lifts 2px and tilts 8 degrees on hover.
 - **Reduced motion:** every animation above is switched off under `prefers-reduced-motion`. New motion must do the same.
 
 ## Elevation & Depth

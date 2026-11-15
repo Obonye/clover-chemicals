@@ -65,7 +65,7 @@ export const ProductsSection = ({ categories, categoryLinks, showViewAll }: Prod
                 className="hidden text-sm font-semibold uppercase tracking-widest text-muted transition-colors duration-200 hover:text-accent md:block"
                 href="/products"
               >
-                View all →
+                View all <span aria-hidden="true" className="arrow-nudge">→</span>
               </NextLink>
             )}
           </div>

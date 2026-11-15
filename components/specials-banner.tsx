@@ -85,7 +85,7 @@ export const SpecialsBanner = async () => {
               href="/products?promotion=true"
             >
               Browse Products
-              <span aria-hidden="true">→</span>
+              <span aria-hidden="true" className="arrow-nudge">→</span>
             </NextLink>
           </div>
         </div>

@@ -187,11 +187,11 @@ export const Navbar = ({ categories }: NavbarProps) => {
     >
       <header className="mx-auto flex h-[var(--navbar-h)] max-w-[1280px] items-center justify-between gap-6 px-6">
         {/* Logo */}
-        <NextLink className="flex flex-shrink-0 items-center gap-2.5" href={homeHref}>
+        <NextLink className="group flex flex-shrink-0 items-center gap-2.5" href={homeHref}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt={division ? division.name : "Clover Industries"}
-            className="h-9 w-9"
+            className="h-9 w-9 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:rotate-[8deg] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:rotate-0"
             src="/clover-logo.svg"
           />
           <div className="flex flex-col leading-none">
@@ -263,7 +263,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                           href={`/${division.slug}/products`}
                           onClick={() => setIsProductsOpen(false)}
                         >
-                          View all products →
+                          View all products <span aria-hidden="true" className="arrow-nudge">→</span>
                         </NextLink>
                       </li>
                     </>
@@ -311,7 +311,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
               )}
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
-              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+              <span key={theme} className="icon-swap">{theme === "dark" ? <SunIcon /> : <MoonIcon />}</span>
             </button>
           )}
           <RfqNavButton
@@ -321,7 +321,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
           />
           {showBrowse && (
             <NextLink
-              className="whitespace-nowrap rounded-lg bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+              className="whitespace-nowrap rounded-lg bg-accent px-4 py-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors press hover:bg-accent/90"
               href={browseHref}
             >
               {browseLabel}
@@ -419,7 +419,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                             href={`/${division.slug}/products`}
                             onClick={() => setIsMenuOpen(false)}
                           >
-                            View all products →
+                            View all products <span aria-hidden="true" className="arrow-nudge">→</span>
                           </NextLink>
                         </li>
                       </ul>
@@ -483,7 +483,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                     type="button"
                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                   >
-                    {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+                    <span key={theme} className="icon-swap">{theme === "dark" ? <SunIcon /> : <MoonIcon />}</span>
                     {theme === "dark" ? "Light Mode" : "Dark Mode"}
                   </button>
                 )}
@@ -491,7 +491,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
               {showBrowse && (
                 <Drawer.Footer className="flex flex-col gap-3">
                   <NextLink
-                    className="block w-full rounded-lg border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-surface-secondary"
+                    className="block w-full wipe wipe-accent rounded-lg border-2 border-separator px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-foreground"
                     href={browseHref}
                     onClick={() => setIsMenuOpen(false)}
                   >

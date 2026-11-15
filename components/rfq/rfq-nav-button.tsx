@@ -63,7 +63,7 @@ export const RfqNavButton = ({ variant, href = "/rfq", className, onNavigate }: 
     return (
       <NextLink
         aria-label={hasItems ? rfqAccessibleName(count) : undefined}
-        className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+        className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-center text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors press hover:bg-accent/90"
         href={href}
         onClick={onNavigate}
       >

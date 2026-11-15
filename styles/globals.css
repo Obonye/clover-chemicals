@@ -341,13 +341,13 @@ body {
   animation: none;
 }
 
-/* Exit is quick; the new page arrives gently once the old one has gone. */
+/* A plain, short fade: the old page leaves, then the new one arrives. */
 ::view-transition-old(.page-exit) {
   animation: page-fade-out var(--duration-fast) ease-in both;
 }
 
 ::view-transition-new(.page-enter) {
-  animation: page-fade-in var(--duration-base) var(--ease-out) var(--duration-fast) both;
+  animation: page-fade-in var(--duration-fast) ease-out var(--duration-fast) both;
 }
 
 @keyframes page-fade-out {
@@ -355,7 +355,7 @@ body {
 }
 
 @keyframes page-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; }
 }
 
 /* B3. Dropdown menus open from their trigger. */
@@ -382,6 +382,140 @@ body {
   }
 
   .menu-in {
+    animation: none;
+  }
+}
+
+/*
+ * Interaction vocabulary: small, quiet moments (M1-M8, M11). Each one is a
+ * shared class so every button, link and card behaves the same way. All of it
+ * is switched off under prefers-reduced-motion.
+ */
+
+/* M1. Wipe-fill. A ghost button whose fill wipes in from the left on hover or
+   focus, with the label (and border) turning to the fill/ink colours part-way
+   through. Also fires when a parent with class "group" is hovered, so a whole
+   card can drive its button. Variants set the colours:
+     .wipe         white fill, black label (over photography)
+     .wipe-accent  accent fill, accent-foreground label
+     .wipe-dark    foreground fill, background label (on light surfaces) */
+.wipe {
+  --wipe-fill: #fff;
+  --wipe-ink: #000;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    color 300ms ease-out,
+    border-color 300ms ease-out;
+}
+
+.wipe::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--wipe-fill);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms ease-out;
+}
+
+.wipe-accent {
+  --wipe-fill: var(--accent);
+  --wipe-ink: var(--accent-foreground);
+}
+
+.wipe-dark {
+  --wipe-fill: var(--foreground);
+  --wipe-ink: var(--background);
+}
+
+:is(.wipe:hover, .wipe:focus-visible, .group:hover .wipe, .group:focus-visible .wipe) {
+  color: var(--wipe-ink);
+  border-color: var(--wipe-fill);
+  transition-delay: 75ms;
+}
+
+:is(.wipe:hover, .wipe:focus-visible, .group:hover .wipe, .group:focus-visible .wipe)::before {
+  transform: scaleX(1);
+  transition-duration: 450ms;
+  transition-timing-function: var(--ease-out);
+}
+
+/* M2. Arrow nudge. Put it on the arrow glyph; it drifts a few pixels when the
+   link, button or card around it is hovered or focused. */
+.arrow-nudge {
+  display: inline-block;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+:is(a, button):is(:hover, :focus-visible) .arrow-nudge,
+.group:is(:hover, :focus-visible) .arrow-nudge {
+  transform: translateX(3px);
+}
+
+/* M3. Press. A solid button settles slightly when pressed. */
+.press {
+  transition-property: color, background-color, border-color, transform;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.press:active {
+  transform: scale(0.98);
+  transition-duration: 100ms;
+}
+
+/* M4. Link underline draw. A thin underline grows from the left on hover. Use
+   w-fit on block-level links so the line matches the text. */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  padding-bottom: 2px;
+  transition:
+    background-size var(--duration-base) var(--ease-out),
+    color var(--duration-fast) ease-out;
+}
+
+.link-draw:is(:hover, :focus-visible) {
+  background-size: 100% 1px;
+}
+
+/* M6. Focus ring. One consistent keyboard focus style, using the division's
+   accent. :where keeps its specificity at zero, so any component that already
+   styles its own focus (HeroUI controls, the hero buttons) wins. */
+:where(a, button, [role="button"], summary, select, input, textarea):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* M8. Icon swap, for the theme toggle: the new icon turns in as it arrives. */
+@keyframes icon-swap {
+  from { opacity: 0; transform: rotate(-40deg) scale(0.8); }
+}
+
+.icon-swap {
+  display: inline-flex;
+  animation: icon-swap var(--duration-base) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wipe,
+  .wipe::before,
+  .arrow-nudge,
+  .press,
+  .link-draw {
+    transition: none;
+  }
+
+  .press:active {
+    transform: none;
+  }
+
+  .icon-swap {
     animation: none;
   }
 }

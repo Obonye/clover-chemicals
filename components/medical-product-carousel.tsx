@@ -202,7 +202,7 @@ export const MedicalProductCarousel = ({ showViewAll = true }: MedicalProductCar
               href="/medical/products"
             >
               View All Products
-              <span aria-hidden="true">→</span>
+              <span aria-hidden="true" className="arrow-nudge">→</span>
             </NextLink>
           )}
         </div>

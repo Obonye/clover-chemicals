@@ -60,9 +60,13 @@ export const Footer = ({ categories }: FooterProps) => {
 
           {/* Brand column */}
           <div>
-            <NextLink className="mb-5 flex items-center gap-2.5" href="/">
+            <NextLink className="group mb-5 flex items-center gap-2.5" href="/">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt={siteConfig.name} className="h-9 w-9" src="/clover-logo.svg" />
+              <img
+                alt={siteConfig.name}
+                className="h-9 w-9 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:rotate-[8deg] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:rotate-0"
+                src="/clover-logo.svg"
+              />
               <div className="flex flex-col leading-none">
                 <span className="text-sm font-bold tracking-tight text-foreground">
                   CLOVER INDUSTRIES
@@ -90,7 +94,7 @@ export const Footer = ({ categories }: FooterProps) => {
               {divisions.map((d) => (
                 <li key={d.slug}>
                   <NextLink
-                    className="text-sm text-muted transition-colors duration-150 hover:text-foreground"
+                    className="text-sm text-muted transition-colors duration-150 hover:text-foreground link-draw"
                     href={`/${d.slug}`}
                   >
                     {d.name}
@@ -110,7 +114,7 @@ export const Footer = ({ categories }: FooterProps) => {
               {footerCategories.map((cat) => (
                 <li key={cat._id}>
                   <NextLink
-                    className="text-sm text-muted transition-colors duration-150 hover:text-foreground"
+                    className="text-sm text-muted transition-colors duration-150 hover:text-foreground link-draw"
                     href={categoryHref(cat.slug)}
                   >
                     {cat.label}
@@ -122,7 +126,7 @@ export const Footer = ({ categories }: FooterProps) => {
                   className="text-sm font-semibold text-accent transition-colors duration-150 hover:text-accent/80"
                   href={productsHref}
                 >
-                  View all →
+                  View all <span aria-hidden="true" className="arrow-nudge">→</span>
                 </NextLink>
               </li>
             </ul>
@@ -138,7 +142,7 @@ export const Footer = ({ categories }: FooterProps) => {
               {companyLinks.map((link) => (
                 <li key={link.href}>
                   <NextLink
-                    className="text-sm text-muted transition-colors duration-150 hover:text-foreground"
+                    className="text-sm text-muted transition-colors duration-150 hover:text-foreground link-draw"
                     href={link.href}
                   >
                     {link.label}
@@ -157,7 +161,7 @@ export const Footer = ({ categories }: FooterProps) => {
               {branchesInDisplayOrder.map((branch) => (
                 <li key={branch.slug}>
                   <NextLink
-                    className="mb-1 block text-sm font-semibold text-foreground transition-colors duration-150 hover:text-accent"
+                    className="mb-1 block w-fit text-sm font-semibold text-foreground transition-colors duration-150 hover:text-accent link-draw"
                     href={`/locations#${branch.slug}`}
                   >
                     {branch.name}
@@ -178,7 +182,7 @@ export const Footer = ({ categories }: FooterProps) => {
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
           <a
-            className="text-xs text-muted transition-colors duration-150 hover:text-foreground"
+            className="text-xs text-muted transition-colors duration-150 hover:text-foreground link-draw"
             href={`mailto:${siteConfig.contact.email}`}
           >
             {siteConfig.contact.email}

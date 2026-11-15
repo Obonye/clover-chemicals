@@ -27,7 +27,7 @@ export const BestSellers = async () => {
             className="hidden text-sm font-semibold uppercase tracking-widest text-muted transition-colors duration-200 hover:text-accent md:block"
             href="/products"
           >
-            View full catalogue →
+            View full catalogue <span aria-hidden="true" className="arrow-nudge">→</span>
           </NextLink>
         </div>
 
@@ -50,7 +50,7 @@ export const BestSellers = async () => {
             className="text-sm font-semibold uppercase tracking-widest text-muted transition-colors hover:text-foreground"
             href="/products"
           >
-            View full catalogue →
+            View full catalogue <span aria-hidden="true" className="arrow-nudge">→</span>
           </NextLink>
         </div>
       </div>

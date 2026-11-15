@@ -42,14 +42,14 @@ export const HeroChemicals = ({ showBrowse = true }: HeroChemicalsProps) => {
           <div className="flex flex-wrap justify-center gap-4">
             {showBrowse && (
               <NextLink
-                className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent/90"
+                className="rounded-lg bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-accent-foreground transition-colors press hover:bg-accent/90"
                 href="/products"
               >
                 Browse Products
               </NextLink>
             )}
             <NextLink
-              className="rounded-lg border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10"
+              className="wipe rounded-lg border-2 border-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white"
               href="/contact"
             >
               Get a Quote

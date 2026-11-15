@@ -79,16 +79,14 @@ export default async function Home() {
               ring and inner highlight keep the black one visible on the dark photo. */}
           <div className="mt-7 flex flex-col gap-3 sm:mt-9 sm:grid sm:grid-cols-2 lg:gap-4">
             <NextLink
-              className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#0b0b0c] px-6 py-3 text-[15px] sm:min-h-14 sm:text-base font-medium text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_1px_2px_rgb(0_0_0/0.4)] ring-1 ring-white/20 transition-[background-color,gap] duration-200 hover:gap-3 hover:bg-[#1a1a1c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#0b0b0c] px-6 py-3 text-[15px] sm:min-h-14 sm:text-base font-medium text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_1px_2px_rgb(0_0_0/0.4)] ring-1 ring-white/20 press hover:bg-[#1a1a1c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               href="/rfq"
             >
               Get a quote
-              <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.25} viewBox="0 0 24 24">
-                <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <span aria-hidden="true" className="arrow-nudge">→</span>
             </NextLink>
             <NextLink
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-white px-6 py-3 text-[15px] sm:min-h-14 sm:text-base font-medium text-black shadow-[0_1px_2px_rgb(0_0_0/0.25)] transition-colors duration-200 hover:bg-white/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-white px-6 py-3 text-[15px] sm:min-h-14 sm:text-base font-medium text-black shadow-[0_1px_2px_rgb(0_0_0/0.25)] press hover:bg-white/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               href="/contact"
             >
               Contact us
@@ -123,7 +121,7 @@ export default async function Home() {
                 >
                   <Image
                     alt=""
-                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                     fill
                     sizes="(min-width: 768px) 50vw, 100vw"
                     src={division.image}
@@ -171,15 +169,11 @@ export default async function Home() {
                       </div>
                     )}
 
-                    {/* Ghost at rest; on hover a white fill wipes across from the left and the
-                        label turns black part-way through, so the colour change rides the wipe. */}
-                    <span className="relative isolate inline-flex w-fit items-center gap-2 overflow-hidden rounded-lg border border-white/60 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-[gap,color,border-color] delay-0 duration-300 group-hover:gap-3 group-hover:border-white group-hover:text-black group-hover:delay-75 group-focus-visible:gap-3 group-focus-visible:border-white group-focus-visible:text-black group-focus-visible:delay-75 motion-reduce:transition-none">
-                      <span
-                        aria-hidden="true"
-                        className="absolute inset-0 -z-10 origin-left scale-x-0 bg-white transition-transform duration-300 ease-out group-hover:scale-x-100 group-hover:duration-[450ms] group-hover:ease-[cubic-bezier(0.16,1,0.3,1)] group-focus-visible:scale-x-100 group-focus-visible:duration-[450ms] group-focus-visible:ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
-                      />
+                    {/* Ghost at rest; on hover (of the whole card) a white fill wipes in
+                        from the left and the label turns black part-way through (.wipe). */}
+                    <span className="wipe inline-flex w-fit items-center gap-2 rounded-lg border border-white/60 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white">
                       Explore {division.name}
-                      <span aria-hidden="true">→</span>
+                      <span aria-hidden="true" className="arrow-nudge">→</span>
                     </span>
                   </div>
                 </NextLink>
@@ -206,10 +200,10 @@ export default async function Home() {
               </p>
             </div>
             <NextLink
-              className="shrink-0 whitespace-nowrap rounded-lg border border-separator px-6 py-3 text-sm font-semibold uppercase tracking-wide text-foreground transition-colors hover:border-foreground/30"
+              className="wipe wipe-dark shrink-0 whitespace-nowrap rounded-lg border border-separator px-6 py-3 text-sm font-semibold uppercase tracking-wide text-foreground"
               href="/about"
             >
-              Learn More →
+              Learn More <span aria-hidden="true" className="arrow-nudge">→</span>
             </NextLink>
           </div>
         </div>
@@ -280,11 +274,11 @@ export default async function Home() {
                       </span>
                     )}
                     <NextLink
-                      className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-foreground transition-[gap] duration-200 hover:gap-3"
+                      className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-foreground"
                       href={`/${division.slug}`}
                     >
                       Explore {division.shortName}
-                      <span aria-hidden="true">→</span>
+                      <span aria-hidden="true" className="arrow-nudge">→</span>
                     </NextLink>
                   </dd>
                 </div>

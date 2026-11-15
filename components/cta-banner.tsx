@@ -75,7 +75,7 @@ export const CtaBanner = ({ tint = CLOVER_GREEN, showBrowse = true }: CtaBannerP
                 className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold uppercase tracking-wide text-white/70 transition-colors duration-200 hover:text-white"
                 href="/products"
               >
-                Browse Products →
+                Browse Products <span aria-hidden="true" className="arrow-nudge">→</span>
               </NextLink>
             )}
           </div>
