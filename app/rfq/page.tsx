@@ -20,7 +20,7 @@ export default async function RfqPage() {
     <>
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 pb-5 pt-8 lg:px-12">
-          <h1 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground">
             Your quote request
           </h1>
           <p className="mt-1 text-sm text-muted">

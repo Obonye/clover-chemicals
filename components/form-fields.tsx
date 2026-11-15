@@ -47,9 +47,18 @@ type SelectFieldProps = {
   options: { id: string; label: string }[];
   isRequired?: boolean;
   defaultSelectedKey?: string;
+  description?: string;
 };
 
-export const SelectField = ({ name, label, placeholder, options, isRequired, defaultSelectedKey }: SelectFieldProps) => (
+export const SelectField = ({
+  name,
+  label,
+  placeholder,
+  options,
+  isRequired,
+  defaultSelectedKey,
+  description,
+}: SelectFieldProps) => (
   <Select
     fullWidth
     defaultSelectedKey={defaultSelectedKey || undefined}
@@ -63,6 +72,7 @@ export const SelectField = ({ name, label, placeholder, options, isRequired, def
       <Select.Value />
       <Select.Indicator />
     </Select.Trigger>
+    {description && <Description>{description}</Description>}
     <FieldError />
     <Select.Popover>
       <ListBox>

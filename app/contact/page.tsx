@@ -122,6 +122,7 @@ function ContactContent() {
                 <SelectField
                   isRequired
                   defaultSelectedKey={defaultEnquiry}
+                  description="This decides who receives your message. Complaints go to one person; everything else goes to our team inboxes."
                   label="Nature of enquiry"
                   name="enquiryType"
                   options={enquiryTypes.map((type) => ({ id: type.id, label: type.label }))}
