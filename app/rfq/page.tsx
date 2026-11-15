@@ -21,7 +21,7 @@ export default async function RfqPage() {
       <section className="border-b border-separator bg-background">
         <div className="mx-auto max-w-[1280px] px-6 pb-5 pt-8 lg:px-12">
           <h1 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
-            Your RFQ
+            Your quote request
           </h1>
           <p className="mt-1 text-sm text-muted">
             Tell us what you need and we&apos;ll send you a quotation. Just have a question?{" "}

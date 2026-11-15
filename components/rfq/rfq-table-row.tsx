@@ -182,7 +182,7 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
       <td className={clsx(cell, "text-right max-md:col-start-2 max-md:row-start-1 max-md:-mr-1 max-md:-mt-1")}>
         <Button
           isIconOnly
-          aria-label={`Remove ${line.name}${line.packLabel ? ` (${line.packLabel})` : ""} from RFQ`}
+          aria-label={`Remove ${line.name}${line.packLabel ? ` (${line.packLabel})` : ""} from your quote request`}
           className="h-11 w-11 text-muted hover:text-danger md:h-9 md:w-9"
           variant="ghost"
           onPress={() => removeItem(key)}

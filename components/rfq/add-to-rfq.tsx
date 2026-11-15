@@ -83,9 +83,9 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
   const controlHeight = lg ? "h-12" : "h-11";
   const statusMessage =
     status === "added"
-      ? `Added ${quantity} × ${name ?? "product"}${selectedPack ? ` (${packLabel(selectedPack)})` : ""} to your RFQ`
+      ? `Added ${quantity} × ${name ?? "product"}${selectedPack ? ` (${packLabel(selectedPack)})` : ""} to your quote request`
       : status === "full"
-        ? `Your RFQ already has ${RFQ_MAX_ITEMS} items. Send it or remove some before adding more.`
+        ? `Your quote request already has ${RFQ_MAX_ITEMS} items. Send it or remove some before adding more.`
         : "";
 
   // Medical sales vary by request, so Medical products don't go into the RFQ
@@ -115,7 +115,7 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
           className={`${controlHeight} text-xs uppercase tracking-wider`}
           variant="outline"
         >
-          Add to RFQ
+          Add to quote request
         </Button>
         <p className="text-xs text-muted" id={`${idPrefix}-unavailable`}>
           Currently unavailable,{" "}
@@ -161,14 +161,14 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
             if (event.key === " ") handleAdd(event);
           }}
         >
-          {status === "added" ? "Added ✓" : "Add to RFQ"}
+          {status === "added" ? "Added ✓" : "Add to quote request"}
         </NextLink>
         {status === "added" && (
           <NextLink
             className="shrink-0 text-xs font-semibold uppercase tracking-wider text-accent underline-offset-2 hover:underline"
             href="/rfq"
           >
-            View RFQ
+            View quote request
           </NextLink>
         )}
       </div>

@@ -234,7 +234,7 @@ export const RfqList = ({ ranges }: RfqListProps) => {
         {form}
       </div>
 
-      <aside aria-label="RFQ summary" className="w-full sm:ml-auto sm:max-w-sm xl:sticky xl:top-36 xl:max-w-none xl:self-start">
+      <aside aria-label="Quote request summary" className="w-full sm:ml-auto sm:max-w-sm xl:sticky xl:top-36 xl:max-w-none xl:self-start">
         <div className="rounded-2xl border border-separator bg-surface p-5">
           <h2 className="mb-3 font-display text-base font-extrabold tracking-tight text-foreground">Summary</h2>
           <dl className="mb-4 flex flex-col gap-2 text-sm">

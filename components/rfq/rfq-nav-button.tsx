@@ -68,7 +68,7 @@ export const RfqNavButton = ({ variant, href = "/rfq", className, onNavigate }: 
       >
         {hasItems && href === "/rfq" ? (
           <>
-            View RFQ
+            View quote request
             <Badge inverse count={count} />
           </>
         ) : (
