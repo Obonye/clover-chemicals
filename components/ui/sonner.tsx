@@ -19,7 +19,7 @@ export const Toaster = (props: ToasterProps) => {
       closeButton
       className="toaster group"
       duration={4500}
-      position="bottom-right"
+      position="bottom-center"
       style={
         {
           "--normal-bg": "var(--overlay)",
