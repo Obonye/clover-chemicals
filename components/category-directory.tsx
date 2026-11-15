@@ -31,14 +31,14 @@ export const CategoryDirectory = ({ heading, items }: CategoryDirectoryProps) =>
         day.
       </p>
 
-      <ul className="mt-10 grid grid-cols-1 gap-px bg-separator sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {items.map(({ category, href, range }) => {
           const src = imageUrl(category.image, { width: 800, height: 520 });
 
           return (
-            <li key={category._id} className="bg-background">
+            <li key={category._id}>
               <RangeCardLink
-                className="group relative flex min-h-[260px] flex-col justify-end overflow-hidden p-6"
+                className="group relative flex min-h-[260px] flex-col justify-end overflow-hidden rounded-2xl p-6"
                 href={href}
                 range={range}
               >
