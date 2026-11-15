@@ -20,8 +20,8 @@ const arrow = <span aria-hidden="true" className="arrow-nudge">→</span>;
 export default function NotFound() {
   return (
     <section className="bg-background py-20 lg:py-28">
-      <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
-        <div className="group mb-8 flex items-center gap-4">
+      <div className="mx-auto max-w-[1280px] px-6 text-center lg:px-12">
+        <div className="group mb-8 flex items-center justify-center gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt=""
@@ -34,15 +34,15 @@ export default function NotFound() {
         </div>
 
         <p className={eyebrow()}>Page not found</p>
-        <h1 className="font-display text-4xl font-extrabold tracking-tight text-foreground" style={{ maxWidth: "20ch" }}>
+        <h1 className="mx-auto font-display text-4xl font-extrabold tracking-tight text-foreground" style={{ maxWidth: "20ch" }}>
           Let&apos;s get you back on track.
         </h1>
-        <p className="mt-4 text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
+        <p className="mx-auto mt-4 text-base leading-relaxed text-muted" style={{ maxWidth: "52ch" }}>
           We can&apos;t find that page: the link may be out of date, or the page may have moved. Start from the home
           page, or tell us what you need and we&apos;ll point you to the right place.
         </p>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <NextLink
             className="press inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-accent-foreground hover:bg-accent/90"
             href="/"
@@ -59,7 +59,7 @@ export default function NotFound() {
 
         <div className="mt-12 border-t border-separator pt-8">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-muted">Or go straight to</p>
-          <ul className="flex flex-wrap gap-x-8 gap-y-3">
+          <ul className="flex flex-wrap justify-center gap-x-8 gap-y-3">
             {divisions.map((division) => (
               <li key={division.slug}>
                 <NextLink
