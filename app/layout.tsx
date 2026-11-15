@@ -13,6 +13,7 @@ import { UtilityBar } from "@/components/utility-bar";
 import { DivisionThemeScope } from "@/components/division-theme-scope";
 import { Footer } from "@/components/footer";
 import { QuickLinksBar } from "@/components/quick-links-bar";
+import { PageTransition } from "@/components/page-transition";
 import { Toaster } from "@/components/ui/sonner";
 import { DisableDraftMode } from "@/components/disable-draft-mode";
 import { loadCatalogQuery } from "@/sanity/lib/fetch";
@@ -77,7 +78,7 @@ export default async function RootLayout({
             <UtilityBar />
             <Navbar categories={categories} />
             <main className="flex-grow pt-[var(--header-h)]">
-              {children}
+              <PageTransition>{children}</PageTransition>
             </main>
             <Footer categories={categories} />
             <QuickLinksBar />

@@ -169,6 +169,8 @@ export const Navbar = ({ categories }: NavbarProps) => {
   const navOpenClass = overDarkHero ? "text-white/70" : "text-accent";
   const navLinkClass = clsx(
     "text-sm font-semibold whitespace-nowrap transition-colors duration-150 tracking-wide uppercase",
+    // Underline slides in from the left on hover and while a menu is open.
+    "relative after:absolute after:inset-x-0 after:-bottom-1.5 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-current after:transition-transform after:duration-200 hover:after:scale-x-100 data-[open=true]:after:scale-x-100 motion-reduce:after:transition-none",
     navHoverClass,
     isTransparent ? heroText : "text-foreground",
   );
@@ -181,6 +183,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
           ? "bg-transparent"
           : "border-b border-separator bg-background",
       )}
+      style={{ viewTransitionName: "site-navbar" }}
     >
       <header className="mx-auto flex h-[var(--navbar-h)] max-w-[1280px] items-center justify-between gap-6 px-6">
         {/* Logo */}
@@ -234,7 +237,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
             </button>
 
             {isProductsOpen && (
-              <div className="absolute left-0 top-full mt-2 w-72 rounded-lg border border-separator bg-surface shadow-md">
+              <div className="menu-in absolute left-0 top-full mt-2 w-72 rounded-lg border border-separator bg-surface shadow-md">
                 <ul className="py-1">
                   {division ? (
                     <>
@@ -338,28 +341,27 @@ export const Navbar = ({ categories }: NavbarProps) => {
           type="button"
           onClick={() => setIsMenuOpen((prev) => !prev)}
         >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            {isMenuOpen ? (
-              <path
-                d="M6 18L18 6M6 6l12 12"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            ) : (
-              <path
-                d="M4 6h16M4 12h16M4 18h16"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            )}
-          </svg>
+          {/* Three bars that turn into an X (the middle one fades). */}
+          <span aria-hidden="true" className="relative block h-3.5 w-5">
+            <span
+              className={clsx(
+                "absolute inset-x-0 top-0 h-0.5 rounded-full bg-current transition-transform duration-200 motion-reduce:transition-none",
+                isMenuOpen && "translate-y-[6px] rotate-45",
+              )}
+            />
+            <span
+              className={clsx(
+                "absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-current transition-opacity duration-150 motion-reduce:transition-none",
+                isMenuOpen && "opacity-0",
+              )}
+            />
+            <span
+              className={clsx(
+                "absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-current transition-transform duration-200 motion-reduce:transition-none",
+                isMenuOpen && "-translate-y-[6px] -rotate-45",
+              )}
+            />
+          </span>
         </button>
       </header>
 

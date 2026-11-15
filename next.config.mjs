@@ -24,6 +24,10 @@ const nextConfig = {
       },
     ];
   },
+  // Page transitions: React's <ViewTransition> (components/page-transition.tsx).
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     remotePatterns: [
       {
