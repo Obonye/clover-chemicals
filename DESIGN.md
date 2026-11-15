@@ -115,7 +115,7 @@ Do not add `sm:`/`lg:` font-size overrides for these steps; pick the step that f
 Motion explains state or confirms an action; it is never decoration. The quote request is the one flow that gets authored feedback.
 
 - **Tokens** (`styles/globals.css`): `--ease-out` (`cubic-bezier(0.16, 1, 0.3, 1)`), `--duration-fast` 150ms, `--duration-base` 250ms. Use these, not ad-hoc values.
-- **Toasts** (Sonner, `components/ui/sonner.tsx`) are the site's one feedback surface: adding to or updating the quote request (with a "View" action), removing an item (with "Undo"), copying a reference. Forms keep their inline, focus-managed error messages; do not duplicate those as toasts.
+- **Toasts** (Sonner, `components/ui/sonner.tsx`) are the site's one feedback surface: adding to or updating the quote request (with a "View" action), removing an item (with "Undo"), copying a reference. Forms keep their inline, focus-managed error messages; do not duplicate those as toasts. Toasts are coloured by outcome with the semantic tokens: green (`success`) for added or updated, red (`danger`) for removed or failed, amber (`warning`) for a limit. They sit at the bottom centre.
 - **Small cues:** the cart count pops when it goes up after the page settles (`count-tick`), the "Added" check draws itself (`draw-check`), post-action messages fade in (`reveal-in`).
 - **Navigation continuity** (`styles/globals.css`, `components/page-transition.tsx`):
   - **Colour bleed:** `--accent`, `--accent-foreground` and `--focus` are registered `<color>` properties with a 400ms transition, so moving between the group, Chemical and Medical cross-fades the accent. A theme toggle (light/dark) fades the group accent the same way.

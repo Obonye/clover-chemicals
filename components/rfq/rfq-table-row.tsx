@@ -189,8 +189,11 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
           onPress={() => {
             removeItem(key);
             // Removing is one click with no confirmation, so offer the way back.
-            toast(`Removed ${line.name}`, {
+            // Red, with a trash icon: removing is a deliberate act, and the colour
+            // says so (the generic error icon would suggest something broke).
+            toast.error(`Removed ${line.name}`, {
               description: line.packLabel ?? undefined,
+              icon: <TrashIcon />,
               action: { label: "Undo", onClick: () => addItem(line) },
             });
           }}

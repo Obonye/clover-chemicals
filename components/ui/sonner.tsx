@@ -33,9 +33,16 @@ export const Toaster = (props: ToasterProps) => {
         classNames: {
           toast: "font-sans",
           title: "font-semibold",
-          description: "!text-muted",
-          actionButton: "!rounded-lg !bg-accent !font-semibold !text-accent-foreground",
+          // Inherits the toast colour, so it stays legible on the coloured types.
+          description: "!text-current !opacity-80",
+          // Outlined in the toast colour: an accent button would vanish on a
+          // green toast in Chemical.
+          actionButton: "!rounded-lg !bg-transparent !font-semibold !text-current !ring-1 !ring-current/40 hover:!bg-black/10",
           cancelButton: "!rounded-lg",
+          // Added or updated: green. Removed or failed: red. A limit: amber.
+          success: "!border-transparent !bg-success !text-success-foreground",
+          error: "!border-transparent !bg-danger !text-danger-foreground",
+          warning: "!border-transparent !bg-warning !text-warning-foreground",
         },
       }}
       {...props}
