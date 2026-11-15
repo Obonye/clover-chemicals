@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/config/site";
 import { divisions } from "@/config/divisions";
+import { catalogSitemapPaths } from "@/lib/catalog/sitemap-paths";
 import { getCatalog } from "@/lib/catalog/visibility";
 import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { CATEGORY_SLUGS_QUERY, PRODUCT_SLUGS_QUERY } from "@/sanity/lib/queries";
@@ -30,24 +31,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const divisionPaths = divisions.flatMap((d) => [`/${d.slug}`, `/${d.slug}/products`]);
 
-  // Only browsable categories: a category that redirects to the RFQ, and its
-  // products, stay out of the sitemap (and so out of the index).
-  const categoryPaths = categorySlugs
-    .filter((c) => catalog.isBrowsable(c))
-    .map((c) => c.slug)
-    .filter((slug): slug is string => Boolean(slug))
-    .map((slug) => `/products/${slug}`);
-
-  const productPaths = productSlugs
-    .filter((s) => catalog.isBrowsable({ catalogReady: s.categoryReady }))
-    .filter(
-      (s): s is typeof s & { category: string; product: string } => Boolean(s.category) && Boolean(s.product),
-    )
-    .map((s) => `/products/${s.category}/${s.product}`);
+  // Only browsable categories and their products (lib/catalog/sitemap-paths.ts):
+  // a category that redirects to the quote form stays out of the index.
+  const catalogPaths = catalogSitemapPaths({
+    enabled: catalog.enabled,
+    categories: categorySlugs,
+    products: productSlugs,
+  });
 
   const lastModified = new Date();
 
-  return [...staticPaths, ...divisionPaths, ...categoryPaths, ...productPaths].map((path) => ({
+  return [...staticPaths, ...divisionPaths, ...catalogPaths].map((path) => ({
     url: `${SITE_URL}${path}`,
     lastModified,
   }));
