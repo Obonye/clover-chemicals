@@ -115,7 +115,7 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
           className={`${controlHeight} text-xs uppercase tracking-wider`}
           variant="outline"
         >
-          Add to quote request
+          Add to RFQ
         </Button>
         <p className="text-xs text-muted" id={`${idPrefix}-unavailable`}>
           Currently unavailable,{" "}
@@ -161,14 +161,14 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
             if (event.key === " ") handleAdd(event);
           }}
         >
-          {status === "added" ? "Added ✓" : "Add to quote request"}
+          {status === "added" ? "Added ✓" : "Add to RFQ"}
         </NextLink>
         {status === "added" && (
           <NextLink
             className="shrink-0 text-xs font-semibold uppercase tracking-wider text-accent underline-offset-2 hover:underline"
             href="/rfq"
           >
-            View quote request
+            View RFQ
           </NextLink>
         )}
       </div>
