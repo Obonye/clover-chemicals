@@ -171,7 +171,10 @@ export const UtilityBar = () => {
   }, [isOpen, useDropdown]);
 
   return (
-    <div className="fixed top-0 z-50 h-[var(--utility-bar-h)] w-full bg-[#111111] text-white">
+    <div
+      className="fixed top-0 z-50 h-[var(--utility-bar-h)] w-full bg-[#111111] text-white"
+      style={{ viewTransitionName: "site-utility-bar" }}
+    >
       <div className="mx-auto flex h-full max-w-[1280px] items-center gap-6 px-6 lg:px-12">
         <MobileDivisionMenu segment={segment} />
 

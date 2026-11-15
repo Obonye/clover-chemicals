@@ -117,6 +117,10 @@ Motion explains state or confirms an action; it is never decoration. The quote r
 - **Tokens** (`styles/globals.css`): `--ease-out` (`cubic-bezier(0.16, 1, 0.3, 1)`), `--duration-fast` 150ms, `--duration-base` 250ms. Use these, not ad-hoc values.
 - **Toasts** (Sonner, `components/ui/sonner.tsx`) are the site's one feedback surface: adding to or updating the quote request (with a "View" action), removing an item (with "Undo"), copying a reference. Forms keep their inline, focus-managed error messages; do not duplicate those as toasts.
 - **Small cues:** the cart count pops when it goes up after the page settles (`count-tick`), the "Added" check draws itself (`draw-check`), post-action messages fade in (`reveal-in`).
+- **Navigation continuity** (`styles/globals.css`, `components/page-transition.tsx`):
+  - **Colour bleed:** `--accent`, `--accent-foreground` and `--focus` are registered `<color>` properties with a 400ms transition, so moving between the group, Chemical and Medical cross-fades the accent. A theme toggle (light/dark) fades the group accent the same way.
+  - **Page transitions:** route changes cross-fade the page content only (React `<ViewTransition>`, `experimental.viewTransition` in `next.config.mjs`). The utility bar and navbar carry `view-transition-name`s so they stay put; any new fixed element that must stay visible during a route change needs one too. To switch it off, set the flag to false.
+  - **Nav polish:** links underline from the left, dropdowns open from their trigger (`menu-in`), the hamburger turns into an X.
 - **Reduced motion:** every animation above is switched off under `prefers-reduced-motion`. New motion must do the same.
 
 ## Elevation & Depth

@@ -207,6 +207,7 @@ body {
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 150ms;
   --duration-base: 250ms;
+  --duration-slow: 400ms;
 }
 
 /* The cart count ticking up: a quick scale pop, keyed on the count. */
@@ -268,6 +269,119 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .product-row {
+    animation: none;
+  }
+}
+
+/*
+ * Navigation and continuity (B1-B3).
+ */
+
+/* B1. Division colour bleed. Registering the accent tokens as <color> lets the
+   browser interpolate them, so moving between the group (black/white), Chemical
+   (green) and Medical (blue) cross-fades the accent across the persistent
+   chrome instead of snapping. The derived tokens (--accent-hover, --accent-soft…)
+   are colour-mix() of --accent on the same element, so they follow along.
+   Initial values match the :root defaults above. */
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(0.62 0.19 127.1031);
+}
+
+@property --accent-foreground {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(15% 0.03 144.21);
+}
+
+@property --focus {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(67.31% 0.1625 144.21);
+}
+
+[data-theme-scope],
+body {
+  transition:
+    --accent var(--duration-slow) var(--ease-out),
+    --accent-foreground var(--duration-slow) var(--ease-out),
+    --focus var(--duration-slow) var(--ease-out);
+}
+
+/* B2. Page transitions (components/page-transition.tsx). Only the page content
+   fades; the root layer is held still and the two fixed bars are anchored by
+   name, because the transition layers paint above fixed elements and would
+   otherwise cover them. */
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  display: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-group(site-utility-bar),
+::view-transition-group(site-navbar) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-utility-bar),
+::view-transition-old(site-navbar) {
+  display: none;
+}
+
+::view-transition-new(site-utility-bar),
+::view-transition-new(site-navbar) {
+  animation: none;
+}
+
+/* Exit is quick; the new page arrives gently once the old one has gone. */
+::view-transition-old(.page-exit) {
+  animation: page-fade-out var(--duration-fast) ease-in both;
+}
+
+::view-transition-new(.page-enter) {
+  animation: page-fade-in var(--duration-base) var(--ease-out) var(--duration-fast) both;
+}
+
+@keyframes page-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+/* B3. Dropdown menus open from their trigger. */
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+}
+
+.menu-in {
+  transform-origin: top left;
+  animation: menu-in var(--duration-fast) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme-scope],
+  body {
+    transition: none;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+
+  .menu-in {
     animation: none;
   }
 }
