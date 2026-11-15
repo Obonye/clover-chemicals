@@ -198,6 +198,59 @@ body {
   }
 }
 
+/*
+ * Motion tokens (quote-flow feedback). One house easing and a short scale of
+ * durations; the keyframes below are the only motion the quote flow adds.
+ * Everything is switched off under prefers-reduced-motion (see below).
+ */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+}
+
+/* The cart count ticking up: a quick scale pop, keyed on the count. */
+@keyframes count-tick {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.count-tick {
+  animation: count-tick var(--duration-base) var(--ease-out);
+}
+
+/* The "added" check drawing itself. The path has pathLength="1". */
+@keyframes draw-check {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+.draw-check {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: draw-check var(--duration-base) var(--ease-out) both;
+}
+
+/* Messages that appear after an action (form errors): a short fade and rise. */
+.reveal-in {
+  animation: fade-up var(--duration-base) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .count-tick,
+  .draw-check,
+  .reveal-in {
+    animation: none;
+  }
+
+  [data-sonner-toast],
+  [data-sonner-toaster] {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;

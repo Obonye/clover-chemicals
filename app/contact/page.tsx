@@ -102,7 +102,7 @@ function ContactContent() {
                 {state.status === "error" && (
                   <p
                     ref={errorRef}
-                    className="rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
+                    className="reveal-in rounded-lg bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground outline-none"
                     role="alert"
                     tabIndex={-1}
                   >

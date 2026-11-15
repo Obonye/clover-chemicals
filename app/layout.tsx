@@ -13,6 +13,7 @@ import { UtilityBar } from "@/components/utility-bar";
 import { DivisionThemeScope } from "@/components/division-theme-scope";
 import { Footer } from "@/components/footer";
 import { QuickLinksBar } from "@/components/quick-links-bar";
+import { Toaster } from "@/components/ui/sonner";
 import { DisableDraftMode } from "@/components/disable-draft-mode";
 import { loadCatalogQuery } from "@/sanity/lib/fetch";
 import { SanityLive } from "@/sanity/lib/live";
@@ -80,6 +81,7 @@ export default async function RootLayout({
             </main>
             <Footer categories={categories} />
             <QuickLinksBar />
+            <Toaster />
           </DivisionThemeScope>
         </Providers>
         <SanityLive />

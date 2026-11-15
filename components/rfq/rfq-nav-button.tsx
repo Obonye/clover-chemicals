@@ -1,9 +1,10 @@
 "use client";
 
+import * as React from "react";
 import NextLink from "next/link";
 import clsx from "clsx";
 
-import { useCatalogEnabled } from "@/components/catalog-state";
+import { useCatalogEnabled, useCatalogState } from "@/components/catalog-state";
 import { useRfq } from "@/lib/rfq/store";
 
 /** Screen-reader label for the RFQ entry point, e.g. "Request for quote, 3 items". */
@@ -107,6 +108,19 @@ const CartIcon = () => (
 export const RfqCartLink = () => {
   const count = useRfqNavCount();
   const catalogEnabled = useCatalogEnabled();
+  const { hydrated } = useRfq();
+  const catalog = useCatalogState();
+  const settled = hydrated && catalog.ready;
+  // The badge pops when the count goes UP after the page has settled: not when
+  // a saved count first loads in from storage, and not when items are removed.
+  const previous = React.useRef<number | null>(null);
+  const [tick, setTick] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!settled) return;
+    if (previous.current !== null && count > previous.current) setTick((n) => n + 1);
+    previous.current = count;
+  }, [count, settled]);
 
   // Nothing to collect while the catalogue is off.
   if (!catalogEnabled && count === 0) return null;
@@ -118,7 +132,13 @@ export const RfqCartLink = () => {
       href="/rfq"
     >
       <CartIcon />
-      {count > 0 && <Badge className="absolute right-0 top-1.5 h-5 min-w-5 px-1 text-xs" count={count} />}
+      {count > 0 && (
+        <Badge
+          key={tick}
+          className={clsx("absolute right-0 top-1.5 h-5 min-w-5 px-1 text-xs", tick > 0 && "count-tick")}
+          count={count}
+        />
+      )}
     </NextLink>
   );
 };

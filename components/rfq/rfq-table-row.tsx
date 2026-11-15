@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Focusable } from "react-aria-components";
 import NextLink from "next/link";
 import clsx from "clsx";
+import { toast } from "sonner";
 
 import { PackSizeSelect } from "@/components/rfq/pack-size-select";
 import { QuantityStepper } from "@/components/rfq/quantity-stepper";
@@ -39,7 +40,7 @@ type RfqTableRowProps = {
 };
 
 export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
-  const { updateItem, removeItem } = useRfq();
+  const { addItem, updateItem, removeItem } = useRfq();
   const key = rfqLineKey(line);
   const idPrefix = React.useId();
   const problem = check?.problem ?? null;
@@ -185,7 +186,14 @@ export const RfqTableRow = ({ line, check }: RfqTableRowProps) => {
           aria-label={`Remove ${line.name}${line.packLabel ? ` (${line.packLabel})` : ""} from your quote request`}
           className="h-11 w-11 text-muted hover:text-danger md:h-9 md:w-9"
           variant="ghost"
-          onPress={() => removeItem(key)}
+          onPress={() => {
+            removeItem(key);
+            // Removing is one click with no confirmation, so offer the way back.
+            toast(`Removed ${line.name}`, {
+              description: line.packLabel ?? undefined,
+              action: { label: "Undo", onClick: () => addItem(line) },
+            });
+          }}
         >
           <TrashIcon />
         </Button>
