@@ -3,6 +3,7 @@
 import { Suspense, startTransition, useActionState, useEffect, useRef } from "react";
 import { Button, Form } from "@heroui/react";
 import NextLink from "next/link";
+import posthog from "posthog-js";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { submitContact } from "./actions";
@@ -95,6 +96,11 @@ function ContactContent() {
                   if (submitting.current) return;
                   submitting.current = true;
                   const data = new FormData(event.currentTarget);
+                  const enquiryType = data.get("enquiryType");
+
+                  posthog.capture("contact_form_submitted", {
+                    enquiry_type: enquiryTypeIds.includes(enquiryType as EnquiryTypeId) ? enquiryType : "other",
+                  });
 
                   startTransition(() => formAction(data));
                 }}

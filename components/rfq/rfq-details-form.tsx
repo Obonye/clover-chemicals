@@ -6,6 +6,7 @@ import type { RfqLineItem, RfqRange } from "@/lib/rfq/types";
 
 import * as React from "react";
 import { getLocalTimeZone, today } from "@internationalized/date";
+import posthog from "posthog-js";
 import {
   Autocomplete,
   Button,
@@ -115,6 +116,12 @@ export const RfqDetailsForm = ({
         if (submitting.current) return;
         submitting.current = true;
         const data = new FormData(event.currentTarget);
+
+        posthog.capture("rfq_form_submitted", {
+          fulfilment: fulfilment ?? "not_selected",
+          product_line_count: items.length,
+          range_count: selectedRanges.length,
+        });
 
         React.startTransition(() => formAction(data));
       }}

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import NextLink from "next/link";
+import posthog from "posthog-js";
 
 import { eyebrow } from "@/components/primitives";
 import { siteConfig } from "@/config/site";
@@ -21,6 +22,8 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
+    posthog.captureException(error);
+
     // Keep the error in the browser console for debugging.
     /* eslint-disable no-console */
     console.error(error);
