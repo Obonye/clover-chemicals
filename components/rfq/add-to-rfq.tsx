@@ -8,6 +8,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { stegaClean } from "next-sanity";
 import { toast } from "sonner";
+import posthog from "posthog-js";
 
 import { PackSizeSelect } from "@/components/rfq/pack-size-select";
 import { QuantityStepper } from "@/components/rfq/quantity-stepper";
@@ -95,6 +96,14 @@ export const AddToRfq = ({ product, division, categorySlug, size = "card" }: Add
     }
 
     const count = result === "added" ? items.length + 1 : items.length;
+
+    posthog.capture("rfq_item_added", {
+      division: line.data.division,
+      item_add_result: result,
+      pack_size_selected: line.data.packSizeKey !== null,
+      product_slug: line.data.slug,
+      quantity: line.data.quantity,
+    });
 
     setStatus("added");
     resetTimer.current = setTimeout(() => setStatus("idle"), 3500);

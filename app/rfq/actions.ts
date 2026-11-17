@@ -1,7 +1,10 @@
 "use server";
 
+import { SeverityNumber } from "@opentelemetry/api-logs";
+
 import type { RfqContact, RfqLineItem, RfqRange } from "@/lib/rfq/types";
 
+import { posthogLogger } from "@/instrumentation";
 import { client } from "@/sanity/lib/client";
 import { RFQ_CATEGORIES_QUERY } from "@/sanity/lib/queries";
 import { clientIp } from "@/lib/client-ip";
@@ -234,11 +237,28 @@ export async function submitRfq(
       submittedAt: new Date(),
     });
   } catch {
+    posthogLogger?.emit({
+      body: "rfq_email_delivery_failed",
+      severityNumber: SeverityNumber.ERROR,
+      attributes: { form: "rfq" },
+    });
+
     return {
       status: "error",
       message: "We couldn't send your request just now. Please try again, or contact us directly.",
     };
   }
+
+  posthogLogger?.emit({
+    body: "rfq_email_delivery_completed",
+    severityNumber: SeverityNumber.INFO,
+    attributes: {
+      form: "rfq",
+      line_count: rebuilt.lines.length,
+      range_count: rebuilt.ranges.length,
+      dropped_count: rebuilt.dropped.length,
+    },
+  });
 
   return { status: "success", reference, dropped: rebuilt.dropped };
 }

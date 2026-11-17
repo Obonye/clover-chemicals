@@ -1,5 +1,8 @@
 "use server";
 
+import { SeverityNumber } from "@opentelemetry/api-logs";
+
+import { posthogLogger } from "@/instrumentation";
 import { sendContactEmails } from "@/lib/contact/email";
 import { ContactSchema } from "@/lib/contact/schema";
 import { clientIp } from "@/lib/client-ip";
@@ -70,11 +73,23 @@ export async function submitContact(
   try {
     await sendContactEmails({ reference, message: parsed.data, submittedAt: new Date() });
   } catch {
+    posthogLogger?.emit({
+      body: "contact_email_delivery_failed",
+      severityNumber: SeverityNumber.ERROR,
+      attributes: { form: "contact" },
+    });
+
     return {
       status: "error",
       message: "We couldn't send your message just now. Please try again, or email us directly.",
     };
   }
+
+  posthogLogger?.emit({
+    body: "contact_email_delivery_completed",
+    severityNumber: SeverityNumber.INFO,
+    attributes: { form: "contact" },
+  });
 
   return { status: "success", reference };
 }
