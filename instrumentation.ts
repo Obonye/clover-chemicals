@@ -21,15 +21,15 @@ export const posthogLoggerProvider =
     ? new LoggerProvider({
         resource: resourceFromAttributes({ "service.name": "clover-chemicals" }),
         processors: [
-          new BatchLogRecordProcessor(
-            new OTLPLogExporter({
+          new BatchLogRecordProcessor({
+            exporter: new OTLPLogExporter({
               url: `${posthogHost.replace(/\/$/, "")}/i/v1/logs`,
               headers: {
                 Authorization: `Bearer ${posthogKey}`,
                 "Content-Type": "application/json",
               },
             }),
-          ),
+          }),
         ],
       })
     : null;
